@@ -1,0 +1,57 @@
+<!-- As a link -->
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+  <a class="navbar-brand" routerLink="">Blog Manager</a>
+  <button
+    class="btn navbar-toggler"
+    type="button"
+    (click)="isCollapsed = !isCollapsed"
+  >
+    M
+  </button>
+  <div
+    class="ml-sm-0 ml-md-4 navbar-collapse wd-100"
+    [ngbCollapse]="isCollapsed"
+    id="navbar-collaspe"
+  >
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLink="/blog"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Blog</a
+        >
+      </li>
+      <li class="nav-item ">
+        <a
+          class="nav-link"
+          [routerLink]="['/blog', 'add']"
+          routerLinkActive="active"
+          >Add Blog</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link "
+          [routerLink]="['/pushnotification']"
+          routerLinkActive="active"
+          >Push Notification</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/blob']" routerLinkActive="active"
+          >Blob</a
+        >
+      </li>
+      <li class="nav-item" *ngIf="!this.auth.isLoggedIn()">
+        <a class="btn nav-link" routerLink="/login" routerLinkActive="active"
+          >Login</a
+        >
+      </li>
+      <li class="nav-item" *ngIf="this.auth.isLoggedIn()">
+        <a class="btn nav-link" (click)="this.auth.logout()">Log out</a>
+      </li>
+    </ul>
+  </div>
+</nav>

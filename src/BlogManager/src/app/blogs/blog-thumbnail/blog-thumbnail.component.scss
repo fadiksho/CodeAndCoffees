@@ -1,0 +1,23 @@
+@import "../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../node_modules/bootstrap/scss/variables";
+@import "../../../../node_modules/bootstrap/scss/mixins";
+
+.blog-thumbnail {
+  height: 100%;
+  .bth-body {
+    h5 {
+      color: $primary;
+    }
+
+    .bthb-description {
+      img {
+        float: right;
+        height: 100px;
+        width: 100px;
+        shape-outside: circle(50%);
+        background-clip: content-box;
+        display: block;
+      }
+    }
+  }
+}

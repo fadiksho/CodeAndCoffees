@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-start align-items-center ">
+  <h3>Filter:</h3>
+  <div class="btn-group-toggle ml-4" data-toggle="buttons">
+    <label
+      [ngClass]="{ active: onlyPublished }"
+      class="btn btn-outline-info btn-sm"
+    >
+      <input
+        type="checkbox"
+        [checked]="onlyPublished"
+        (change)="togglePublished((onlyPublished = !onlyPublished))"
+        autocomplete="off"
+      />
+      Only Published
+    </label>
+  </div>
+</div>

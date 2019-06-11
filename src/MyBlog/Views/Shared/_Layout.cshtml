@@ -1,0 +1,119 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnv
+@{
+  var userTheme = Context.Request.Cookies["theme-color"];
+}
+<!DOCTYPE html>
+<html lang="en" class="theme">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@ViewData["PageTitle"]</title>
+  <meta name="description" content="@ViewData["PageDescription"]">
+  <meta property="og:title" content="@ViewData["MetaTitle"]" />
+  <meta property="og:description" content="@ViewData["MetaDescription"]" />
+  <meta name="author" content="Fadi Ksho">
+  <meta property="og:type" content="website" />
+  <meta property="fb:app_id" content="2411821265711958" />
+  <meta property="og:url" content="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path" />
+  @if (hostingEnv.EnvironmentName == "Production")
+  {
+    <meta property="og:image" content="https://codeandcoffees.com/images/codeandcoffees-brand-2400x1260.png" />
+  }
+  else if (hostingEnv.EnvironmentName == "Staging")
+  {
+    <meta property="og:image" content="https://staging.codeandcoffees.com/images/codeandcoffees-brand-2400x1260.png" />
+  }
+  <meta property="og:image:height" content="1257">
+  <meta property="og:image:width" content="2400">
+  <link rel="icon" type="image/x-icon" href="~/favicon.ico">
+  <link rel="manifest" href="~/manifest.json">
+  <meta name="theme-color" content="@(userTheme == "dark" ? "#FF7B39" : "#0F006B")">
+  <environment include="Development">
+    <link rel="stylesheet" href="~/css/site.css" />
+    @if (Context.Request.Cookies["theme-color"] == "dark")
+    {
+      <link rel="stylesheet" href="~/css/theme/theme-dark.css" id="theme-dark" />
+    }
+    else
+    {
+      <link rel="stylesheet" href="~/css/theme/theme-default.css" id="theme-default" />
+    }
+    @RenderSection("Styles", required: false)
+  </environment>
+  <environment exclude="Development">
+    <link rel="stylesheet" href="~/dist/css/site.css" asp-append-version="false" />
+    @if (Context.Request.Cookies["theme-color"] == "dark")
+    {
+      <link rel="stylesheet" href="~/dist/css/theme/theme-dark.css" id="theme-dark" />
+    }
+    else
+    {
+      <link rel="stylesheet" href="~/dist/css/theme/theme-default.css" id="theme-default" />
+    }
+    @RenderSection("Styles", required: false)
+  </environment>
+
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">
+      <a class="nav-brand-link underline-from-center underline-from-center-d"
+         asp-controller="Blog"
+         asp-action="Index">
+        <span>&lt;</span> Code & Coffees&nbsp;<span>></span>
+      </a>
+    </div>
+    <div class="nav-container">
+      <ul class="nav-list">
+        <li class="nav-item nav-item-first" is-active-route
+            asp-controller="Blog"
+            asp-action="Index">
+          <a class="nav-link underline-from-center underline-from-center-d"
+             asp-controller="Blog"
+             asp-action="Index"
+             is-active-route>Blog</a>
+          <button id="pwaInstallButton" onclick="addToHomeScreen()"
+                  class="btn nav-button round-tl-br"
+                  aria-label="PWA install app" style="display:none;">PWA</button>
+          <button id="subscribeButton" class="btn nav-button round-tl-br icon-bell-slash"
+                  aria-label="Subscribe To Notifications" style="display:none;" disabled></button>
+          <button id="toggleThemeButton" onclick="toggleTheme()"
+                  class="btn nav-button round-tl-br @(userTheme == "dark" ? " icon-moon-o" : "icon-sun-o")"
+                  aria-label="Toggle Theme"></button>
+        </li>
+      </ul>
+      <div class="hide-md-down">
+        <partial name="_AboutAuther" />
+      </div>
+
+    </div>
+    <div class="nav-brand nav-brand-sm">
+      <span class="nav-brand-link">
+        <span>&lt;</span> Code & Coffees&nbsp;<span>/></span>
+      </span>
+    </div>
+  </nav>
+  <main class="content">
+    @RenderSection("PageHeader", required: false)
+    <div class="container">
+      @RenderBody()
+
+      <div class="hide-lg-up">
+        <partial name="_AboutAuther" />
+      </div>
+      <footer>
+        <p>&copy; 2018 - codeandcoffees.com</p>
+      </footer>
+    </div>
+  </main>
+  <div id="snackbar"></div>
+  <environment include="Development">
+    <script src="~/js/site.js"></script>
+    @RenderSection("Scripts", required: false)
+  </environment>
+  <environment exclude="Development">
+    <script src="~/dist/js/site.js" asp-append-version="false"></script>
+    @RenderSection("Scripts", required: false)
+  </environment>
+</body>
+</html>

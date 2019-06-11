@@ -1,0 +1,29 @@
+﻿@model IPaggingData
+
+<nav class="pagination">
+	<ul class="pagination-links">
+		<li class="pagination-item pagination-item-navigation @(!Model.HasPrevious ? "disabled" : "")">
+			<a class="pagination-link"
+				 asp-route-pageNumber="@(Model.CurrentPage-1)">
+				<span>&laquo;</span>
+			</a>
+		</li>
+		@for (int i = 1; i <= Model.TotalPages; i++)
+		{
+			<li class="pagination-item"
+					is-active-route
+					asp-route-pageNumber="@i">
+				<a class="pagination-link"
+					 asp-route-pageNumber="@i">
+					@i
+				</a>
+			</li>
+		}
+		<li class="pagination-item pagination-item-navigation @(!Model.HasNext ? "disabled" : "")">
+			<a class="pagination-link"
+				 asp-route-pageNumber="@(Model.CurrentPage+1)">
+				<span>&raquo;</span>
+			</a>
+		</li>
+	</ul>
+</nav>

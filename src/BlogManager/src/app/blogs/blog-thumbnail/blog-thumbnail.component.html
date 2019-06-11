@@ -1,0 +1,28 @@
+<div class="blog-thumbnail d-flex flex-column p-3 shadow-lg border rounded">
+  <div class="mb-auto bth-body">
+    <h5 class="">{{ blog.title }}</h5>
+    <div
+      class="bthb-description"
+      [innerHTML]="blog.description | safeHtml"
+    ></div>
+  </div>
+  <div class="">
+    <ul class="list-inline mb-0">
+      <li class="list-inline-item font-weight-bold">Tags:</li>
+      <li *ngFor="let tag of blog.tags" class="list-inline-item">{{ tag }}</li>
+    </ul>
+    <div>
+      <span class="font-weight-bold">Publish Date: </span>
+      <span>{{ blog.publishedDate | date: "dd/MM/yyyy" }}</span>
+    </div>
+    <div>
+      <span class="font-weight-bold">Published: </span>
+      <span>{{ blog.isPublished }}</span>
+    </div>
+  </div>
+  <hr class="w-100 border-primary" />
+  <div class="btn-group">
+    <a href="#" class="btn btn-success">Priview</a>
+    <a [routerLink]="['/blog/edit', blog.id]" class="btn btn-primary">Edit</a>
+  </div>
+</div>

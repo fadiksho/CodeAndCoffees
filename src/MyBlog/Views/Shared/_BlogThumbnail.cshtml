@@ -1,0 +1,30 @@
+﻿@model Blog
+
+
+<div class="blog-thumbnail">
+  <!-- Title -->
+  <div class="blog-thumbnail-header">
+    <a class="blog-thumbnail-header-link" href="/@Model.Slug">@(Model.Title)</a>
+  </div>
+  <!-- Body -->
+  <div class="blog-thumbnail-body">
+    <div>
+      @Html.Raw(Model.Description)
+      <a href="/@Model.Slug" class="blog-thumbnail-body-read-more-link">read more 🧐</a>
+    </div>
+  </div>
+  <!-- footer -->
+  <div class="blog-thumbnail-footer">
+    <div class="blog-thumbnail-footer-date">
+      <strong class="blog-thumbnail-footer-date-icon">Publish Date: </strong>
+      <span class="blog-thumbnail-footer-date-text">@Model.PublishedDate.ToString("dddd, dd MMMM yyyy")</span>
+    </div>
+    <div class="blog-thumbnail-footer-tags">
+      <strong class="blog-thumbnail-footer-tags-icon">Tags: </strong>
+      @foreach (var tag in Model.Tags)
+      {
+        <span>@tag</span>
+      }
+    </div>
+  </div>
+</div>

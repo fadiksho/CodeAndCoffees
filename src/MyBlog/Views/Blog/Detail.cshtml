@@ -1,0 +1,92 @@
+﻿@model Blog
+@{
+
+  ViewData["PageTitle"] = Model.Title;
+  ViewData["MetaTitle"] = Model.Title;
+  var PageDescription = Model.GetFirstParagraphFromHtml(Model.Description);
+  if (!string.IsNullOrEmpty(PageDescription))
+  {
+    ViewData["PageDescription"] = PageDescription;
+    ViewData["MetaDescription"] = PageDescription;
+  }
+  else
+  {
+    ViewData["PageDescription"] = "Bring your coffee and enjoy reading in depth articles about programing topics.";
+    ViewData["MetaDescription"] = "Bring your coffee and enjoy reading in depth articles about programing topics.";
+  }
+
+  var disqusOption = new DisqusViewModel
+  {
+    PageTitle = Model.Title,
+  };
+}
+
+@section Styles {
+  <environment include="Development">
+    <link rel="stylesheet" href="~/css/blog-detail.css" />
+    @if (Context.Request.Cookies["theme-color"] == "dark")
+    {
+      <link rel="stylesheet" href="~/css/theme/blog-detail-theme-dark.css" id="blog-detail-theme-dark" />
+    }
+    else
+    {
+      <link rel="stylesheet" href="~/css/theme/blog-detail-theme-default.css" id="blog-detail-theme-default" />
+    }
+  </environment>
+  <environment exclude="Development">
+    <link rel="stylesheet" href="~/dist/css/blog-detail.css" asp-append-version="false" />
+    @if (Context.Request.Cookies["theme-color"] == "dark")
+    {
+      <link rel="stylesheet" href="~/dist/css/theme/blog-detail-theme-dark.css" id="blog-detail-theme-dark" />
+    }
+    else
+    {
+      <link rel="stylesheet" href="~/dist/css/theme/blog-detail-theme-default.css" id="blog-detail-theme-default" />
+    }
+  </environment>
+}
+
+@section PageHeader {
+  <div class="phbd">
+    <h1 class="phbd-header">@Model.Title</h1>
+    <div class="bdh-footer">
+      <div class="bdhf-tag-date-wrapper">
+        <div class="bdhf-date">
+          <strong class="bdhf-date-icon">Publish Date: </strong>
+          <span>@Model.PublishedDate.ToString("dd/MM/yyyy")</span>
+        </div>
+        <div class="bdhf-tags">
+          <strong class="bdhf-tags-icon">Tags: </strong>
+          @foreach (var tag in Model.Tags)
+          {
+            <span class="bdhf-tags-text">@(tag)</span> @:
+          }
+        </div>
+      </div>
+      <div class="bdhf-social">
+        <strong class="bdhf-social-icon">Share This Post</strong>
+        <div class="social-links-wrapper">
+          <a class="icon-twitter round-tl-br social-link">
+          </a>
+          <a class="icon-github round-tl-br social-link">
+          </a>
+          <a class="icon-linkedin-square round-tl-br social-link">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<article class="b-article">
+  @Html.Raw(Model.Body)
+  <vc:disqus disqus-options="new DisqusViewModel { PageTitle = Model.Title }" />
+</article>
+@section Scripts {
+  <environment include="Development">
+    <script src="~/js/blog-detail.js"></script>
+  </environment>
+  <environment exclude="Development">
+    <script src="~/dist/js/blog-detail.js" asp-append-version="false"></script>
+  </environment>
+}

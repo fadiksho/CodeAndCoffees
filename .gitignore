@@ -1,0 +1,19 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/src/MyBlog/node_modules
+/src/MyBlog/bin
+/src/MyBlog/obj
+/src/MyBlog/MyBlog.csproj.user
+/src/MyBlog/Properties
+/src/MyBlog/web.config
+/src/MyBlog/appsettings.Staging.json
+/src/MyBlog/appsettings.json
+/src/BlogManager/src/environments/environment.staging.ts
+/src/BlogManager/src/environments/environment.prod.ts
+/src/BlogManager/src/web.config
+/src/BlogManager/.vscode
+/test/MyBlog/UnitTest.Repository/obj
+/test/MyBlog/UnitTest.Repository/bin/Debug/netcoreapp2.2

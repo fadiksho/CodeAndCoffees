@@ -1,0 +1,190 @@
+﻿@import '../shared/_variable';
+
+$primary-color: #FF7B39;
+$color: darken(#fff, 7%);
+$background: #000;
+$secondry-color: gray;
+$link-color: royalblue;
+$link-hover-color: darken($link-color, 10%);
+
+.theme
+{
+  background-color: $background;
+  color: $color;
+}
+
+.btn
+{
+  &:focus
+  {
+    box-shadow: 0px 0px 0px 0.1rem $primary-color;
+  }
+}
+
+.underline-from-center-d
+{
+  &.active
+  {
+    &::before
+    {
+      background-color: $secondry-color;
+    }
+  }
+
+  &::before
+  {
+    background-color: $secondry-color;
+  }
+}
+
+.nav
+{
+  background: lighten($background, 5%);
+  color: $color;
+}
+
+.nav-brand-link
+{
+  color: $color;
+
+  span
+  {
+    color: $primary-color;
+  }
+}
+
+.nav-item
+{
+  border-color: $primary-color;
+}
+
+.nav-link
+{
+  color: $primary-color;
+
+  &.active
+  {
+    color: $color;
+    background-color: $primary-color;
+  }
+}
+
+.nav-button
+{
+  color: $primary-color;
+}
+
+.aboutAuther-container
+{
+  background-color: lighten($background, 5%);
+  color: $color;
+}
+
+.aboutAuther-text
+{
+  border-color: $primary-color;
+}
+
+.aboutAuther-text-auther
+{
+  border-color: $secondry-color;
+}
+
+.aboutAuther-text-name
+{
+  color: $primary-color;
+}
+
+.aboutAuther-text-quote
+{
+  color: $primary-color;
+}
+
+.aboutAuther-social
+{
+  border-color: $primary-color;
+}
+
+.phbl
+{
+  background-color: lighten($background, 12%);
+  color: $primary-color;
+}
+
+.blog-thumbnail
+{
+  border-color: $secondry-color;
+  background-color: lighten($background, 5%);
+}
+
+.blog-thumbnail-header-link
+{
+  color: $primary-color;
+}
+
+.blog-thumbnail-body-read-more-link
+{
+  color: $secondry-color;
+}
+
+.blog-thumbnail-footer-date-icon
+{
+  color: $primary-color;
+}
+
+.blog-thumbnail-footer-tags-icon
+{
+  color: $primary-color;
+}
+
+.pagination-item
+{
+  background-color: lighten($background, 10%);
+
+  &.active
+  {
+    background-color: $primary-color;
+    color: $color;
+  }
+
+  &:hover
+  {
+    color: $color;
+    background-color: darken($primary-color, 20%);
+  }
+}
+
+.pagination-item-navigation
+{
+  color: $color;
+  background-color: $primary-color;
+
+  &:hover
+  {
+    background-color: darken($primary-color, 15%);
+  }
+}
+
+.pagination-link
+{
+  border-color: $primary-color;
+  color: $color;
+}
+
+.social-link
+{
+  background-color: white;
+}
+
+.comments-block-button
+{
+  background-color: transparent;
+  color: $primary-color;
+  border-color: $primary-color;
+
+  &:hover
+  {
+    background-color: $primary-color;
+    color: $white;
+  }
+}

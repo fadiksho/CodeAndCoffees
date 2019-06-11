@@ -1,0 +1,173 @@
+﻿@import "../shared/_variable.scss";
+@import "../shared/_mixins.scss";
+/* NavBar ******************************************************************** */
+
+.nav {
+  padding: 0.1rem;
+  transition: $backgound-color-transtion;
+}
+
+.nav-brand {
+  text-align: center;
+  margin: 0.4rem 0;
+  font-weight: bold;
+
+  &.nav-brand-sm {
+    margin-bottom: 1rem;
+    margin-top: 0.4rem;
+
+    .nav-brand-link {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.nav-brand-link {
+  font-size: 1.8rem;
+  display: inline-block;
+}
+
+.aboutAuther-container {
+  margin-bottom: 0.2rem;
+  border-radius: $radius-round;
+  transition: $backgound-color-transtion;
+}
+
+.aboutAuther {
+  padding: 0.3rem;
+}
+
+.aboutAuther-image {
+  max-width: 75px;
+  float: left;
+  margin: 0.3rem;
+  margin-left: 0px;
+  shape-outside: circle(40%);
+  background-clip: content-box;
+  display: block;
+}
+
+.aboutAuther-text {
+  font-size: 1rem;
+  line-height: 1.55;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  margin-bottom: 0.5rem;
+
+  &::after {
+    content: "";
+    clear: both;
+    display: block;
+  }
+}
+
+.aboutAuther-text-auther {
+  display: inline-block;
+  padding-bottom: 0.2rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid;
+  margin-left: 0.3rem;
+}
+
+.aboutAuther-text-quote {
+  white-space: nowrap;
+  font-size: 1rem;
+}
+
+.aboutAuther-social {
+  text-align: center;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  padding-bottom: 0.15rem;
+}
+
+.aboutAuther-social-header {
+  font-style: italic;
+  margin-bottom: 0.3rem;
+}
+
+.nav-list {
+  padding-top: 0.3rem;
+  padding-left: 0;
+  margin: 0px;
+  list-style: none;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0.11rem;
+  border-bottom-left-radius: 0.7rem;
+  font-size: 1.1rem;
+  padding-top: 0;
+  padding-left: 0.3rem;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  margin-top: 0.3rem;
+
+  .nav-item-first {
+    margin-top: 0;
+  }
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 0.2rem 0.8rem;
+  border-top-right-radius: 15px;
+  border-bottom-left-radius: 8px;
+  margin-right: auto;
+}
+
+.nav-button
+{
+  border: none;
+  background-color: transparent;
+  text-align: center;
+  cursor: pointer;
+  font-style: oblique;
+  margin-left: 0.5em;
+
+  &:hover
+  {
+    opacity: 0.7;
+  }
+}
+
+@include media-breakpoint-lg {
+  .content {
+    overflow-x: hidden;
+    margin-left: 15.625rem;
+  }
+
+  .nav {
+    width: 15.625rem;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .nav-brand {
+    &.nav-brand-sm {
+      margin: 0;
+    }
+
+    .nav-brand-link {
+      font-size: 1.5rem;
+    }
+  }
+
+  .aboutAuther-container {
+    transition: $backgound-color-transtion;
+  }
+
+  .aboutAuther {
+    padding: 0.3rem;
+  }
+
+  .aboutAuther-text-auther {
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,24 @@
+﻿@model PaggingResult<Blog>
+@{
+  ViewData["PageTitle"] = $"Latest Blog Post - Page: {Model.CurrentPage}";
+  ViewData["MetaTitle"] = $"Latest Blog Post - Page: {Model.CurrentPage}";
+  ViewData["PageDescription"] = "Bring your coffee and enjoy reading in depth articles about programing topics.";
+  ViewData["MetaDescription"] = "Bring your coffee and enjoy reading in depth articles about programing topics.";
+}
+
+@section PageHeader {
+  <header class="phbl">
+    <h1 class="pgbl-header">Latest Posts</h1>
+  </header>
+}
+
+@foreach (var blog in Model.TResult)
+{
+  <partial name="~/Views/Shared/_BlogThumbnail.cshtml" model="@blog" />
+}
+
+@if (Model.TotalPages > 1)
+{
+  <partial name="~/Views/Shared/_paggination.cshtml" model="@Model" />
+}
+

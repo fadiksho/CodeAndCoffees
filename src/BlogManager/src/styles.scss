@@ -1,0 +1,52 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+@import "~ngx-toastr/toastr-bs4-alert";
+@import "../node_modules/highlight.js/styles/vs.css";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+pre {
+  border: 1px solid $primary;
+  padding-left: 10px;
+  margin-bottom: 0px;
+  code {
+    margin: 0px;
+  }
+}
+.code-wrapper {
+  margin: 1rem 0;
+}
+img {
+  max-width: 100%;
+}
+ol {
+  ol {
+    list-style-type: lower-alpha;
+  }
+}
+
+/* Ng-bootstrap ************************************************************************/
+.tabset-sticky-top {
+  .nav-tabs {
+    position: sticky;
+    top: 0px;
+    left: 0px;
+  }
+}
+.tabset-primary {
+  .nav-tabs {
+    background-color: $light;
+    .nav-item {
+      .nav-link.active {
+        background-color: $primary;
+        color: $light;
+      }
+    }
+  }
+}

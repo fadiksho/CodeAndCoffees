@@ -1,0 +1,40 @@
+﻿@model MyBlog.ViewModel.DisqusViewModel
+<div class="comments-block">
+  <button type="button" id="scrolToButton" class="btn round-tl-br comments-block-button" aria-label="Scroll To Top">Scroll To Top</button>
+  <button id="show-comments" class="btn round-tl-br comments-block-button" aria-label="Load Post Comments" onclick="loadDisqusComment();return false;">Click To Load Comments</button>
+</div>
+<div id="disqus_thread" class="disqus"></div>
+<script defer>
+  var disqus_loaded = false;
+  var disqus_config = function() {
+    var pageUrl = "@Model.PageUrl";
+    if (pageUrl.length > 0) {
+      this.page.url = pageUrl;
+    }
+    var pageIdentifier = "@Model.PageIdentifier";
+    if (pageIdentifier.length > 0) {
+      this.page.identifier = pageIdentifier;
+    }
+    var pageTitle = "@Model.PageTitle";
+    if (pageTitle.length > 0) {
+      this.page.title = pageTitle;
+    }
+    var pageCategoryId = "@Model.PageCategoryId";
+    if (pageCategoryId.length > 0) {
+      this.page.category_id = pageCategoryId;
+    }
+  };
+  function loadDisqusComment() {
+    if (!disqus_loaded) {
+      document.getElementById("disqus_thread").style.display = 'block';
+      disqus_loaded = true;
+       var d = document, s = d.createElement('script');
+      s.src = '//@(Model.ShortName).disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      //Hide the button after opening
+      document.getElementById("show-comments").style.display = "none";
+    }
+  }
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
