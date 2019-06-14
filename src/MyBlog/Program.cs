@@ -26,7 +26,6 @@ namespace MyBlog
 
         try
         {
-          DbInitialize.Initialize(services, config.Token.AdminPassword).Wait();
           if (!(env.IsProduction() || env.IsStaging()))
           {
             DbInitialize.SeedDb(context, config.WebSiteHosting.Url);

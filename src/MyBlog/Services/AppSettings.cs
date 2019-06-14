@@ -4,7 +4,7 @@
   {
     public ConnectionStrings ConnectionStrings { get; set; }
     public DisqusSettings Disqus { get; set; }
-    public TokenSettings Token { get; set; }
+    public JwtBearerSettings JwtBearer { get; set; }
     public WebSiteHostingSettings WebSiteHosting { get; set; }
     public VapidSettings Vapid { get; set; }
   }
@@ -16,12 +16,10 @@
   {
     public string ShortName { get; set; }
   }
-  public class TokenSettings
+  public class JwtBearerSettings
   {
-    public string Key { get; set; }
-    public string Issuer { get; set; }
-    public string[] Audience { get; set; }
-    public string AdminPassword { get; set; }
+    public string Authority { get; set; }
+    public string Audience { get; set; }
   }
   public class WebSiteHostingSettings
   {

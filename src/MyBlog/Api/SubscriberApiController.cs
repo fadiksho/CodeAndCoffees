@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MyBlog.DTO;
@@ -13,7 +12,7 @@ using WebPush;
 
 namespace MyBlog.Api
 {
-  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+  [Authorize]
   [Route("api/subscribers")]
   public class SubscriberApiController : Controller
   {

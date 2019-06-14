@@ -42,7 +42,13 @@ namespace MyBlog.Controllers
       {
         var blog = await unitOfWork.Blogs.GetBlogAsync(fullSlug);
 
-        if (blog != null && blog.IsPublished) return View(blog);
+        if (blog == null || !blog.IsPublished)
+        {
+          // Implement Blog Not Found
+          return NotFound();
+        };
+
+        return View(blog);
       }
       catch
       {

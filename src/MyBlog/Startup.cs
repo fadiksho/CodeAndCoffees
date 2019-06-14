@@ -39,9 +39,7 @@ namespace MyBlog
       services.Configure<AppSettings>(Configuration);
       services.AddDbContext<BlogContext>(options =>
           options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
-      services.AddDefaultIdentity<User>().AddRoles<IdentityRole>()
-        .AddEntityFrameworkStores<BlogContext>()
-        .AddDefaultTokenProviders();
+      
       services.AddScoped<IBlogRepository, BlogRepository>();
       services.AddScoped<ITagRepository, TagRepository>();
       services.AddScoped<ISubscriberRepository, SubscriberRepository>();
@@ -62,29 +60,16 @@ namespace MyBlog
           .AllowAnyMethod();
       }));
 
-      services.AddAuthentication()
-        .AddJwtBearer(options =>
+      services.AddAuthentication("Bearer")
+        .AddJwtBearer("Bearer", options =>
         {
-          options.SaveToken = true;
           options.RequireHttpsMetadata = appSetting.WebSiteHosting.RequirdHttps;
-          options.TokenValidationParameters = new TokenValidationParameters
-          {
-            ValidIssuer = appSetting.Token.Issuer,
-            ValidAudiences = appSetting.Token.Audience,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.Token.Key)),
-            ValidateLifetime = true,
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ClockSkew = TimeSpan.Zero
-          };
+          options.Authority = appSetting.JwtBearer.Authority;
+          options.Audience = appSetting.JwtBearer.Audience;
         });
 
       services.AddMvc()
-        .AddJsonOptions(opt =>
-        {
-          opt.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
-        }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

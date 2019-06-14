@@ -4,7 +4,7 @@ using MyBlog.Entity;
 
 namespace MyBlog.Peristence.Data
 {
-  public class BlogContext : IdentityDbContext<User>
+  public class BlogContext : DbContext
   {
     public BlogContext(DbContextOptions<BlogContext> options)
         : base(options)

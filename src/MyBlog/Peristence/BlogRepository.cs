@@ -66,7 +66,7 @@ namespace MyBlog.Peristence
     public async Task<Blog> GetBlogAsync(string slug)
     {
       var blogEntity = await context.Blogs
-        .Where(b => b.Slug == slug)
+        .Where(b => b.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase))
         .FirstOrDefaultAsync();
 
       var blog = mapper.Map<BlogTable, Blog>(blogEntity);
