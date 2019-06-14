@@ -7,6 +7,7 @@ using IDP.Peristence.Data;
 using Microsoft.EntityFrameworkCore;
 using IDP.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Reflection;
 
 namespace IDP
 {
@@ -23,6 +24,7 @@ namespace IDP
     public void ConfigureServices(IServiceCollection services)
     {
       var appSetting = Configuration.Get<AppSettings>();
+      var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
       services.Configure<AppSettings>(Configuration);
 
@@ -32,6 +34,9 @@ namespace IDP
       services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
+
+      services.AddMvc()
+        .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
 
       var builder = services.AddIdentityServer(options =>
       {
@@ -44,19 +49,20 @@ namespace IDP
       .AddConfigurationStore(options =>
       {
         options.ConfigureDbContext = b =>
-          b.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection);
+          b.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection,
+            sql => sql.MigrationsAssembly(migrationsAssembly));
       })
       // operational data from DB (codes, tokens, consents)
       .AddOperationalStore(options =>
       {
         options.ConfigureDbContext = b =>
-          b.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection);
+          b.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection,
+            sql => sql.MigrationsAssembly(migrationsAssembly));
 
         // this enables automatic token cleanup. this is optional.
         options.EnableTokenCleanup = true;
       })
       .AddAspNetIdentity<ApplicationUser>();
-
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
