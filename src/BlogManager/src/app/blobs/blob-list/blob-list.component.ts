@@ -4,14 +4,13 @@ import { PaggingResult } from "src/app/shared/_model/paggingResult";
 import { BlobsService } from "../_services/blobs.service";
 import { ToastrService } from "ngx-toastr";
 import { Blob } from "../_model/blob";
-import { ProgressService } from "../_services/progress.service";
 @Component({
   selector: "app-blob-list",
   templateUrl: "./blob-list.component.html",
   styleUrls: ["./blob-list.component.scss"]
 })
 export class BlobListComponent implements OnInit {
-  @ViewChild("fileInput") fileInput: ElementRef;
+  @ViewChild("fileInput", { static: false }) fileInput: ElementRef;
 
   query: PaggingQuery = {
     page: 1,
@@ -66,16 +65,6 @@ export class BlobListComponent implements OnInit {
 
   uploadFile() {
     const nativeElement: HTMLInputElement = this.fileInput.nativeElement;
-    // this.progressService.uploadProgress.subscribe(
-    //   progress => {
-    //     console.log(progress);
-    //   }
-    // );
-    // this.progressService.downloadProgress.subscribe(
-    //   progress => {
-    //     console.log(progress);
-    //   }
-    // );
 
     this.blobService.upload(nativeElement.files[0]).subscribe(value => {
       this.toastr.success("Upload File Filnished", "Success");

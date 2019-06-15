@@ -14,22 +14,22 @@ const routes: Routes = [
       {
         path: "blog",
         canActivateChild: [AuthGuard],
-        loadChildren: "./blogs/blog.module#BlogModule"
+        loadChildren: () => import('./blogs/blog.module').then(m => m.BlogModule)
       },
       {
         path: "blob",
         canActivateChild: [AuthGuard],
-        loadChildren: "./blobs/blob.module#BlobModule"
+        loadChildren: () => import('./blobs/blob.module').then(m => m.BlobModule)
       },
       {
         path: "pushnotification",
         canActivateChild: [AuthGuard],
         loadChildren:
-          "./push-notification/push-notification.module#PushNotificationModule"
+          () => import('./push-notification/push-notification.module').then(m => m.PushNotificationModule)
       },
       {
         path: "login",
-        loadChildren: "./user/user.module#UserModule"
+        loadChildren: () => import('./user/user.module').then(m => m.UserModule)
       },
       { path: "", redirectTo: "welcome", pathMatch: "full" }
     ]
