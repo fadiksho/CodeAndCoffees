@@ -8,17 +8,21 @@ using Microsoft.EntityFrameworkCore;
 using IDP.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection;
+using System;
 
 namespace IDP
 {
   public class Startup
   {
-    public Startup(IConfiguration configuration)
+    public IConfiguration Configuration { get; }
+    public IHostingEnvironment Environment { get; }
+
+    public Startup(IConfiguration configuration, IHostingEnvironment environment)
     {
       Configuration = configuration;
+      Environment = environment;
     }
 
-    public IConfiguration Configuration { get; }
     // This method gets called by the runtime. Use this method to add services to the container.
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
@@ -45,6 +49,19 @@ namespace IDP
         options.Events.RaiseFailureEvents = true;
         options.Events.RaiseSuccessEvents = true;
       })
+      .AddAspNetIdentity<ApplicationUser>();
+
+      if (Environment.IsDevelopment())
+      {
+        builder
+          .AddInMemoryIdentityResources(Config.GetIdentityResources())
+          .AddInMemoryClients(Config.GetClients())
+          .AddInMemoryApiResources(Config.GetApis())
+          .AddDeveloperSigningCredential();
+      }
+      else
+      {
+        builder
       // config data from DB (clients, resources)
       .AddConfigurationStore(options =>
       {
@@ -63,6 +80,10 @@ namespace IDP
         options.EnableTokenCleanup = true;
       })
       .AddAspNetIdentity<ApplicationUser>();
+        throw new Exception("configure key to signin the token!");
+      }
+
+      services.AddAuthentication();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

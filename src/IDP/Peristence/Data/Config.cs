@@ -1,5 +1,4 @@
-﻿
-using IdentityServer4;
+﻿using IdentityServer4;
 using IdentityServer4.Models;
 using System.Collections.Generic;
 
@@ -28,16 +27,22 @@ namespace IDP.Peristence.Data
           RequirePkce = true,
           RequireClientSecret = false,
 
-          RedirectUris =           { "http://localhost:4200/callback.html" },
-          PostLogoutRedirectUris = { "http://localhost:4200/index.html" },
-          AllowedCorsOrigins =     { "http://localhost:4200/" },
-
+          RedirectUris =           { "http://localhost:4200/auth-callback", "http://localhost:4200/silent-refresh.html" },
+          PostLogoutRedirectUris = { "http://localhost:4200/?postLogout=true" },
+          AllowedCorsOrigins =     { "http://localhost:4200" },
+          RequireConsent = false,
+          AllowRememberConsent = false,
+          FrontChannelLogoutUri = "http://localhost:4200/?postLogout=true",
           AllowedScopes =
           {
             IdentityServerConstants.StandardScopes.OpenId,
             IdentityServerConstants.StandardScopes.Profile,
             "codeandcoffees.blog.api"
-          }
+          },
+          AllowAccessTokensViaBrowser = true,
+          
+          // 30 Minutes
+          AccessTokenLifetime = 1800,
         }
       };
     }
