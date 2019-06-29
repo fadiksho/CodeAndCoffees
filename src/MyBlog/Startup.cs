@@ -1,23 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.IdentityModel.Tokens;
-using MyBlog.Entity;
 using MyBlog.Peristence;
 using MyBlog.Peristence.Data;
 using MyBlog.Repository;
 using MyBlog.Repository.Data;
 using MyBlog.Services;
-using Newtonsoft.Json;
 using AutoMapper;
 namespace MyBlog
 {
@@ -43,7 +37,7 @@ namespace MyBlog
       services.AddScoped<IBlogRepository, BlogRepository>();
       services.AddScoped<ITagRepository, TagRepository>();
       services.AddScoped<ISubscriberRepository, SubscriberRepository>();
-      services.AddScoped<IUnitOfWork, UnitOfWork>();
+      services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 
       services.AddAutoMapper(typeof(Startup));
 
@@ -67,7 +61,7 @@ namespace MyBlog
           options.Authority = appSetting.JwtBearer.Authority;
           options.Audience = appSetting.JwtBearer.Audience;
         });
-
+      
       services.AddMvc()
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }

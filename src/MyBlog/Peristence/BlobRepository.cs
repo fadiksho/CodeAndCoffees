@@ -7,6 +7,7 @@ using MyBlog.Extensions;
 using MyBlog.Model;
 using MyBlog.Peristence.Data;
 using MyBlog.Repository;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -48,9 +49,8 @@ namespace MyBlog.Peristence
 
     public PaggingResult<Blob> GetBlobPageAsync(IPaggingQuery query)
     {
-      var blobs = context.Blobs
-        .AsQueryable()
-        .ProjectTo<Blob>();
+      var blobsTable = context.Blobs.ToList();
+      var blobs = mapper.Map<IEnumerable<Blob>>(blobsTable);
 
       var totalItems = blobs.Count();
       var blobsAfterPagging = blobs.ApplayPaging(query);
