@@ -4,7 +4,18 @@
 
 export const environment = {
   apiRoot: "https://localhost:44346/api/",
-  production: false
+  production: false,
+  userManagerSettings: {
+    authority: "http://localhost:5000",
+    client_id: "blogManager_SPA",
+    redirect_uri: "http://localhost:4200/auth-callback",
+    post_logout_redirect_uri: "http://localhost:4200/?postLogout=true",
+    response_type: "code",
+    scope: "openid profile codeandcoffees.blog.api",
+    loadUserInfo: true,
+    automaticSilentRenew: true,
+    silent_redirect_uri: "http://localhost:4200/silent-refresh.html"
+  }
 };
 
 /*

@@ -22,7 +22,17 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets", "src/web.config"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/web.config",
+              "src/silent-refresh.html",
+              {
+                "glob": "**/*.min.js",
+                "input": "./node_modules/oidc-client/lib",
+                "output": "./assets/"
+              }
+            ],
             "styles": ["src/styles.scss"],
             "scripts": []
           },

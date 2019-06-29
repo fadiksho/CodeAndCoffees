@@ -7,7 +7,7 @@ import {
   Route,
   CanActivateChild
 } from "@angular/router";
-import { User } from "../user/user";
+
 import { AuthService } from "../user/auth.service";
 
 @Injectable({ providedIn: "root" })
@@ -18,9 +18,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     if (this.auth.isLoggedIn()) {
       return true;
     }
-    localStorage.removeItem("blogManagerUser");
-    // not logged in so redirect to login page with the return url
-    this.router.navigate(["/login"], { queryParams: { returnUrl: state.url } });
+
+    this.auth.login(state.url);
     return false;
   }
 
@@ -31,9 +30,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     if (this.auth.isLoggedIn()) {
       return true;
     }
-    localStorage.removeItem("blogManagerUser");
-    // not logged in so redirect to login page with the return url
-    this.router.navigate(["/login"], { queryParams: { returnUrl: state.url } });
+    this.auth.login(state.url);
     return false;
   }
 }

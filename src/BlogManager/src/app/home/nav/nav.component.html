@@ -13,7 +13,7 @@
     [ngbCollapse]="isCollapsed"
     id="navbar-collaspe"
   >
-    <ul class="navbar-nav">
+    <ul class="navbar-nav w-100">
       <li class="nav-item">
         <a
           class="nav-link"
@@ -45,12 +45,10 @@
         >
       </li>
       <li class="nav-item" *ngIf="!this.auth.isLoggedIn()">
-        <a class="btn nav-link" routerLink="/login" routerLinkActive="active"
-          >Login</a
-        >
+        <a class="btn nav-link" (click)="this.auth.login()">Login</a>
       </li>
       <li class="nav-item" *ngIf="this.auth.isLoggedIn()">
-        <a class="btn nav-link" (click)="this.auth.logout()">Log out</a>
+        <a class="btn nav-link" (click)="this.auth.logout()">Log out </a>
       </li>
     </ul>
   </div>

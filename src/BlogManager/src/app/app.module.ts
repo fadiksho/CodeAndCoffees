@@ -9,9 +9,9 @@ import { NavComponent } from "./home/nav/nav.component";
 import { PageNotFoundComponent } from "./home/page-not-found.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SharedModule } from "./shared/shared.module";
-import { JwtInterceptor } from "./_interceptors/jwt.interceptor";
-import { ErrorInterceptor } from "./_interceptors/error.interceptor";
 import { ToastrModule } from "ngx-toastr";
+import { AuthInterceptor } from "./_interceptors/auth.interceptor";
+import { AuthCallbackComponent } from "./user/auth-callback/auth-callback.component";
 
 @NgModule({
   declarations: [
@@ -19,7 +19,8 @@ import { ToastrModule } from "ngx-toastr";
     ShellComponent,
     WelcomeComponent,
     NavComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    AuthCallbackComponent
   ],
   imports: [
     BrowserModule,
@@ -30,8 +31,7 @@ import { ToastrModule } from "ngx-toastr";
     AppRoutingModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
