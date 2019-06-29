@@ -32,7 +32,6 @@ namespace IDP.Peristence.Data
           AllowedCorsOrigins =     { "http://localhost:4200" },
           RequireConsent = false,
           AllowRememberConsent = false,
-          FrontChannelLogoutUri = "http://localhost:4200/?postLogout=true",
           AllowedScopes =
           {
             IdentityServerConstants.StandardScopes.OpenId,
