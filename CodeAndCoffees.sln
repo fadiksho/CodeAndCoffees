@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IDP", "src\IDP\IDP.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest.Mapper", "test\MyBlog\UnitTest.Mapper\UnitTest.Mapper.csproj", "{D855FDCD-C54B-4987-B2F7-5DFDBB1C5F7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest.Helpers", "test\MyBlog\UnitTest.Helpers\UnitTest.Helpers.csproj", "{5BCA7420-9B69-4599-8D01-BF99FD94B6DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D855FDCD-C54B-4987-B2F7-5DFDBB1C5F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D855FDCD-C54B-4987-B2F7-5DFDBB1C5F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D855FDCD-C54B-4987-B2F7-5DFDBB1C5F7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BCA7420-9B69-4599-8D01-BF99FD94B6DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BCA7420-9B69-4599-8D01-BF99FD94B6DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BCA7420-9B69-4599-8D01-BF99FD94B6DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BCA7420-9B69-4599-8D01-BF99FD94B6DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 		{5FB39DBF-6027-4CC8-910F-4DF76FE7F6DA} = {7736805A-3A33-41B0-8E9C-B38DA0872B40}
 		{5B68B6E9-9FA7-405E-8875-349051A04102} = {CFE5A044-01E9-45C6-8BFF-D5F09BC7465D}
 		{D855FDCD-C54B-4987-B2F7-5DFDBB1C5F7D} = {7736805A-3A33-41B0-8E9C-B38DA0872B40}
+		{5BCA7420-9B69-4599-8D01-BF99FD94B6DC} = {7736805A-3A33-41B0-8E9C-B38DA0872B40}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F98B51A1-8449-48D5-B383-6ED9A44D38EE}

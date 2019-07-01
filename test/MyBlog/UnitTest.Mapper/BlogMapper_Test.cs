@@ -4,6 +4,7 @@ using MyBlog.Entity;
 using MyBlog.Model;
 using System;
 using System.Collections.Generic;
+using UnitTest.Helpers;
 using Xunit;
 
 namespace UnitTest.Mapper

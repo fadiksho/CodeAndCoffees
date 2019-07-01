@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MyBlog.MappingProfiles;
 
-namespace UnitTest.Mapper
+namespace UnitTest.Helpers
 {
   public class MapperConfig
   {

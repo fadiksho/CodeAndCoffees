@@ -24,3 +24,5 @@
 /src/IDP/appsettings.json
 /test/MyBlog/UnitTest.Mapper/bin/Debug/netcoreapp2.2
 /test/MyBlog/UnitTest.Mapper/obj
+/test/MyBlog/UnitTest.Helpers/obj
+/test/MyBlog/UnitTest.Helpers/bin/Debug/netcoreapp2.2

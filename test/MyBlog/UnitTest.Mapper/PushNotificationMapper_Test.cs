@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MyBlog.DTO;
 using MyBlog.Entity;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using UnitTest.Helpers;
 using WebPush;
 using Xunit;
 namespace UnitTest.Mapper
