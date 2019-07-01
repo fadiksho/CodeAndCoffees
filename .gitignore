@@ -22,3 +22,4 @@
 /src/IDP/Properties
 /src/IDP/tempkey.rsa
 /src/IDP/appsettings.json
+/test/UnitTest.Mapper/obj

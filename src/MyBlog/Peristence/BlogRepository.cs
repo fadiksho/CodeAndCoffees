@@ -27,7 +27,7 @@ namespace MyBlog.Peristence
 
     public async Task AddBlog(BlogForCreatingDto newBlogDto)
     {
-      var blogEnitity = Mapper.Map<BlogForCreatingDto, BlogTable>(newBlogDto);
+      var blogEnitity = mapper.Map<BlogForCreatingDto, BlogTable>(newBlogDto);
 
       await context.Blogs
         .AddAsync(blogEnitity);
