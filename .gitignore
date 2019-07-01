@@ -22,4 +22,5 @@
 /src/IDP/Properties
 /src/IDP/tempkey.rsa
 /src/IDP/appsettings.json
-/test/UnitTest.Mapper/obj
+/test/MyBlog/UnitTest.Mapper/bin/Debug/netcoreapp2.2
+/test/MyBlog/UnitTest.Mapper/obj

@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest.Repository", "test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IDP", "src\IDP\IDP.csproj", "{5B68B6E9-9FA7-405E-8875-349051A04102}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest.Mapper", "test\UnitTest.Mapper\UnitTest.Mapper.csproj", "{D855FDCD-C54B-4987-B2F7-5DFDBB1C5F7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest.Mapper", "test\MyBlog\UnitTest.Mapper\UnitTest.Mapper.csproj", "{D855FDCD-C54B-4987-B2F7-5DFDBB1C5F7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
