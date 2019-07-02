@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\MyBlog\MyBlog.csproj" />
+    <ProjectReference Include="..\UnitTest.Helpers\UnitTest.Helpers.csproj" />
   </ItemGroup>
 
 </Project>

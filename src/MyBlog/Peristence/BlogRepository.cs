@@ -25,12 +25,14 @@ namespace MyBlog.Peristence
       this.mapper = mapper;
     }
 
-    public async Task AddBlog(BlogForCreatingDto newBlogDto)
+    public async Task<BlogTable> AddBlog(BlogForCreatingDto newBlogDto)
     {
-      var blogEnitity = mapper.Map<BlogForCreatingDto, BlogTable>(newBlogDto);
+      var blogEntity = mapper.Map<BlogForCreatingDto, BlogTable>(newBlogDto);
 
       await context.Blogs
-        .AddAsync(blogEnitity);
+        .AddAsync(blogEntity);
+
+      return blogEntity;
     }
 
     public async Task<bool> BlogExistAsync(int blogId, bool onlyPublishedBlog)
@@ -40,7 +42,7 @@ namespace MyBlog.Peristence
         .Where(b => b.Id == blogId
           && b.IsPublished == onlyPublishedBlog)
         .FirstOrDefaultAsync();
-
+        
       return (blogEntity != null);
     }
 
@@ -86,7 +88,11 @@ namespace MyBlog.Peristence
         .Split(',', StringSplitOptions.RemoveEmptyEntries)
         .Contains(s, StringComparer.OrdinalIgnoreCase)));
       }
+      // Apply Ordering
+      blogs = blogs.OrderByDescending(b => b.PublishedDate);
+
       var totalItems = blogs.Count();
+      // Apply Paging
       var blogsAfterPagging = blogs.ApplayPaging(query);
 
       var paggingResult = new PaggingResult<Blog>

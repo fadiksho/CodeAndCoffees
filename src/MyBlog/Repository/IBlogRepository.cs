@@ -1,4 +1,5 @@
 ﻿using MyBlog.DTO;
+using MyBlog.Entity;
 using MyBlog.Model;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace MyBlog.Repository
 
     PaggingResult<Blog> GetBlogsPage(BlogQuery opt);
 
-    Task AddBlog(BlogForCreatingDto newBlogDto);
+    Task<BlogTable> AddBlog(BlogForCreatingDto newBlogDto);
     Task UpdateBlogAsync(int id, BlogForUpdatingDto updatedBlog);
     Task DeleteBlogAsync(int id);
 
