@@ -27,6 +27,7 @@ namespace UnitTest.Repository
     {
       using (var factory = new BlogContextFactory())
       {
+        bool isSaved = false;
         using (var context = factory.CreateBlogContext())
         {
           // Arrange
@@ -34,13 +35,14 @@ namespace UnitTest.Repository
           var blogForCreating = GetBlogForCreatingDtoInstance();
           // Act
           await unitOfWork.Blogs.AddBlog(blogForCreating);
-          await unitOfWork.SaveAsync();
+          isSaved = await unitOfWork.SaveAsync();
         }
 
         using (var context = factory.CreateBlogContext())
         {
           // Assert
           Assert.NotNull(context.Blogs.First());
+          Assert.True(isSaved);
         }
       }
     }
