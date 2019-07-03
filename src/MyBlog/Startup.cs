@@ -34,10 +34,8 @@ namespace MyBlog
       services.AddDbContext<BlogContext>(options =>
           options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
       
-      services.AddScoped<IBlogRepository, BlogRepository>();
-      services.AddScoped<ITagRepository, TagRepository>();
-      services.AddScoped<ISubscriberRepository, SubscriberRepository>();
-      services.AddScoped<IUnitOfWork, UnitOfWork>(); 
+      services.AddScoped<IUnitOfWork, UnitOfWork>();
+      services.AddScoped<IFileHelper, FileHelper>();
 
       services.AddAutoMapper(typeof(Startup));
 
@@ -86,6 +84,12 @@ namespace MyBlog
         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @".well-known")),
         RequestPath = new PathString("/.well-known"),
         ServeUnknownFileTypes = true // serve extensionless file
+      });
+      app.UseStaticFiles(new StaticFileOptions
+      {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles")),
+        RequestPath = "/UploadedFiles"
       });
       app.UseStaticFiles();
 

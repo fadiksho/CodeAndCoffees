@@ -1,74 +1,91 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MyBlog.Abstraction;
+using MyBlog.DTO;
 using MyBlog.Entity;
 using MyBlog.Model;
 using MyBlog.Repository.Data;
+using MyBlog.Services;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace MyBlog.Api
 {
-  [Authorize]
+  //[Authorize]
   [Route("api/blob")]
   public class BlobApiController : Controller
   {
     private readonly IHostingEnvironment host;
-    private readonly IConfiguration configuration;
     private readonly IUnitOfWork unitOfWork;
-
+    private readonly IFileHelper fileHelper;
+    private readonly WebSiteHostingSettings webHostingSettings;
     public BlobApiController(
-      IConfiguration configuration,
+      IOptions<AppSettings> config,
       IHostingEnvironment host,
-      IUnitOfWork unitOfWork)
+      IUnitOfWork unitOfWork,
+      IFileHelper fileHelper)
     {
       this.host = host;
-      this.configuration = configuration;
+      this.webHostingSettings = config.Value.WebSiteHosting;
       this.unitOfWork = unitOfWork;
+      this.fileHelper = fileHelper;
     }
     [HttpPost]
-    public async Task<IActionResult> UploadAsync(IFormFile file)
+    public async Task<IActionResult> UploadAsync(BlobForCreatingDto blob)
     {
       try
       {
-        if (file == null) return BadRequest("Null file");
-        if (file.Length == 0) return BadRequest("Empty file");
-        if (file.Length > 10 * 1024 * 1024) return BadRequest("Max file size exceeded");
-        var uploadsFolerPath = Path.Combine(host.WebRootPath, "uploads", "images");
+        if (blob.File == null) return BadRequest("Null file");
+        if (blob.File.Length == 0) return BadRequest("Empty file");
+        if (blob.File.Length > 10 * 1024 * 1024) return BadRequest("Max file size exceeded");
+        //  Validate file extenstion
+        var fileExtenstion = Path.GetExtension(blob.File.FileName);
+        if (!fileHelper.IsExtenstionSupported(fileExtenstion))
+          return BadRequest("Invalid file type.");
+
+        var folderPath = new string[] { "UploadedFiles", "Images", DateTime.Now.Year.ToString() };
+        var uploadsFolerPath = Path.Combine(
+          host.ContentRootPath, Path.Combine(folderPath));
         if (!Directory.Exists(uploadsFolerPath))
-        {
           Directory.CreateDirectory(uploadsFolerPath);
-        }
-        var fileName = $"{DateTime.Now.ToShortDateString().Replace('/', '-')}_{Path.GetFileNameWithoutExtension(file.FileName.Replace("/", string.Empty))}{Path.GetExtension(file.FileName)}";
-        var filePath = Path.Combine(uploadsFolerPath, fileName);
-        var fileUrl = string.Join("/", configuration["WebSiteHosting:Url"], "uploads", "images", fileName);
+
+        var fileName = Path.GetRandomFileName();
+        if (string.IsNullOrEmpty(blob.Name))
+          blob.Name = fileName;
+
+        var fileNameWithExtenstion = $"{fileName}{fileExtenstion}";
+        var filePath = Path.Combine(uploadsFolerPath, fileNameWithExtenstion);
+        var fileUrl = string.Join("/",
+          this.webHostingSettings.Url, string.Join("/", folderPath) , fileNameWithExtenstion);
+
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
-          await file.CopyToAsync(stream);
+          await blob.File.CopyToAsync(stream);
         }
         await unitOfWork.Blobs.AddBlobAsync(
           new BlobTable
           {
-            FileName = fileName,
+            Name = blob.Name,
+            CreatedDate = DateTime.Now,
+            FileName = fileNameWithExtenstion,
             FilePath = filePath,
             URL = fileUrl,
-            FileSize = file.Length
+            FileSize = blob.File.Length
           });
+
         if (!await unitOfWork.SaveAsync())
-        {
           return StatusCode(500);
-        }
+
         return StatusCode(201);
       }
       catch
       {
         // ToDo: Logging
+        return StatusCode(500);
       }
-      return StatusCode(500);
     }
 
     [HttpGet("{id}")]

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.Abstraction;
 using MyBlog.Entity;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MyBlog.Peristence
 {
-	public class BlobRepository : IBlobRepository
+  public class BlobRepository : IBlobRepository
   {
     private readonly BlogContext context;
     private readonly IMapper mapper;

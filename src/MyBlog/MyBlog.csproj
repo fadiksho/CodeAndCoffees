@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include=".well-known\" />
+    <Folder Include="UploadedFiles\" />
     <Folder Include="wwwroot\dist\js\" />
   </ItemGroup>
 </Project>
