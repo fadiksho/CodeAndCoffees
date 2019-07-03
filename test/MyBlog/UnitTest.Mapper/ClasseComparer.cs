@@ -109,5 +109,21 @@ namespace UnitTest.Mapper
 
       return true;
     }
+
+    public static bool IsBlobEqual(
+      this Blob blob1, Blob blob2)
+    {
+      if (blob1.Id != blob2.Id)
+        throw new Exception("Blob 'Id' are not Equal.");
+      if (blob1.Name != blob2.Name)
+        throw new Exception("Blob 'Name' are not Equal.");
+      if (blob1.FileSize != blob2.FileSize)
+        throw new Exception("Blob 'FileSize' are not Equal.");
+      if (blob1.CreatedDate != blob2.CreatedDate)
+        throw new Exception("Blob 'CreatedDate' are not Equal.");
+      if (blob1.URL != blob2.URL)
+        throw new Exception("Blob 'URL' are not Equal.");
+      return true;
+    }
   }
 }

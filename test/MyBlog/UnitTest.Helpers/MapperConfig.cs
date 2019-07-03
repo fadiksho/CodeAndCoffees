@@ -10,8 +10,8 @@ namespace UnitTest.Helpers
       var config = new MapperConfiguration(cfg =>
       {
         cfg.AddProfile<BlogProfile>();
-        cfg.AddProfile<TagProfile>();
         cfg.AddProfile<PushNotificationProfile>();
+        cfg.AddProfile<BlobProfile>();
       });
 
       return config.CreateMapper();

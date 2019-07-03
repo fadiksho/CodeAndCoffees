@@ -33,22 +33,27 @@ namespace MyBlog.Peristence
     public async Task<bool> BlobExistAsync(int blobId)
     {
       return await context.Blobs
-        .Where(b => b.Id == blobId)
-        .FirstOrDefaultAsync() != null;
+        .AsNoTracking()
+        .FirstOrDefaultAsync(b => b.Id == blobId) != null;
     }
 
     public async Task<Blob> GetBlobAsync(int blobId)
     {
       var blobEntity = await context.Blobs
-        .Where(b => b.Id == blobId)
-        .FirstOrDefaultAsync();
+        .AsNoTracking()
+        .FirstAsync(b => b.Id == blobId);
 
       return mapper.Map<Blob>(blobEntity);
     }
 
-    public PaggingResult<Blob> GetBlobPageAsync(IPaggingQuery query)
+    public PaggingResult<Blob> GetBlobPage(IPaggingQuery query)
     {
-      var blobsTable = context.Blobs.ToList();
+      var blobsTable = context.Blobs
+        .AsNoTracking();
+
+       // Apply Ordering
+      blobsTable = blobsTable.OrderByDescending(b => b.CreatedDate);
+      // Convert BlobTable to Blob
       var blobs = mapper.Map<IEnumerable<Blob>>(blobsTable);
 
       var totalItems = blobs.Count();
@@ -64,13 +69,21 @@ namespace MyBlog.Peristence
       return paggingResult;
     }
 
-    public async Task DeleteBlob(int blobId)
+    public async Task DeleteBlobAsync(int blobId)
     {
       var blobEntity = await context.Blobs
-        .Where(b => b.Id == blobId)
-        .FirstOrDefaultAsync();
+        .FirstAsync(b => b.Id == blobId);
 
       context.Blobs.Remove(blobEntity);
+    }
+
+    public async Task<string> GetBlobPathAsync(int blobId)
+    {
+      var blobEntity = await context.Blobs
+        .AsNoTracking()
+        .FirstAsync(b => b.Id == blobId);
+
+      return blobEntity.FilePath;
     }
   }
 }

@@ -59,7 +59,7 @@ namespace MyBlog.Api
         var fileNameWithExtenstion = $"{fileName}{fileExtenstion}";
         var filePath = Path.Combine(uploadsFolerPath, fileNameWithExtenstion);
         var fileUrl = string.Join("/",
-          this.webHostingSettings.Url, string.Join("/", folderPath) , fileNameWithExtenstion);
+          this.webHostingSettings.Url, string.Join("/", folderPath), fileNameWithExtenstion);
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
@@ -114,7 +114,8 @@ namespace MyBlog.Api
         if (ModelState.IsValid)
         {
           PaggingResult<Blob> blogPage =
-        unitOfWork.Blobs.GetBlobPageAsync(query);
+            unitOfWork.Blobs.GetBlobPage(query);
+
           return Ok(blogPage);
         }
         return BadRequest();
@@ -135,14 +136,15 @@ namespace MyBlog.Api
           return NotFound();
 
         // Delete The blob from the disk
-        var blob = await unitOfWork.Blobs.GetBlobAsync(id);
-        FileInfo myfileinf = new FileInfo(blob.FilePath);
+        var blobPath = await unitOfWork.Blobs.GetBlobPathAsync(id);
+         
+        FileInfo myfileinf = new FileInfo(blobPath);
 
         if (myfileinf.Exists)
           myfileinf.Delete();
 
         // Remove The blob from the db
-        await unitOfWork.Blobs.DeleteBlob(id);
+        await unitOfWork.Blobs.DeleteBlobAsync(id);
         if (!await unitOfWork.SaveAsync())
           return StatusCode(500);
 
