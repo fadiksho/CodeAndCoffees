@@ -23,7 +23,7 @@ namespace UnitTest.Repository
     }
 
     [Fact]
-    public async Task Adding_Blog_Should_Persiste()
+    public async Task Adding_Blog()
     {
       using (var factory = new BlogContextFactory())
       {
@@ -48,7 +48,7 @@ namespace UnitTest.Repository
     }
 
     [Fact]
-    public async Task Updating_Blog_Should_Persiste()
+    public async Task Updating_Blog()
     {
       using (var factory = new BlogContextFactory())
       {
@@ -74,6 +74,33 @@ namespace UnitTest.Repository
           var isBlogUpdated = await unitOfWork.SaveAsync();
           // Assert
           Assert.True(isBlogUpdated);
+        }
+      }
+    }
+
+    [Fact]
+    public async Task Updating_Blog_Should_Throw_InvalidOperationException()
+    {
+      using (var factory = new BlogContextFactory())
+      {
+        using (var context = factory.CreateBlogContext())
+        {
+          // Arrange
+          var blogTable = GetBlogTableInstance();
+          context.Add(blogTable);
+          context.SaveChanges();
+        }
+
+        using (var context = factory.CreateBlogContext())
+        {
+          var unitOfWork = new UnitOfWork(context, mapper);
+          var blogForUpdatingDto = GetBlogForUpdatingDtoInstance(
+            title: "updated",
+            tags: new List<string> { "test" });
+
+          // Act & Assert 
+          await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            unitOfWork.Blogs.UpdateBlogAsync(999, blogForUpdatingDto));
         }
       }
     }
@@ -133,7 +160,7 @@ namespace UnitTest.Repository
     }
 
     [Fact]
-    public async Task Delete_Blog_Should_Persiste()
+    public async Task Delete_Blog()
     {
       using (var factory = new BlogContextFactory())
       {
@@ -157,6 +184,29 @@ namespace UnitTest.Repository
           // Assert
           Assert.True(isBlogDeleted);
           Assert.Null(context.Blogs.FirstOrDefault());
+        }
+      }
+    }
+
+    [Fact]
+    public async Task Delete_Blog_Should_Throw_InvalidOperationException()
+    {
+      using (var factory = new BlogContextFactory())
+      {
+        using (var context = factory.CreateBlogContext())
+        {
+          // Arrange
+          var blogTable = GetBlogTableInstance();
+          context.Add(blogTable);
+          context.SaveChanges();
+        }
+
+        using (var context = factory.CreateBlogContext())
+        {
+          var unitOfWork = new UnitOfWork(context, mapper);
+          // Act & Assert
+          await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            unitOfWork.Blogs.DeleteBlogAsync(999));
         }
       }
     }
@@ -188,6 +238,28 @@ namespace UnitTest.Repository
       }
     }
 
+    [Fact]
+    public async Task Get_Blog_Should_Throw_InvalidOperationException()
+    {
+      using (var factory = new BlogContextFactory())
+      {
+        using (var context = factory.CreateBlogContext())
+        {
+          // Arrange
+          var blogTable = GetBlogTableInstance();
+          context.Add(blogTable);
+          context.SaveChanges();
+        }
+
+        using (var context = factory.CreateBlogContext())
+        {
+          var unitOfWork = new UnitOfWork(context, mapper);
+          // Act & Assert
+          await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            unitOfWork.Blogs.GetBlogAsync(999));
+        }
+      }
+    }
     [Theory]
     [InlineData("2017/12/10/test-convert")]
     [InlineData("2017/12/10/TEST-CONVERT")]
@@ -210,6 +282,29 @@ namespace UnitTest.Repository
           var blog = await unitOfWork.Blogs.GetBlogAsync(slug);
           // Assert
           Assert.NotNull(blog);
+        }
+      }
+    }
+
+    [Fact]
+    public async Task Get_Blog_By_Slug_Should_Throw_InvalidOperationException()
+    {
+      using (var factory = new BlogContextFactory())
+      {
+        using (var context = factory.CreateBlogContext())
+        {
+          // Arrange
+          var blogTable = GetBlogTableInstance();
+          context.Add(blogTable);
+          context.SaveChanges();
+        }
+
+        using (var context = factory.CreateBlogContext())
+        {
+          var unitOfWork = new UnitOfWork(context, mapper);
+          // Act & Assert
+          await Assert.ThrowsAsync<InvalidOperationException>(() => 
+            unitOfWork.Blogs.GetBlogAsync("un existing slug"));
         }
       }
     }

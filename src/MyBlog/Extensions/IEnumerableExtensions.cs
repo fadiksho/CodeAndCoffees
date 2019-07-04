@@ -10,8 +10,7 @@ namespace MyBlog.Extensions
     {
       return query
         .Skip(pagingParameter.PageSize * (pagingParameter.Page - 1))
-        .Take(pagingParameter.PageSize)
-        .AsEnumerable();
+        .Take(pagingParameter.PageSize);
     }
   }
 }

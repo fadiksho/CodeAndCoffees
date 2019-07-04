@@ -39,18 +39,17 @@ namespace MyBlog.Peristence
     {
       var blogEntity = await context.Blogs
         .AsNoTracking()
-        .Where(b => b.Id == blogId
-          && b.IsPublished == onlyPublishedBlog)
-        .FirstOrDefaultAsync();
-        
+        .FirstOrDefaultAsync(b => b.Id == blogId
+          && b.IsPublished == onlyPublishedBlog);
+
       return (blogEntity != null);
     }
 
     public async Task DeleteBlogAsync(int id)
     {
       var blogEntity = await context.Blogs
-        .Where(b => b.Id == id)
-        .FirstOrDefaultAsync();
+        .AsNoTracking()
+        .FirstAsync(b => b.Id == id);
 
       context.Blogs.Remove(blogEntity);
     }
@@ -58,27 +57,28 @@ namespace MyBlog.Peristence
     public async Task<Blog> GetBlogAsync(int id)
     {
       var blogEntity = await context.Blogs
-        .Where(b => b.Id == id)
-        .FirstOrDefaultAsync();
+        .FirstAsync(b => b.Id == id);
 
-      var blog = mapper.Map<BlogTable, Blog>(blogEntity);
-      return blog;
+      return mapper.Map<BlogTable, Blog>(blogEntity);
     }
 
     public async Task<Blog> GetBlogAsync(string slug)
     {
       var blogEntity = await context.Blogs
-        .Where(b => b.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase))
-        .FirstOrDefaultAsync();
+        .FirstAsync(b => b.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
 
-      var blog = mapper.Map<BlogTable, Blog>(blogEntity);
-      return blog;
+      return mapper.Map<BlogTable, Blog>(blogEntity);
     }
 
     public PaggingResult<Blog> GetBlogsPage(BlogQuery query)
     {
       var blogsTable = context.Blogs
+        .AsNoTracking()
         .Where(b => b.IsPublished == query.OnlyPublished);
+
+      // Apply Ordering
+      blogsTable = blogsTable.OrderByDescending(b => b.PublishedDate);
+      // Convert BlogTable to Blog
       var blogs = mapper.Map<IEnumerable<Blog>>(blogsTable);
       // Tag Filter
       if (query.Tags != null && query.Tags.Any())
@@ -88,8 +88,6 @@ namespace MyBlog.Peristence
         .Split(',', StringSplitOptions.RemoveEmptyEntries)
         .Contains(s, StringComparer.OrdinalIgnoreCase)));
       }
-      // Apply Ordering
-      blogs = blogs.OrderByDescending(b => b.PublishedDate);
 
       var totalItems = blogs.Count();
       // Apply Paging
@@ -108,8 +106,7 @@ namespace MyBlog.Peristence
     public async Task UpdateBlogAsync(int id, BlogForUpdatingDto updatedBlogDto)
     {
       var blogEntity = await context.Blogs
-        .Where(b => b.Id == id)
-        .FirstOrDefaultAsync();
+        .FirstAsync(b => b.Id == id);
 
       mapper.Map<BlogForUpdatingDto, BlogTable>(updatedBlogDto, blogEntity);
     }
