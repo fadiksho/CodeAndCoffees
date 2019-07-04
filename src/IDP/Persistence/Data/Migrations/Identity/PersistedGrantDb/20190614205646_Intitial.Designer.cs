@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace IDP.Peristence.Data.Migrations.Identity.PersistedGrantDb
+namespace IDP.Persistence.Data.Migrations.Identity.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
     [Migration("20190614205646_Intitial")]

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MyBlog.Peristence.Data;
+using MyBlog.Persistence.Data;
 using MyBlog.Services;
 
 namespace MyBlog

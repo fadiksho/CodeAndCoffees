@@ -1,4 +1,4 @@
-﻿using IDP.Peristence.Data;
+﻿using IDP.Persistence.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

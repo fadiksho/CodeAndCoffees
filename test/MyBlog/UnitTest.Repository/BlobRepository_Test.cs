@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MyBlog.Abstraction;
 using MyBlog.Entity;
-using MyBlog.Peristence.Data;
+using MyBlog.Persistence.Data;
 using System;
 using System.Globalization;
 using System.Linq;

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyBlog.Entity;
 
-namespace MyBlog.Peristence.Data
+namespace MyBlog.Persistence.Data
 {
   public class BlogContext : DbContext
   {

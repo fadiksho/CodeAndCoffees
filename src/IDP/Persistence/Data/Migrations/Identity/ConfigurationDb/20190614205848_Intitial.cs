@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace IDP.Peristence.Data.Migrations.Identity.ConfigurationDb
+namespace IDP.Persistence.Data.Migrations.Identity.ConfigurationDb
 {
   public partial class Intitial : Migration
   {

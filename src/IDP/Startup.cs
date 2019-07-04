@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using IDP.Peristence.Data;
+using IDP.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using IDP.Models;
 using Microsoft.AspNetCore.Identity;

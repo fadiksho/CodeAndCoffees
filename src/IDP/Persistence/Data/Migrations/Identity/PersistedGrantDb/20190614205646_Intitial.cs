@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace IDP.Peristence.Data.Migrations.Identity.PersistedGrantDb
+namespace IDP.Persistence.Data.Migrations.Identity.PersistedGrantDb
 {
   public partial class Intitial : Migration
   {

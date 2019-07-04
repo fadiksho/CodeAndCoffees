@@ -3,7 +3,7 @@ using MyBlog.Repository;
 using MyBlog.Repository.Data;
 using System.Threading.Tasks;
 
-namespace MyBlog.Peristence.Data
+namespace MyBlog.Persistence.Data
 {
 	public class UnitOfWork : IUnitOfWork
   {

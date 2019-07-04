@@ -4,14 +4,14 @@ using MyBlog.DTO;
 using MyBlog.Entity;
 using MyBlog.Extensions;
 using MyBlog.Model;
-using MyBlog.Peristence.Data;
+using MyBlog.Persistence.Data;
 using MyBlog.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MyBlog.Peristence
+namespace MyBlog.Persistence
 {
   public class BlogRepository : IBlogRepository
   {

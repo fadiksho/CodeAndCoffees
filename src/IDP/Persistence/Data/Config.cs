@@ -2,7 +2,7 @@
 using IdentityServer4.Models;
 using System.Collections.Generic;
 
-namespace IDP.Peristence.Data
+namespace IDP.Persistence.Data
 {
   public class Config
   {

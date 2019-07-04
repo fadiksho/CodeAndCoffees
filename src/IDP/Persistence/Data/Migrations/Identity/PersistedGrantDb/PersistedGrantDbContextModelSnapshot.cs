@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace IDP.Peristence.Data.Migrations.Identity.PersistedGrantDb
+namespace IDP.Persistence.Data.Migrations.Identity.PersistedGrantDb
 {
   [DbContext(typeof(PersistedGrantDbContext))]
   partial class PersistedGrantDbContextModelSnapshot : ModelSnapshot

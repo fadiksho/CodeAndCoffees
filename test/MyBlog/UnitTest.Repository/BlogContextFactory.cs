@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using MyBlog.Peristence.Data;
+using MyBlog.Persistence.Data;
 using System;
 using System.Data.Common;
 

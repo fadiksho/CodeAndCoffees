@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyBlog.Peristence.Data
+namespace MyBlog.Persistence.Data
 {
   public static class DbInitialize
   {

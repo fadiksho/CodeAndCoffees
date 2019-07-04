@@ -2,7 +2,7 @@
 using MyBlog.DTO;
 using MyBlog.Entity;
 using MyBlog.Model;
-using MyBlog.Peristence.Data;
+using MyBlog.Persistence.Data;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

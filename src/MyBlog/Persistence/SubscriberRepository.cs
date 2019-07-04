@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using MyBlog.DTO;
 using MyBlog.Entity;
-using MyBlog.Peristence.Data;
+using MyBlog.Persistence.Data;
 using MyBlog.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebPush;
 
-namespace MyBlog.Peristence
+namespace MyBlog.Persistence
 {
 	public class SubscriberRepository : ISubscriberRepository
   {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MyBlog.DTO;
 using MyBlog.Entity;
-using MyBlog.Peristence.Data;
+using MyBlog.Persistence.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace UnitTest.Repository
     }
 
     [Fact]
-    public async Task Add_PushNotificationSubscriber_Should_Persiste()
+    public async Task Add_PushNotificationSubscriber()
     {
       using (var factory = new BlogContextFactory())
       {
@@ -76,7 +76,7 @@ namespace UnitTest.Repository
 
     [Theory]
     [InlineData("endPoint")]
-    public async Task Delete_PushNotification_Should_Persiste(string endPoint)
+    public async Task Delete_PushNotification(string endPoint)
     {
       using (var factory = new BlogContextFactory())
       {

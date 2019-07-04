@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace IDP.Peristence.Data.Migrations.Identity.ConfigurationDb
+namespace IDP.Persistence.Data.Migrations.Identity.ConfigurationDb
 {
   [DbContext(typeof(ConfigurationDbContext))]
   partial class ConfigurationDbContextModelSnapshot : ModelSnapshot
