@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MyBlog.DTO;
 using MyBlog.Entity;
-using MyBlog.Extensions;
 using MyBlog.Model;
+using MyBlog.Services;
 using System;
 using System.Linq;
 
@@ -16,22 +16,17 @@ namespace MyBlog.MappingProfiles
       CreateMap<BlogForCreatingDto, BlogTable>()
         .ForMember(bt => bt.Tags, bdto => 
           bdto.MapFrom(dto => string.Join(",", dto.Tags)))
-        .ForMember(a => a.Slug, b => b.MapFrom(
-          c => URLHelper.BuildBlogUrl(c.Title, c.PublishedDate)));
+        .ForMember(a => a.Slug, exp => exp.MapFrom(new BlogSlugResolver()));
 
       CreateMap<BlogForUpdatingDto, BlogTable>()
         .ForMember(bt => bt.Tags, bdto => bdto.MapFrom(
           dto => string.Join(",", dto.Tags)))
-        .ForMember(a => a.Slug, b => b.MapFrom(
-          c => URLHelper.BuildBlogUrl(c.Title, c.PublishedDate)));
+        .ForMember(a => a.Slug, exp => exp.MapFrom(new BlogSlugResolver()));
 
       // Entity to Model
       CreateMap<BlogTable, Blog>()
         .ForMember(a => a.Tags, b => b.MapFrom(
-          c => c.Tags.Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)))
-        .ForMember(a => a.Slug, b => b.MapFrom(
-          c => URLHelper.BuildBlogUrl(c.Title, c.PublishedDate)));
-      CreateMap<IQueryable<BlogTable>, IQueryable<Blog>>();
+          c => c.Tags.Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)));
       CreateMap<BlobTable, Blob>();
 
       // Model to Dto

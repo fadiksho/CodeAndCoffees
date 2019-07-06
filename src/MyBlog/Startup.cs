@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using MyBlog.Persistence;
 using MyBlog.Persistence.Data;
-using MyBlog.Repository;
 using MyBlog.Repository.Data;
 using MyBlog.Services;
 using AutoMapper;
@@ -35,7 +34,8 @@ namespace MyBlog
           options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
       
       services.AddScoped<IUnitOfWork, UnitOfWork>();
-      services.AddScoped<IFileHelper, FileHelper>();
+
+      services.AddSingleton<IFileHelper, FileHelper>();
 
       services.AddAutoMapper(typeof(Startup));
 

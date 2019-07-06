@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Text;
 
-namespace MyBlog.Extensions
+namespace MyBlog.Persistence
 {
   public class URLHelper
   {
-    public static string ToFriendlyUrl(string urlToEncode)
+    public string ToFriendlyUrl(string urlToEncode)
     {
-      urlToEncode = (urlToEncode ?? "").Trim().ToLower();
-
       StringBuilder url = new StringBuilder();
 
       foreach (char ch in urlToEncode)
@@ -41,8 +39,7 @@ namespace MyBlog.Extensions
 
       return url.ToString();
     }
-
-    public static string BuildBlogUrl(string urlToEncode, DateTime date)
+    public string BuildBlogUrl(string urlToEncode, DateTime date)
     {
       urlToEncode = date.ToString("yyyy/MM/dd") + "/" + ToFriendlyUrl(urlToEncode);
       return urlToEncode;

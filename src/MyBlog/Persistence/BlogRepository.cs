@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.DTO;
 using MyBlog.Entity;
@@ -57,9 +58,11 @@ namespace MyBlog.Persistence
     public async Task<Blog> GetBlogAsync(int id)
     {
       var blogEntity = await context.Blogs
+        .Where(b => b.Id == id)
         .FirstAsync(b => b.Id == id);
+      var blog = mapper.Map<Blog>(blogEntity);
 
-      return mapper.Map<BlogTable, Blog>(blogEntity);
+      return blog;
     }
 
     public async Task<Blog> GetBlogAsync(string slug)
