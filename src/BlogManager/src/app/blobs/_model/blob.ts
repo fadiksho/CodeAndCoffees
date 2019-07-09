@@ -1,7 +1,7 @@
 export interface Blob {
   id: number;
-  fileName: string;
-  filePath: string;
+  name: string;
+  createdDate: Date;
   url: string;
   fileSize: number;
 }
