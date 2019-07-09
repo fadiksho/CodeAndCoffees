@@ -27,44 +27,34 @@ namespace MyBlog.Api
     [HttpPost("PushNotificationSubscription")]
     public async Task<IActionResult> Create([FromBody] PushNotificationSubscriptionDto pushNotificationSubscription)
     {
+      if (!ModelState.IsValid)
+      {
+        return new UnprocessableEntityObjectResult(ModelState);
+      }
+      var pushSubscription = new PushSubscription(pushNotificationSubscription.EndPoint, pushNotificationSubscription.Key, pushNotificationSubscription.AuthSecret);
+      var vapidDetails = new VapidDetails(vapidSettings.Subject, vapidSettings.PublicKey, vapidSettings.PrivateKey);
+
+      var webPushClient = new WebPushClient();
+      webPushClient.SetVapidDetails(vapidDetails);
+
+      await unitOfWork.Subscribers.AddPushNotificationSubscriptionAsync(pushNotificationSubscription);
+      await this.unitOfWork.SaveAsync();
+
+      var payload = new PushNotificationPayload
+      {
+        Title = "Welcome",
+        Body = "Thank you for subscribing :-)",
+      };
+
       try
       {
-        if (!ModelState.IsValid)
-        {
-          return BadRequest();
-        }
-        var pushSubscription = new PushSubscription(pushNotificationSubscription.EndPoint, pushNotificationSubscription.Key, pushNotificationSubscription.AuthSecret);
-        var vapidDetails = new VapidDetails(vapidSettings.Subject, vapidSettings.PublicKey, vapidSettings.PrivateKey);
-
-        var webPushClient = new WebPushClient();
-        webPushClient.SetVapidDetails(vapidDetails);
-
-        await unitOfWork.Subscribers.AddPushNotificationSubscriptionAsync(pushNotificationSubscription);
-        if (!await this.unitOfWork.SaveAsync())
-        {
-          return StatusCode(500);
-        }
-
-        var payload = new PushNotificationPayload
-        {
-          Title = "Welcome",
-          Body = "Thank you for subscribing :-)",
-        };
-        try
-        {
-          await webPushClient.SendNotificationAsync(pushSubscription,
-          JsonConvert.SerializeObject(payload), vapidDetails);
-        }
-        catch (WebPushException exception)
-        {
-          var statusCode = exception.StatusCode;
-          return new StatusCodeResult((int)statusCode);
-        }
-
+        await webPushClient.SendNotificationAsync(pushSubscription,
+        JsonConvert.SerializeObject(payload), vapidDetails);
       }
-      catch
+      catch (WebPushException exception)
       {
-        return StatusCode(500);
+        var statusCode = exception.StatusCode;
+        return StatusCode((int)statusCode, new { message = exception.Message });
       }
 
       return StatusCode(201);
@@ -72,63 +62,51 @@ namespace MyBlog.Api
 
     [AllowAnonymous]
     [HttpPost("PushNotificationCancelSubscription")]
-    public async Task<IActionResult> Remove([FromBody] PushNotificationSubscriptionDto pushNotificationSubscription)
+    public async Task<IActionResult> Remove([FromBody] PushNotificationSubscriptionBase dto)
     {
-      try
+      if (dto == null)
       {
-        if (string.IsNullOrEmpty(pushNotificationSubscription.EndPoint))
-        {
-          return BadRequest();
-        }
-        var subscription = await unitOfWork.Subscribers
-          .GetPushNotificationSubscriptionAsync(pushNotificationSubscription.EndPoint);
-        if (subscription == null)
-        {
-          return NotFound();
-        }
-        await unitOfWork.Subscribers
-          .RemovePushNotificationSubscriptionAsync(pushNotificationSubscription.EndPoint);
+        return BadRequest();
+      }
 
-        if (!await unitOfWork.SaveAsync())
-        {
-          return StatusCode(500);
-        }
-      }
-      catch
+      if (!ModelState.IsValid)
       {
-        // ToDo: Logging
-        return StatusCode(500);
+        return new UnprocessableEntityObjectResult(dto);
       }
+
+      var subscription = await unitOfWork.Subscribers
+        .GetPushNotificationSubscriptionAsync(dto.EndPoint);
+
+      if (subscription == null)
+      {
+        return NotFound();
+      }
+
+      await unitOfWork.Subscribers
+        .RemovePushNotificationSubscriptionAsync(dto.EndPoint);
+      await unitOfWork.SaveAsync();
 
       return NoContent();
     }
 
     [AllowAnonymous]
     [HttpPost("CheckIfPushNotificationSubscriber")]
-    public async Task<IActionResult> CheckIfSubscriber([FromBody] PushNotificationSubscriptionDto pushNotificationSubscription)
+    public async Task<IActionResult> CheckIfSubscriber([FromBody]PushNotificationSubscriptionBase dto)
     {
-      try
+      if (dto == null || !ModelState.IsValid)
       {
-        if (string.IsNullOrEmpty(pushNotificationSubscription.EndPoint))
-        {
-          return BadRequest();
-        }
-
-        var subscription = await unitOfWork.Subscribers
-          .GetPushNotificationSubscriptionAsync(pushNotificationSubscription.EndPoint);
-
-        if (subscription == null)
-        {
-          return new JsonResult(new { isSubscribed = false });
-        }
-
-        return new JsonResult(new { isSubscribed = true });
+        return new JsonResult(new { isSubscribed = false });
       }
-      catch
+
+      var subscription = await unitOfWork.Subscribers
+        .GetPushNotificationSubscriptionAsync(dto.EndPoint);
+
+      if (subscription == null)
       {
-        // ToDo: Logging
+        return new JsonResult(new { isSubscribed = false });
       }
-      return StatusCode(500);
+
+      return new JsonResult(new { isSubscribed = true });
     }
 
     [HttpPost("newPushNotification")]
@@ -136,44 +114,27 @@ namespace MyBlog.Api
     {
       var messageSentCount = 0;
       var messageFaildCount = 0;
-      try
-      {
-        var subscriptions = await unitOfWork.Subscribers.GetPushNotificationSubscriptionAsync();
-        var vapidDetails = new VapidDetails(vapidSettings.Subject, vapidSettings.PublicKey, vapidSettings.PrivateKey);
-        var webPushClient = new WebPushClient();
-        webPushClient.SetVapidDetails(vapidDetails);
 
-        foreach (var subscriber in subscriptions)
+      var subscriptions = await unitOfWork.Subscribers.GetPushNotificationSubscriptionAsync();
+      var vapidDetails = new VapidDetails(vapidSettings.Subject, vapidSettings.PublicKey, vapidSettings.PrivateKey);
+      var webPushClient = new WebPushClient();
+      webPushClient.SetVapidDetails(vapidDetails);
+
+      foreach (var subscriber in subscriptions)
+      {
+        try
         {
-          try
-          {
-            messageSentCount += 1;
-            webPushClient.SendNotification(subscriber,
-            JsonConvert.SerializeObject(payload), vapidDetails);
-          }
-          catch (Exception ex) when (ex.InnerException is WebPushException)
-          {
-            messageFaildCount += 1;
-            await unitOfWork.Subscribers.RemovePushNotificationSubscriptionAsync(subscriber.Endpoint);
-          }
+          messageSentCount += 1;
+          webPushClient.SendNotification(subscriber,
+          JsonConvert.SerializeObject(payload), vapidDetails);
         }
-        if (messageFaildCount > 0 && !await unitOfWork.SaveAsync())
+        catch (Exception ex) when (ex.InnerException is WebPushException)
         {
-          return StatusCode(500, new
-          {
-            subscribersCount = messageSentCount,
-            messageSentCount = messageSentCount - messageFaildCount,
-            messageFaildCount
-          });
+          messageFaildCount += 1;
+          await unitOfWork.Subscribers.RemovePushNotificationSubscriptionAsync(subscriber.Endpoint);
         }
-        return StatusCode(201, new
-        {
-          subscribersCount = messageSentCount,
-          messageSentCount = messageSentCount - messageFaildCount,
-          messageFaildCount
-        });
       }
-      catch
+      if (messageFaildCount > 0 && !await unitOfWork.SaveAsync())
       {
         return StatusCode(500, new
         {
@@ -182,21 +143,20 @@ namespace MyBlog.Api
           messageFaildCount
         });
       }
+      return StatusCode(201, new
+      {
+        subscribersCount = messageSentCount,
+        messageSentCount = messageSentCount - messageFaildCount,
+        messageFaildCount
+      });
     }
 
     [HttpGet("getSubscribersCount")]
     public async Task<IActionResult> GetSubscribersCount()
     {
-      try
-      {
-        var subscribersCount = await unitOfWork.Subscribers.GetPushNotificationSubscribersCountAsync();
-        return Ok(subscribersCount);
-      }
-      catch
-      {
-        // ToDo: Logging
-      }
-      return StatusCode(500);
+      var subscribersCount = await unitOfWork.Subscribers.GetPushNotificationSubscribersCountAsync();
+
+      return Ok(subscribersCount);
     }
   }
 }

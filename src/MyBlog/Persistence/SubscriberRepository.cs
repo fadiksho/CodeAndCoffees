@@ -11,7 +11,7 @@ using WebPush;
 
 namespace MyBlog.Persistence
 {
-	public class SubscriberRepository : ISubscriberRepository
+  public class SubscriberRepository : ISubscriberRepository
   {
     private readonly BlogContext context;
     private readonly IMapper mapper;
@@ -32,13 +32,16 @@ namespace MyBlog.Persistence
 
     public async Task<IEnumerable<PushSubscription>> GetPushNotificationSubscriptionAsync()
     {
-      var subscriptionEntity = await context.PushNotificationSubscriptions.ToListAsync();
+      var subscriptionEntity = await context.PushNotificationSubscriptions
+        .AsNoTracking()
+        .ToListAsync();
       return mapper.Map<IEnumerable<PushSubscription>>(subscriptionEntity);
     }
 
     public async Task RemovePushNotificationSubscriptionAsync(string subscriptionEndPoint)
     {
       var subscription = await context.PushNotificationSubscriptions
+        .AsNoTracking()
         .Where(c => c.EndPoint == subscriptionEndPoint)
         .FirstOrDefaultAsync();
 
@@ -48,15 +51,19 @@ namespace MyBlog.Persistence
     public async Task<PushSubscription> GetPushNotificationSubscriptionAsync(string subscriptionEndPoint)
     {
       var subscriptionEntity = await context.PushNotificationSubscriptions
+        .AsNoTracking()
         .Where(c => c.EndPoint == subscriptionEndPoint)
         .FirstOrDefaultAsync();
-      
+
       return mapper.Map<PushSubscription>(subscriptionEntity);
     }
 
     public async Task<int> GetPushNotificationSubscribersCountAsync()
     {
-      var subscribersCount = await context.PushNotificationSubscriptions.CountAsync();
+      var subscribersCount = await context.PushNotificationSubscriptions
+        .AsNoTracking()
+        .CountAsync();
+
       return subscribersCount;
     }
   }

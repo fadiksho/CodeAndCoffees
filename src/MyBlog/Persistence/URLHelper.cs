@@ -1,48 +1,49 @@
-﻿using System;
+﻿using MyBlog.Services;
 using System.Text;
 
 namespace MyBlog.Persistence
 {
-  public class URLHelper
+  public class URLHelper : IURLHelper
   {
-    public string ToFriendlyUrl(string urlToEncode)
+    public string ToFriendlyUrl(string url)
     {
-      StringBuilder url = new StringBuilder();
-
-      foreach (char ch in urlToEncode)
+      url = url.Trim().ToLower();
+      StringBuilder friendlyUrl = new StringBuilder();
+      bool shouldAppend = true;
+      for (int i = 0; i < url.Length; i++)
       {
-        switch (ch)
+        if (url[i] == ' ')
         {
-          case ' ':
-            url.Append('-');
-            break;
-          case '&':
-            url.Append("and");
-            break;
-          case '\'':
-          case ',':
-          case '.':
-            break;
-          default:
-            if ((ch >= '0' && ch <= '9') ||
-                (ch >= 'a' && ch <= 'z'))
-            {
-              url.Append(ch);
-            }
-            else
-            {
-              url.Append('-');
-            }
-            break;
+          friendlyUrl.Append('-');
+          shouldAppend = false;
+        }
+        else if (url[i] == '&')
+        {
+          if (shouldAppend)
+            friendlyUrl.Append('-');
+          friendlyUrl.Append("and");
+
+          if (i != url.Length - 1) {
+            friendlyUrl.Append('-');
+            shouldAppend = false;
+          }
+          else shouldAppend = false;
+
+        }
+        else if ((url[i] >= '0' && url[i] <= '9') ||
+                 (url[i] >= 'a' && url[i] <= 'z') ||
+                 (url[i] >= 'A' && url[i] <= 'Z'))
+        {
+          friendlyUrl.Append(url[i]);
+          shouldAppend = true;
+        }
+        else if (shouldAppend && i != url.Length - 1)
+        {
+          friendlyUrl.Append('-');
+          shouldAppend = false;
         }
       }
-
-      return url.ToString();
-    }
-    public string BuildBlogUrl(string urlToEncode, DateTime date)
-    {
-      urlToEncode = date.ToString("yyyy/MM/dd") + "/" + ToFriendlyUrl(urlToEncode);
-      return urlToEncode;
+      return friendlyUrl.ToString();
     }
   }
 }

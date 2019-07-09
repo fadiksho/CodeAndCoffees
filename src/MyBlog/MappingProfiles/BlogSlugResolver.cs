@@ -10,20 +10,20 @@ namespace MyBlog.MappingProfiles
     IValueResolver<BlogForCreatingDto, BlogTable, string>, 
     IValueResolver<BlogForUpdatingDto, BlogTable, string>
   {
-    private readonly URLHelper URLHelper;
+    private readonly IURLHelper URLHelper;
 
     public BlogSlugResolver()
     {
-      URLHelper = new URLHelper();
+      this.URLHelper = new URLHelper();
     }
     public string Resolve(BlogForCreatingDto source, BlogTable destination, string destMember, ResolutionContext context)
     {
-      return URLHelper.BuildBlogUrl(source.Title, source.PublishedDate);
+      return URLHelper.ToFriendlyUrl(source.Title);
     }
 
     public string Resolve(BlogForUpdatingDto source, BlogTable destination, string destMember, ResolutionContext context)
     {
-      return URLHelper.BuildBlogUrl(source.Title, source.PublishedDate);
+      return URLHelper.ToFriendlyUrl(source.Title);
     }
   }
 }

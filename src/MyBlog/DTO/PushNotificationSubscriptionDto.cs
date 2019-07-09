@@ -2,10 +2,8 @@
 
 namespace MyBlog.DTO
 {
-	public class PushNotificationSubscriptionDto
+	public class PushNotificationSubscriptionDto : PushNotificationSubscriptionBase
   {
-    [Required]
-    public string EndPoint { get; set; }
     [Required]
     public string Key { get; set; }
     [Required]

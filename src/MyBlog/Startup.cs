@@ -36,6 +36,7 @@ namespace MyBlog
       services.AddScoped<IUnitOfWork, UnitOfWork>();
 
       services.AddSingleton<IFileHelper, FileHelper>();
+      services.AddSingleton<IURLHelper, URLHelper>();
 
       services.AddAutoMapper(typeof(Startup));
 

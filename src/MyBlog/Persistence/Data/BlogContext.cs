@@ -20,6 +20,10 @@ namespace MyBlog.Persistence.Data
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       base.OnModelCreating(modelBuilder);
+
+      modelBuilder.Entity<BlogTable>()
+        .HasIndex(b => b.Slug)
+        .IsUnique();
     }
   }
 }

@@ -122,9 +122,7 @@ function unsubscribeUser() {
     headers: {
       "Content-Type": "application/json; charset=utf-8"
     },
-    body: JSON.stringify({
-      EndPoint: subscription.endpoint
-    })
+    body: JSON.stringify({ EndPoint: subscription.endpoint })
   }).then(function (response) {
     if (response.ok) {
       subscription = null;
@@ -181,13 +179,14 @@ function updateNotificationButton() {
   notificationButton.disabled = false;
 }
 function checkIfSubscriber() {
+  console.log({ endPoint: subscription.endpoint });
   notificationButton.disabled = true;
   fetch('/api/subscribers/CheckIfPushNotificationSubscriber', {
     method: 'POST',
     headers: {
       "Content-Type": "application/json; charset=utf-8"
     },
-    body: JSON.stringify(subscription)
+    body: JSON.stringify({ EndPoint: subscription.endpoint })
   }).then(function (response) {
     if (response.ok) {
       return response.json();

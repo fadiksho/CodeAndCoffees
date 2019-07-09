@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MyBlog.Api
 {
-  //[Authorize]
+  [Authorize]
   [Route("api/blob")]
   public class BlobApiController : Controller
   {
@@ -36,25 +36,36 @@ namespace MyBlog.Api
     [HttpPost]
     public async Task<IActionResult> UploadAsync(BlobForCreatingDto blob)
     {
+      if (!ModelState.IsValid)
+      {
+        return new UnprocessableEntityObjectResult(ModelState);
+      }
+
+      if (blob.File.Length == 0) return BadRequest("Empty file");
+      if (blob.File.Length > 10 * 1024 * 1024) return BadRequest("Max file size exceeded");
+
+      //  Validate file extenstion
+      var fileExtenstion = Path.GetExtension(blob.File.FileName);
+      if (!fileHelper.IsExtenstionSupported(fileExtenstion))
+      {
+        return BadRequest("Invalid file type.");
+      }
+
+      var folderPath = new string[] { "UploadedFiles", "Images", DateTime.Now.Year.ToString() };
+      var uploadsFolerPath = Path.Combine(
+        host.ContentRootPath, Path.Combine(folderPath));
       try
       {
-        if (blob.File == null) return BadRequest("Null file");
-        if (blob.File.Length == 0) return BadRequest("Empty file");
-        if (blob.File.Length > 10 * 1024 * 1024) return BadRequest("Max file size exceeded");
-        //  Validate file extenstion
-        var fileExtenstion = Path.GetExtension(blob.File.FileName);
-        if (!fileHelper.IsExtenstionSupported(fileExtenstion))
-          return BadRequest("Invalid file type.");
-
-        var folderPath = new string[] { "UploadedFiles", "Images", DateTime.Now.Year.ToString() };
-        var uploadsFolerPath = Path.Combine(
-          host.ContentRootPath, Path.Combine(folderPath));
         if (!Directory.Exists(uploadsFolerPath))
+        {
           Directory.CreateDirectory(uploadsFolerPath);
+        }
 
         var fileName = Path.GetRandomFileName();
         if (string.IsNullOrEmpty(blob.Name))
+        {
           blob.Name = fileName;
+        }
 
         var fileNameWithExtenstion = $"{fileName}{fileExtenstion}";
         var filePath = Path.Combine(uploadsFolerPath, fileNameWithExtenstion);
@@ -65,6 +76,7 @@ namespace MyBlog.Api
         {
           await blob.File.CopyToAsync(stream);
         }
+
         await unitOfWork.Blobs.AddBlobAsync(
           new BlobTable
           {
@@ -74,87 +86,66 @@ namespace MyBlog.Api
             FilePath = filePath,
             URL = fileUrl,
             FileSize = blob.File.Length
-          });
+          }
+        );
 
-        if (!await unitOfWork.SaveAsync())
-          return StatusCode(500);
+        await unitOfWork.SaveAsync();
 
         return StatusCode(201);
       }
-      catch
+      catch (IOException)
       {
-        // ToDo: Logging
-        return StatusCode(500);
+        return StatusCode(409, new { message = "The server is busy right now try again later" });
       }
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUploadedFile(int id)
     {
-      try
-      {
-        if (!await unitOfWork.Blobs.BlobExistAsync(id))
-          return NotFound();
+      if (!await unitOfWork.Blobs.BlobExistAsync(id))
+        return NotFound();
 
-        var blob = await unitOfWork.Blobs.GetBlobAsync(id);
-        return Ok(blob);
-      }
-      catch
-      {
-        // ToDo: Logging
-      }
-      return StatusCode(500);
+      var blob = await unitOfWork.Blobs.GetBlobAsync(id);
+      return Ok(blob);
     }
 
     [HttpGet]
     public IActionResult GetUploadedFiles(PaggingQuery query)
     {
-      try
-      {
-        if (ModelState.IsValid)
-        {
-          PaggingResult<Blob> blogPage =
-            unitOfWork.Blobs.GetBlobPage(query);
+      PaggingResult<Blob> blogPage =
+        unitOfWork.Blobs.GetBlobPage(query);
 
-          return Ok(blogPage);
-        }
-        return BadRequest();
-      }
-      catch
-      {
-        // ToDo: Logging
-      }
-      return StatusCode(500);
+      return Ok(blogPage);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFileAsync(int id)
     {
-      try
+
+      if (!await unitOfWork.Blobs.BlobExistAsync(id))
       {
-        if (!await unitOfWork.Blobs.BlobExistAsync(id))
-          return NotFound();
+        return NotFound();
+      }
 
-        // Delete The blob from the disk
-        var blobPath = await unitOfWork.Blobs.GetBlobPathAsync(id);
-         
-        FileInfo myfileinf = new FileInfo(blobPath);
+      var blobPath = await unitOfWork.Blobs.GetBlobPathAsync(id);
 
-        if (myfileinf.Exists)
+      FileInfo myfileinf = new FileInfo(blobPath);
+      if (myfileinf.Exists)
+      {
+        try
+        {
           myfileinf.Delete();
-
-        // Remove The blob from the db
-        await unitOfWork.Blobs.DeleteBlobAsync(id);
-        if (!await unitOfWork.SaveAsync())
-          return StatusCode(500);
-
-        return NoContent();
+        }
+        catch (IOException)
+        {
+          return StatusCode(409, new { message = "The server is busy right now try again later" });
+        }
       }
-      catch
-      {
-        // ToDo: Logging
-      }
-      return StatusCode(500);
+
+      await unitOfWork.Blobs.DeleteBlobAsync(id);
+      await unitOfWork.SaveAsync();
+
+      return NoContent();
     }
   }
 }

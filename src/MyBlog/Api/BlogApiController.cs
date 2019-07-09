@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -7,162 +6,153 @@ using Microsoft.AspNetCore.Mvc;
 using MyBlog.DTO;
 using MyBlog.Model;
 using MyBlog.Repository.Data;
+using MyBlog.Services;
 
 namespace MyBlog.Api
 {
-  [Authorize]
+  //[Authorize]
   [Route("api/blog")]
   public class BlogApiController : Controller
   {
     private readonly IUnitOfWork unitOfWork;
-
-    public BlogApiController(IUnitOfWork unitOfWork)
+    private readonly IURLHelper urlHelper;
+    public BlogApiController(
+      IUnitOfWork unitOfWork,
+      IURLHelper urlHelper)
     {
       this.unitOfWork = unitOfWork;
+      this.urlHelper = urlHelper;
     }
 
     [HttpGet]
     public IActionResult GetBlogsPage(BlogQuery blogQuery)
     {
-      try
-      {
-        if (ModelState.IsValid)
-        {
-          var date = DateTime.UtcNow;
-          PaggingResult<Blog> blogPage =
-        unitOfWork.Blogs.GetBlogsPage(blogQuery);
-          return Ok(blogPage);
-        }
-        return BadRequest();
-      }
-      catch
-      {
-        // ToDo: Logging
-      }
-      return StatusCode(500);
-    }
+      PaggingResult<Blog> blogPage =
+          unitOfWork.Blogs.GetBlogsPage(blogQuery);
 
+      return Ok(blogPage);
+    }
+    
     [HttpGet("{id}")]
     public async Task<IActionResult> GetBlog(int id)
     {
-      try
-      {
-        var blog = await unitOfWork.Blogs.GetBlogAsync(id);
-        if (blog == null)
-          return NotFound();
-        return Ok(blog);
-      }
-      catch
-      {
-        // ToDo: Logging
-      }
-      return StatusCode(500);
+      var blog = await unitOfWork.Blogs.GetBlogAsync(id);
+
+      if (blog == null)
+        return NotFound();
+
+      return Ok(blog);
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateBlog([FromBody]BlogForCreatingDto newBlog)
     {
-      try
+      if (newBlog == null)
       {
-        if (ModelState.IsValid)
-        {
-          await unitOfWork.Blogs.AddBlog(newBlog);
-          if (!await unitOfWork.SaveAsync())
-          {
-            return StatusCode(500);
-          }
-          return StatusCode(201);
-        }
         return BadRequest();
       }
-      catch
+
+      if (ModelState.IsValid)
       {
-        // ToDo: Logging
+        var slug = urlHelper.ToFriendlyUrl(newBlog.Title);
+        var isUniqueSlug =
+          await unitOfWork.Blogs.IsBlogExistBySlugAsync(slug, false);
+
+        if (isUniqueSlug)
+        {
+          await unitOfWork.Blogs.AddBlog(newBlog);
+          await unitOfWork.SaveAsync();
+          return StatusCode(201);
+        }
+        else
+        {
+          ModelState.AddModelError("Title", "This title has already has been taken.");
+        }
       }
-      return StatusCode(500);
+      return new UnprocessableEntityObjectResult(ModelState);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateBlog(int id,
       [FromBody]BlogForUpdatingDto updatedBlog)
     {
-      try
+      if (updatedBlog == null)
       {
-        if (ModelState.IsValid)
-        {
-          if (await unitOfWork.Blogs.GetBlogAsync(id) == null)
-            return NotFound();
-
-          await unitOfWork.Blogs.UpdateBlogAsync(id, updatedBlog);
-
-          if (!await unitOfWork.SaveAsync())
-            return StatusCode(500);
-
-          return NoContent();
-        }
         return BadRequest();
       }
-      catch
+
+      if (!ModelState.IsValid)
       {
-        // ToDo: Logging
+        return new UnprocessableEntityObjectResult(ModelState);
       }
-      return StatusCode(500);
+
+      if (await unitOfWork.Blogs.GetBlogAsync(id) == null)
+      {
+        return NotFound();
+      }
+
+      await unitOfWork.Blogs.UpdateBlogAsync(id, updatedBlog);
+      await unitOfWork.SaveAsync();
+
+      return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBlog(int id)
     {
-      try
+      if (await unitOfWork.Blogs.GetBlogAsync(id) == null)
       {
-        if (await unitOfWork.Blogs.GetBlogAsync(id) == null)
-          return NotFound();
-
-        await unitOfWork.Blogs.DeleteBlogAsync(id);
-
-        if (!await unitOfWork.SaveAsync())
-          return StatusCode(500);
-
-        return NoContent();
+        return NotFound();
       }
-      catch
-      {
-        // ToDo: Logging
-      }
-      return StatusCode(500);
+
+      await unitOfWork.Blogs.DeleteBlogAsync(id);
+      await unitOfWork.SaveAsync();
+
+      return NoContent();
     }
 
     [HttpPatch("{id}")]
     public async Task<IActionResult> PartiallyUpdateBlog(int id,
       [FromBody] JsonPatchDocument<BlogForUpdatingDto> patchDoc)
     {
-      try
+      if (patchDoc == null)
       {
-        if (patchDoc == null)
-          return BadRequest();
+        return BadRequest();
+      }
 
-        var blog = await unitOfWork.Blogs.GetBlogAsync(id);
+      var blog = await unitOfWork.Blogs.GetBlogAsync(id);
 
-        if (blog == null)
+      if (blog == null)
+      {
+        return NotFound();
+      }
+
+      var updatedBlogDto = Mapper.Map<BlogForUpdatingDto>(blog);
+
+      TryValidateModel(updatedBlogDto);
+
+      if (ModelState.IsValid)
+      {
+        var slug = urlHelper.ToFriendlyUrl(updatedBlogDto.Title);
+        var isUniqueSlug =
+          await unitOfWork.Blogs.IsBlogExistBySlugAsync(slug, false);
+
+        if (isUniqueSlug)
         {
-          return NotFound();
+          patchDoc.ApplyTo(updatedBlogDto);
+
+          await unitOfWork.Blogs.UpdateBlogAsync(id, updatedBlogDto);
+          await unitOfWork.SaveAsync();
+
+          return NoContent();
         }
-
-        var updatedBlogDto = Mapper.Map<BlogForUpdatingDto>(blog);
-
-        patchDoc.ApplyTo(updatedBlogDto);
-
-        await unitOfWork.Blogs.UpdateBlogAsync(id, updatedBlogDto);
-
-        if (!await unitOfWork.SaveAsync())
-          return StatusCode(500);
-
-        return NoContent();
+        else
+        {
+          ModelState.AddModelError("Title", "This title has already has been taken.");
+        }
       }
-      catch
-      {
-        // ToDo: Logging
-      }
-      return StatusCode(500);
+
+      return new UnprocessableEntityObjectResult(ModelState);
     }
   }
 }

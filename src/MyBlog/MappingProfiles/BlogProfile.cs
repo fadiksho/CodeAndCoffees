@@ -14,14 +14,14 @@ namespace MyBlog.MappingProfiles
     {
       // Dto to Entity
       CreateMap<BlogForCreatingDto, BlogTable>()
-        .ForMember(bt => bt.Tags, bdto => 
+        .ForMember(bt => bt.Tags, bdto =>
           bdto.MapFrom(dto => string.Join(",", dto.Tags)))
-        .ForMember(a => a.Slug, exp => exp.MapFrom(new BlogSlugResolver()));
+        .ForMember(a => a.Slug, exp => exp.MapFrom<BlogSlugResolver>());
 
       CreateMap<BlogForUpdatingDto, BlogTable>()
         .ForMember(bt => bt.Tags, bdto => bdto.MapFrom(
           dto => string.Join(",", dto.Tags)))
-        .ForMember(a => a.Slug, exp => exp.MapFrom(new BlogSlugResolver()));
+        .ForMember(a => a.Slug, exp => exp.MapFrom<BlogSlugResolver>());
 
       // Entity to Model
       CreateMap<BlogTable, Blog>()

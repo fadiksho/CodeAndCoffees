@@ -36,11 +36,11 @@ namespace MyBlog.Persistence
       return blogEntity;
     }
 
-    public async Task<bool> BlogExistAsync(int blogId, bool onlyPublishedBlog)
+    public async Task<bool> IsBlogExistBySlugAsync(string slug, bool onlyPublishedBlog)
     {
       var blogEntity = await context.Blogs
         .AsNoTracking()
-        .FirstOrDefaultAsync(b => b.Id == blogId
+        .FirstOrDefaultAsync(b => b.Slug == slug
           && b.IsPublished == onlyPublishedBlog);
 
       return (blogEntity != null);
@@ -49,7 +49,6 @@ namespace MyBlog.Persistence
     public async Task DeleteBlogAsync(int id)
     {
       var blogEntity = await context.Blogs
-        .AsNoTracking()
         .FirstAsync(b => b.Id == id);
 
       context.Blogs.Remove(blogEntity);
@@ -68,7 +67,7 @@ namespace MyBlog.Persistence
     public async Task<Blog> GetBlogAsync(string slug)
     {
       var blogEntity = await context.Blogs
-        .FirstAsync(b => b.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
+        .FirstAsync(b => b.Slug == slug);
 
       return mapper.Map<BlogTable, Blog>(blogEntity);
     }

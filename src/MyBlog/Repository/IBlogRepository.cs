@@ -16,6 +16,6 @@ namespace MyBlog.Repository
     Task UpdateBlogAsync(int id, BlogForUpdatingDto updatedBlog);
     Task DeleteBlogAsync(int id);
 
-    Task<bool> BlogExistAsync(int blogId, bool onlyPublishedBlog);
+    Task<bool> IsBlogExistBySlugAsync(string slug, bool onlyPublishedBlog);
   }
 }
