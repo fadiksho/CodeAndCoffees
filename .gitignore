@@ -26,3 +26,5 @@
 /test/MyBlog/UnitTest.Mapper/obj
 /test/MyBlog/UnitTest.Helpers/obj
 /test/MyBlog/UnitTest.Helpers/bin/Debug/netcoreapp2.2
+/test/MyBlog/UnitTest.BusinessLogic/bin/Debug/netcoreapp2.2
+/test/MyBlog/UnitTest.BusinessLogic/obj

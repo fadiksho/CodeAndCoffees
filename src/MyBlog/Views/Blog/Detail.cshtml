@@ -1,24 +1,10 @@
-﻿@model Blog
+﻿@model BlogDetailViewModel
 @{
 
-  ViewData["PageTitle"] = Model.Title;
-  ViewData["MetaTitle"] = Model.Title;
-  var PageDescription = Model.GetFirstParagraphFromHtml(Model.Description);
-  if (!string.IsNullOrEmpty(PageDescription))
-  {
-    ViewData["PageDescription"] = PageDescription;
-    ViewData["MetaDescription"] = PageDescription;
-  }
-  else
-  {
-    ViewData["PageDescription"] = "Bring your coffee and enjoy reading in-depth articles about programming.";
-    ViewData["MetaDescription"] = "Bring your coffee and enjoy reading in-depth articles about programming.";
-  }
-
-  var disqusOption = new DisqusViewModel
-  {
-    PageTitle = Model.Title,
-  };
+  ViewData["PageTitle"] = Model.Blog.Title;
+  ViewData["MetaTitle"] = Model.Blog.Title;
+  ViewData["PageDescription"] = Model.PageDescription;
+  ViewData["MetaDescription"] = Model.PageDescription;
 }
 
 @section Styles {
@@ -48,16 +34,16 @@
 
 @section PageHeader {
   <div class="phbd">
-    <h1 class="phbd-header">@Model.Title</h1>
+    <h1 class="phbd-header">@Model.Blog.Title</h1>
     <div class="bdh-footer">
       <div class="bdhf-tag-date-wrapper">
         <div class="bdhf-date">
           <strong class="bdhf-date-icon">Publish Date: </strong>
-          <span>@Model.PublishedDate.ToString("dd/MM/yyyy")</span>
+          <span>@Model.Blog.PublishedDate.ToString("dd/MM/yyyy")</span>
         </div>
         <div class="bdhf-tags">
           <strong class="bdhf-tags-icon">Tags: </strong>
-          @foreach (var tag in Model.Tags)
+          @foreach (var tag in Model.Blog.Tags)
           {
             <span class="bdhf-tags-text">@(tag)</span> @:
           }
@@ -79,8 +65,8 @@
 }
 
 <article class="b-article">
-  @Html.Raw(Model.Body)
-  <vc:disqus disqus-options="new DisqusViewModel { PageTitle = Model.Title }" />
+  @Html.Raw(Model.Blog.Body)
+  <vc:disqus disqus-options="Model.DisqusViewModel" />
 </article>
 @section Scripts {
   <environment include="Development">

@@ -74,7 +74,7 @@ namespace UnitTest.Mapper
       {
         Id = 10,
         Title = "test convert",
-        Slug = "2017/12/10/test-convert",
+        Slug = "test-convert",
         Description = "test description",
         Body = "test body",
         PublishedDate = new DateTime(2017, 12, 10, 0, 0, 0),
@@ -108,7 +108,7 @@ namespace UnitTest.Mapper
       {
         Id = 10,
         Title = "test convert",
-        Slug = "2017/12/10/test-convert",
+        Slug = "test-convert",
         Description = "test description",
         Body = "test body",
         PublishedDate = new DateTime(2017, 12, 10, 0, 0, 0),

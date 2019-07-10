@@ -15,12 +15,5 @@ namespace MyBlog.Model
     public List<string> Tags { get; set; } = new List<string>();
     public DateTime PublishedDate { get; set; }
     public bool IsPublished { get; set; }
-
-    public string GetFirstParagraphFromHtml(string html)
-    {
-      Match m = Regex.Match(html, @"<(\s{0,2})p(\s{0,2})>\s{0,2}(.+?)\s{0,2}<(\s{0,2})\/(\s{0,2})p(\s{0,2})>");
-      if (m.Success) return m.Groups[3].Value;
-      else return "";
-    }
   }
 }

@@ -4,13 +4,13 @@
 <div class="blog-thumbnail">
   <!-- Title -->
   <div class="blog-thumbnail-header">
-    <a class="blog-thumbnail-header-link" href="/@Model.Slug">@(Model.Title)</a>
+    <a class="blog-thumbnail-header-link" href="/blog/@Model.Slug">@(Model.Title)</a>
   </div>
   <!-- Body -->
   <div class="blog-thumbnail-body">
     <div>
       @Html.Raw(Model.Description)
-      <a href="/@Model.Slug" class="blog-thumbnail-body-read-more-link">read more 🧐</a>
+      <a href="/blog/@Model.Slug" class="blog-thumbnail-body-read-more-link">read more 🧐</a>
     </div>
   </div>
   <!-- footer -->

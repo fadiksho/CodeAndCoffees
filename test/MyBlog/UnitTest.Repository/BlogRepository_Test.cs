@@ -48,6 +48,43 @@ namespace UnitTest.Repository
     }
 
     [Fact]
+    public async Task Blog_Should_Have_Unique_Slug()
+    {
+      using (var factory = new BlogContextFactory())
+      {
+        using (var context = factory.CreateBlogContext())
+        {
+          // Arrange
+          var unitOfWork = new UnitOfWork(context, mapper);
+          var blogTable = GetBlogTableInstance(slug: "new-blog", title: "new blog");
+          context.Blogs.Add(blogTable);
+          await unitOfWork.SaveAsync();
+          
+          try
+          {
+            // Act
+            var blogForCreatingDto = GetBlogForCreatingDtoInstance(title: "new blog");
+            await unitOfWork.Blogs.AddBlog(blogForCreatingDto);
+            // Should Throw SQLite Exception
+            // becourse it's a test related exception we don't care about it
+            // only the result of this action that matter
+            await unitOfWork.SaveAsync();
+          }
+          catch
+          {
+            Assert.Single(context.Blogs);
+          }
+        }
+
+          using (var context = factory.CreateBlogContext())
+          {
+            // Assert
+            var blogs = context.Blogs.ToList();
+            
+          }
+        }
+      }
+    [Fact]
     public async Task Updating_Blog()
     {
       using (var factory = new BlogContextFactory())
@@ -110,22 +147,19 @@ namespace UnitTest.Repository
     {
       using (var factory = new BlogContextFactory())
       {
-        int blogId = 0;
         using (var context = factory.CreateBlogContext())
         {
           // Arrange
-          var blogTable = GetBlogTableInstance(isPublished: false);
+          var blogTable = GetBlogTableInstance(slug: "new-blog", isPublished: false);
           context.Add(blogTable);
           context.SaveChanges();
-
-          blogId = blogTable.Id;
         }
 
         using (var context = factory.CreateBlogContext())
         {
           // Act
           var unitOfWork = new UnitOfWork(context, mapper);
-          var isBlogExist = await unitOfWork.Blogs.BlogExistAsync(blogId, true);
+          var isBlogExist = await unitOfWork.Blogs.IsBlogExistBySlugAsync("new-blog", true);
           // Assert
           Assert.False(isBlogExist);
         }
@@ -137,22 +171,19 @@ namespace UnitTest.Repository
     {
       using (var factory = new BlogContextFactory())
       {
-        int blogId = 0;
         using (var context = factory.CreateBlogContext())
         {
           // Arrange
-          var blogTable = GetBlogTableInstance();
+          var blogTable = GetBlogTableInstance(slug: "new-blog");
           context.Add(blogTable);
           context.SaveChanges();
-
-          blogId = blogTable.Id;
         }
 
         using (var context = factory.CreateBlogContext())
         {
           // Act
           var unitOfWork = new UnitOfWork(context, mapper);
-          var isBlogExist = await unitOfWork.Blogs.BlogExistAsync(blogId, true);
+          var isBlogExist = await unitOfWork.Blogs.IsBlogExistBySlugAsync("new-blog", true);
           // Assert
           Assert.True(isBlogExist);
         }
@@ -303,7 +334,7 @@ namespace UnitTest.Repository
         {
           var unitOfWork = new UnitOfWork(context, mapper);
           // Act & Assert
-          await Assert.ThrowsAsync<InvalidOperationException>(() => 
+          await Assert.ThrowsAsync<InvalidOperationException>(() =>
             unitOfWork.Blogs.GetBlogAsync("un existing slug"));
         }
       }
@@ -317,8 +348,8 @@ namespace UnitTest.Repository
         using (var context = factory.CreateBlogContext())
         {
           // Arrange
-          var blogTable1 = GetBlogTableInstance();
-          var blogTable2 = GetBlogTableInstance();
+          var blogTable1 = GetBlogTableInstance(slug: "first");
+          var blogTable2 = GetBlogTableInstance(slug: "second");
 
           context.Add(blogTable1);
           context.Add(blogTable2);
@@ -338,7 +369,7 @@ namespace UnitTest.Repository
         }
       }
     }
-
+    
     [Fact]
     public void Get_Blog_Page_Should_Be_In_Descending_Order_By_UpdatedDate()
     {
@@ -347,8 +378,8 @@ namespace UnitTest.Repository
         using (var context = factory.CreateBlogContext())
         {
           // Arrange
-          var blogTable1 = GetBlogTableInstance(title: "first", publishDate: "01/01/2019");
-          var blogTable2 = GetBlogTableInstance(title: "second", publishDate: "02/01/2019");
+          var blogTable1 = GetBlogTableInstance(title: "first", slug: "first", publishDate: "01/01/2019");
+          var blogTable2 = GetBlogTableInstance(title: "second", slug: "second", publishDate: "02/01/2019");
 
           context.Add(blogTable1);
           context.Add(blogTable2);

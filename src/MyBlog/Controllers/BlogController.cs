@@ -1,8 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.Extensions;
 using MyBlog.Model;
 using MyBlog.Repository.Data;
+using MyBlog.ViewModel;
 
 namespace MyBlog.Controllers
 {
@@ -18,44 +19,42 @@ namespace MyBlog.Controllers
     [HttpGet("blog/{pageNumber:int?}")]
     public IActionResult Index(int pageNumber = 1)
     {
-      try
+      PaggingResult<Blog> blogPage =
+      unitOfWork.Blogs.GetBlogsPage(new BlogQuery()
       {
-        PaggingResult<Blog> blogPage =
-        unitOfWork.Blogs.GetBlogsPage(new BlogQuery()
-        {
-          Page = pageNumber
-        });
-        return View(blogPage);
-      }
-      catch (Exception ex)
-      {
-        // ToDo: Logging
-        throw ex;
-      }
+        Page = pageNumber
+      });
+      return View(blogPage);
     }
 
-    [HttpGet("{year}/{month}/{day}/{slug}")]
-    public async Task<IActionResult> Detail(string year, string month, string day, string slug)
+    [HttpGet("/blog/{slug}")]
+    public async Task<IActionResult> Detail(string slug)
     {
-      var fullSlug = $"{year}/{month}/{day}/{slug}";
-      try
-      {
-        var blog = await unitOfWork.Blogs.GetBlogAsync(fullSlug);
+      var blog = await unitOfWork.Blogs.GetBlogAsync(slug);
 
-        if (blog == null || !blog.IsPublished)
+      if (blog == null || !blog.IsPublished)
+      {
+        // Implement Blog Not Found
+        return NotFound();
+      };
+
+      var pageDescription = blog.Description.GetFirstParagraphTextFromHtml();
+      if (string.IsNullOrEmpty(pageDescription))
+      {
+        pageDescription = "Bring your coffee and enjoy reading in-depth articles about programming.";
+      }
+
+      var blogDetailVM = new BlogDetailViewModel
+      {
+        Blog = blog,
+        DisqusViewModel = new DisqusViewModel
         {
-          // Implement Blog Not Found
-          return NotFound();
-        };
+          PageTitle = blog.Title
+        },
+        PageDescription = pageDescription
+      };
 
-        return View(blog);
-      }
-      catch
-      {
-        // ToDo: Logging
-      }
-
-      return Redirect("/");
+      return View(blogDetailVM);
     }
   }
 }
