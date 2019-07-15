@@ -24,19 +24,22 @@ namespace MyBlog.Controllers
       {
         Page = pageNumber
       });
+
       return View(blogPage);
     }
 
-    [HttpGet("/blog/{slug}")]
+    [HttpGet("blog/{slug}")]
     public async Task<IActionResult> Detail(string slug)
     {
-      var blog = await unitOfWork.Blogs.GetBlogAsync(slug);
-
-      if (blog == null || !blog.IsPublished)
+      var blogExist = await unitOfWork.Blogs
+        .IsBlogExistBySlugAsync(slug, onlyPublishedBlog: true);
+      if (!blogExist)
       {
         // Implement Blog Not Found
         return NotFound();
       };
+
+      var blog = await unitOfWork.Blogs.GetBlogAsync(slug);
 
       var pageDescription = blog.Description.GetFirstParagraphTextFromHtml();
       if (string.IsNullOrEmpty(pageDescription))
@@ -55,6 +58,6 @@ namespace MyBlog.Controllers
       };
 
       return View(blogDetailVM);
-    }
+    }   
   }
 }

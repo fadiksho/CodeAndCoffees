@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MyBlog.Abstraction;
@@ -11,6 +10,8 @@ using MyBlog.Services;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyBlog.Api
 {
@@ -22,16 +23,19 @@ namespace MyBlog.Api
     private readonly IUnitOfWork unitOfWork;
     private readonly IFileHelper fileHelper;
     private readonly WebSiteHostingSettings webHostingSettings;
+    private readonly ILogger<BlogApiController> logger;
     public BlobApiController(
       IOptions<AppSettings> config,
       IHostingEnvironment host,
       IUnitOfWork unitOfWork,
+      ILogger<BlogApiController> logger,
       IFileHelper fileHelper)
     {
       this.host = host;
       this.webHostingSettings = config.Value.WebSiteHosting;
       this.unitOfWork = unitOfWork;
       this.fileHelper = fileHelper;
+      this.logger = logger;
     }
     [HttpPost]
     public async Task<IActionResult> UploadAsync(BlobForCreatingDto blob)
@@ -50,8 +54,12 @@ namespace MyBlog.Api
       {
         return BadRequest("Invalid file type.");
       }
-
-      var folderPath = new string[] { "UploadedFiles", "Images", DateTime.Now.Year.ToString() };
+      var folderPath = new string[]
+      {
+        "UploadedFiles",
+        "Images",
+        DateTime.Now.Year.ToString()
+      };
       var uploadsFolerPath = Path.Combine(
         host.ContentRootPath, Path.Combine(folderPath));
       try
@@ -89,13 +97,12 @@ namespace MyBlog.Api
           }
         );
 
-        await unitOfWork.SaveAsync();
-
         return StatusCode(201);
       }
-      catch (IOException)
+      catch (IOException ex)
       {
-        return StatusCode(409, new { message = "The server is busy right now try again later" });
+        logger.LogError(ex, ex.Message);
+        return StatusCode(409, new { message = "The server is busy now try again later." });
       }
     }
 
@@ -136,9 +143,10 @@ namespace MyBlog.Api
         {
           myfileinf.Delete();
         }
-        catch (IOException)
+        catch (IOException ex)
         {
-          return StatusCode(409, new { message = "The server is busy right now try again later" });
+          logger.LogError(ex, ex.Message);
+          return StatusCode(409, new { message = "The server is busy now try again later." });
         }
       }
 

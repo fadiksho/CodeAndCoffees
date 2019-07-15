@@ -59,7 +59,8 @@
     <div class="nav-brand">
       <a class="nav-brand-link underline-from-center underline-from-center-d"
          asp-controller="Blog"
-         asp-action="Index">
+         asp-action="Index"
+         asp-route-pageNumber="1">
         <span>&lt;</span> Code & Coffees&nbsp;<span>></span>
       </a>
     </div>
@@ -74,7 +75,9 @@
              is-active-route>Blog</a>
           <button id="pwaInstallButton" onclick="addToHomeScreen()"
                   class="btn nav-button round-tl-br"
-                  aria-label="PWA install app" style="display:none;">PWA</button>
+                  aria-label="PWA install app" style="display:none;">
+            PWA
+          </button>
           <button id="subscribeButton" class="btn nav-button round-tl-br icon-bell-slash"
                   aria-label="Subscribe To Notifications" style="display:none;" disabled></button>
           <button id="toggleThemeButton" onclick="toggleTheme()"

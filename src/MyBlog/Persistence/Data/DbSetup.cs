@@ -1,16 +1,60 @@
-﻿using MyBlog.Entity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MyBlog.Entity;
+using MyBlog.Services;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MyBlog.Persistence.Data
 {
-  public static class DbInitialize
+  public static class DbSetup
   {
-    public static void SeedDb(BlogContext context, string url)
+    public static void EnsureMigrationAndSeeding(IWebHost host, Logger logger)
     {
+      using (var scope = host.Services.CreateScope())
+      {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<BlogContext>();
+        var config = host.Services.GetRequiredService<IConfiguration>().Get<AppSettings>();
+        var env = host.Services.GetRequiredService<IHostingEnvironment>();
+
+        logger.Debug("Apply Latest Migration.");
+        try
+        {
+          EnsureLatestMigration(context);
+        }
+        catch (Exception ex)
+        {
+          logger.Error(ex, "An error occurred while applying migration on the database.");
+          throw ex;
+        }
+        try
+        {
+          EnsureSeedDb(env, context, config);
+        }
+        catch (Exception ex)
+        {
+          logger.Error(ex, "An error occurred while seeding the database.");
+          throw ex;
+        }
+      }
+    }
+    public static void EnsureLatestMigration(BlogContext context)
+    {
+      context.Database.Migrate();
+    }
+    public static void EnsureSeedDb(IHostingEnvironment env, BlogContext context, AppSettings appSettings)
+    {
+      if (env.IsProduction() || env.IsStaging())
+        return;
+
       if (context.Blogs.Any())
         return;
+
       // Implement Init data for staging and development
       var blogs = new List<BlogTable>
       {

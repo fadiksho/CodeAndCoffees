@@ -1,5 +1,5 @@
-﻿var SITE_CACHE = 'site-cache-v2';
-var Article_CACHE = 'article-cache-v2';
+﻿var SITE_CACHE = 'site-cache-v1';
+var Article_CACHE = 'article-cache-v1';
 
 var offlineUrl = '/offline.html';
 
@@ -15,7 +15,6 @@ var urlsToCache = [
   './dist/js/site.js',
   './dist/js/blog-detail.js',
   './images/auther-image.png',
-  './offline.html',
   './manifest.json',
   './fonts/icons-font/icons-font.eot',
   './fonts/icons-font/icons-font.woff',
@@ -56,7 +55,7 @@ self.addEventListener('fetch', function (event) {
             addToCache(request, response, Article_CACHE);
             return response;
           }).catch(function () {
-            return getOfflineHtml();
+            //return getOfflineHtml();
           });
         });
       })
@@ -144,7 +143,6 @@ self.addEventListener('notificationclick', function (event) {
     })
   );
 });
-
 
 function addToCache(request, response, cacheName) {
   var copy = response.clone();

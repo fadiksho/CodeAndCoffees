@@ -1,12 +1,9 @@
-﻿using System;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MyBlog.Persistence.Data;
-using MyBlog.Services;
+using NLog.Web;
+using System;
 
 namespace MyBlog
 {
@@ -14,34 +11,35 @@ namespace MyBlog
   {
     public static void Main(string[] args)
     {
-      var host = CreateWebHostBuilder(args).Build();
-
-      using (var scope = host.Services.CreateScope())
+      var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+      try
       {
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<BlogContext>();
-        context.Database.Migrate();
-        var config = host.Services.GetRequiredService<IConfiguration>().Get<AppSettings>();
-        var env = host.Services.GetRequiredService<IHostingEnvironment>();
+        var host = CreateWebHostBuilder(args).Build();
 
-        try
-        {
-          if (!(env.IsProduction() || env.IsStaging()))
-          {
-            DbInitialize.SeedDb(context, config.WebSiteHosting.Url);
-          }
-        }
-        catch (Exception ex)
-        {
-          var logger = services.GetRequiredService<ILogger<Program>>();
-          logger.LogError(ex, "An error occurred while seeding the database.");
-        }
+        DbSetup.EnsureMigrationAndSeeding(host, logger);
+
+        host.Run();
       }
-      host.Run();
+      catch (Exception exception)
+      {
+        //NLog: catch setup errors
+        logger.Error(exception, "Stopped program because of exception");
+        throw;
+      }
+      finally
+      {
+        NLog.LogManager.Shutdown();
+      }
     }
 
     public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
         WebHost.CreateDefaultBuilder(args)
-            .UseStartup<Startup>();
+          .UseStartup<Startup>()
+          .ConfigureLogging(logging =>
+          {
+            logging.ClearProviders();
+            logging.SetMinimumLevel(LogLevel.Trace);
+          })
+          .UseNLog();
   }
 }

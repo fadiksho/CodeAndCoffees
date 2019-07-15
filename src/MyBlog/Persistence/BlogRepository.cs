@@ -57,8 +57,9 @@ namespace MyBlog.Persistence
     public async Task<Blog> GetBlogAsync(int id)
     {
       var blogEntity = await context.Blogs
-        .Where(b => b.Id == id)
+        .AsNoTracking()
         .FirstAsync(b => b.Id == id);
+
       var blog = mapper.Map<Blog>(blogEntity);
 
       return blog;
@@ -67,6 +68,7 @@ namespace MyBlog.Persistence
     public async Task<Blog> GetBlogAsync(string slug)
     {
       var blogEntity = await context.Blogs
+        .AsNoTracking()
         .FirstAsync(b => b.Slug == slug);
 
       return mapper.Map<BlogTable, Blog>(blogEntity);
@@ -110,7 +112,7 @@ namespace MyBlog.Persistence
       var blogEntity = await context.Blogs
         .FirstAsync(b => b.Id == id);
 
-      mapper.Map<BlogForUpdatingDto, BlogTable>(updatedBlogDto, blogEntity);
+      mapper.Map(updatedBlogDto, blogEntity);
     }
   }
 }

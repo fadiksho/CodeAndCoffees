@@ -12,6 +12,8 @@ using MyBlog.Persistence.Data;
 using MyBlog.Repository.Data;
 using MyBlog.Services;
 using AutoMapper;
+using Newtonsoft.Json.Serialization;
+
 namespace MyBlog
 {
   public class Startup
@@ -60,8 +62,13 @@ namespace MyBlog
           options.Authority = appSetting.JwtBearer.Authority;
           options.Audience = appSetting.JwtBearer.Audience;
         });
-      
+
       services.AddMvc()
+        .AddJsonOptions(opt =>
+        {
+          opt.SerializerSettings.ContractResolver =
+            new CamelCasePropertyNamesContractResolver();
+        })
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
 
@@ -75,6 +82,7 @@ namespace MyBlog
       else if (env.IsProduction() || env.IsStaging())
       {
         app.UseExceptionHandler("/Error");
+        
         app.UseHsts();
         app.UseHttpsRedirection();
       }
