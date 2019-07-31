@@ -267,18 +267,18 @@ window.addEventListener('load', function () {
     }
   }
   // Register ServiceWorker if Supported
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/serviceworker.js', {
-      updateViaCache: 'none'
-    }).then(function (swReg) {
-      swRegistration = swReg;
-      if ('PushManager' in window) {
-        initializeNotificationButton();
-      }
-    }).catch(function (error) {
-      console.log('ServiceWorker registration failed: ', error);
-    });
-  }
+  //if ('serviceWorker' in navigator) {
+  //  navigator.serviceWorker.register('/serviceworker.js', {
+  //    updateViaCache: 'none'
+  //  }).then(function (swReg) {
+  //    swRegistration = swReg;
+  //    if ('PushManager' in window) {
+  //      initializeNotificationButton();
+  //    }
+  //  }).catch(function (error) {
+  //    console.log('ServiceWorker registration failed: ', error);
+  //  });
+  //}
   // Check If We Are Runing From PWA APP
   if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
     console.log('Check if we Are Running From PWA App');
