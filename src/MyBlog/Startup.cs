@@ -13,6 +13,7 @@ using MyBlog.Repository.Data;
 using MyBlog.Services;
 using AutoMapper;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace MyBlog
 {
@@ -75,17 +76,38 @@ namespace MyBlog
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
+      app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
+
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
       }
       else if (env.IsProduction() || env.IsStaging())
       {
-        app.UseExceptionHandler("/Error");
-        
+        app.UseExceptionHandler(errorApp =>
+        {
+          errorApp.Run(async context =>
+          {
+            context.Response.StatusCode = 500;
+          });
+        });
         app.UseHsts();
         app.UseHttpsRedirection();
       }
+
+      // Disable html view response on api request
+      app.Use(async (ctx, next) =>
+      {
+        if (ctx.Request.Path.StartsWithSegments("/api", System.StringComparison.OrdinalIgnoreCase))
+        {
+          var statusCodeFeature = ctx.Features.Get<IStatusCodePagesFeature>();
+
+          if (statusCodeFeature != null && statusCodeFeature.Enabled)
+            statusCodeFeature.Enabled = false;
+        }
+
+        await next();
+      });
 
       app.UseCors("EnableCors");
       app.UseStaticFiles(new StaticFileOptions

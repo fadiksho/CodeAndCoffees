@@ -15,7 +15,9 @@ namespace UnitTest.BusinessLogic
     [InlineData(@"new.", "new")]
     [InlineData(@" new Blog Post", "new-blog-post")]
     [InlineData(@"new:Blog Post", "new-blog-post")]
+    [InlineData(@"new: Blog Post", "new-blog-post")]
     [InlineData(@"new::Blog&Post\new blog", "new-blog-and-post-new-blog")]
+    [InlineData(@"new:&:Blog& Post\new blog", "new-and-blog-and-post-new-blog")]
     [InlineData(@"new,Blog\,Post.", "new-blog-post")]
     public void ToFriendlyUrl_Test(string url, string expected)
     {

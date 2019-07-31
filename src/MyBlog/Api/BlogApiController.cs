@@ -10,7 +10,7 @@ using MyBlog.Services;
 
 namespace MyBlog.Api
 {
-  //[Authorize]
+  [Authorize]
   [Route("api/blog")]
   public class BlogApiController : Controller
   {
@@ -32,14 +32,19 @@ namespace MyBlog.Api
 
       return Ok(blogPage);
     }
-    
-    [HttpGet("{id}")]
+
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetBlog(int id)
     {
-      var blog = await unitOfWork.Blogs.GetBlogAsync(id);
-
-      if (blog == null)
+      var blogExist = await unitOfWork.Blogs
+        .IsBlogExistByIdAsync(id);
+      
+      if (!blogExist)
+      {
         return NotFound();
+      }
+
+      var blog = await unitOfWork.Blogs.GetBlogAsync(id);
 
       return Ok(blog);
     }
@@ -56,7 +61,7 @@ namespace MyBlog.Api
       {
         var slug = urlHelper.ToFriendlyUrl(newBlog.Title);
         var isUniqueSlug =
-          await unitOfWork.Blogs.IsBlogExistBySlugAsync(slug, false);
+          await unitOfWork.Blogs.IsBlogSlugUniqueAsync(slug);
 
         if (isUniqueSlug)
         {
@@ -86,7 +91,10 @@ namespace MyBlog.Api
         return new UnprocessableEntityObjectResult(ModelState);
       }
 
-      if (await unitOfWork.Blogs.GetBlogAsync(id) == null)
+      var blogExist = await unitOfWork.Blogs
+        .IsBlogExistByIdAsync(id);
+
+      if (!blogExist)
       {
         return NotFound();
       }
@@ -100,7 +108,10 @@ namespace MyBlog.Api
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBlog(int id)
     {
-      if (await unitOfWork.Blogs.GetBlogAsync(id) == null)
+      var blogExist = await unitOfWork.Blogs
+        .IsBlogExistByIdAsync(id);
+
+      if (!blogExist)
       {
         return NotFound();
       }
@@ -120,13 +131,15 @@ namespace MyBlog.Api
         return BadRequest();
       }
 
-      var blog = await unitOfWork.Blogs.GetBlogAsync(id);
+      var blogExist = await unitOfWork.Blogs
+        .IsBlogExistByIdAsync(id);
 
-      if (blog == null)
+      if (!blogExist)
       {
         return NotFound();
       }
 
+      var blog = await unitOfWork.Blogs.GetBlogAsync(id);
       var updatedBlogDto = Mapper.Map<BlogForUpdatingDto>(blog);
 
       TryValidateModel(updatedBlogDto);
@@ -135,8 +148,7 @@ namespace MyBlog.Api
       {
         var slug = urlHelper.ToFriendlyUrl(updatedBlogDto.Title);
         var isUniqueSlug =
-          await unitOfWork.Blogs.IsBlogExistBySlugAsync(slug, false);
-
+          await unitOfWork.Blogs.IsBlogSlugUniqueAsync(slug);
         if (isUniqueSlug)
         {
           patchDoc.ApplyTo(updatedBlogDto);

@@ -143,14 +143,14 @@ namespace UnitTest.Repository
     }
 
     [Fact]
-    public async Task Is_Blog_Exist_Should_be_False_When_Blog_Is_Not_Published()
+    public async Task Is_Blog_Slug_Unipque_Should_be_True()
     {
       using (var factory = new BlogContextFactory())
       {
         using (var context = factory.CreateBlogContext())
         {
           // Arrange
-          var blogTable = GetBlogTableInstance(slug: "new-blog", isPublished: false);
+          var blogTable = GetBlogTableInstance(slug: "new-blog-1", isPublished: false);
           context.Add(blogTable);
           context.SaveChanges();
         }
@@ -159,15 +159,15 @@ namespace UnitTest.Repository
         {
           // Act
           var unitOfWork = new UnitOfWork(context, mapper);
-          var isBlogExist = await unitOfWork.Blogs.IsBlogExistBySlugAsync("new-blog", true);
+          var isSlugUnique = await unitOfWork.Blogs.IsBlogSlugUniqueAsync("new-blog-2");
           // Assert
-          Assert.False(isBlogExist);
+          Assert.True(isSlugUnique);
         }
       }
     }
 
     [Fact]
-    public async Task Is_Blog_Exist_Should_be_True_When_Blog_Is_Published()
+    public async Task Is_Blog_Slug_Unipque_Should_be_False()
     {
       using (var factory = new BlogContextFactory())
       {
@@ -183,9 +183,9 @@ namespace UnitTest.Repository
         {
           // Act
           var unitOfWork = new UnitOfWork(context, mapper);
-          var isBlogExist = await unitOfWork.Blogs.IsBlogExistBySlugAsync("new-blog", true);
+          var isSlugUnique = await unitOfWork.Blogs.IsBlogSlugUniqueAsync("new-blog");
           // Assert
-          Assert.True(isBlogExist);
+          Assert.False(isSlugUnique);
         }
       }
     }
@@ -318,7 +318,7 @@ namespace UnitTest.Repository
     }
 
     [Fact]
-    public async Task Get_Blog_By_Slug_Should_Throw_InvalidOperationException()
+    public async Task Get_Blog_By_Slug_Should_Return_Null_If_Slug_Not_Exist()
     {
       using (var factory = new BlogContextFactory())
       {
@@ -334,8 +334,8 @@ namespace UnitTest.Repository
         {
           var unitOfWork = new UnitOfWork(context, mapper);
           // Act & Assert
-          await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            unitOfWork.Blogs.GetBlogAsync("un existing slug"));
+          var blog = await unitOfWork.Blogs.GetBlogAsync("un existing slug");
+          Assert.Null(blog);
         }
       }
     }

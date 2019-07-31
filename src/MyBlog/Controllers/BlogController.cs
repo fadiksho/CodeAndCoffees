@@ -31,15 +31,12 @@ namespace MyBlog.Controllers
     [HttpGet("blog/{slug}")]
     public async Task<IActionResult> Detail(string slug)
     {
-      var blogExist = await unitOfWork.Blogs
-        .IsBlogExistBySlugAsync(slug, onlyPublishedBlog: true);
-      if (!blogExist)
+      var blog = await unitOfWork.Blogs.GetBlogAsync(slug);
+
+      if (blog == null)
       {
-        // Implement Blog Not Found
         return NotFound();
       };
-
-      var blog = await unitOfWork.Blogs.GetBlogAsync(slug);
 
       var pageDescription = blog.Description.GetFirstParagraphTextFromHtml();
       if (string.IsNullOrEmpty(pageDescription))

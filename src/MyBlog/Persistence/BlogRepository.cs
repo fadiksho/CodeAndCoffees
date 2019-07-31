@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.DTO;
 using MyBlog.Entity;
@@ -36,14 +35,22 @@ namespace MyBlog.Persistence
       return blogEntity;
     }
 
-    public async Task<bool> IsBlogExistBySlugAsync(string slug, bool onlyPublishedBlog)
+    public async Task<bool> IsBlogExistByIdAsync(int id)
     {
       var blogEntity = await context.Blogs
         .AsNoTracking()
-        .FirstOrDefaultAsync(b => b.Slug == slug
-          && b.IsPublished == onlyPublishedBlog);
+        .FirstOrDefaultAsync(b => b.Id == id);
 
       return (blogEntity != null);
+    }
+
+    public async Task<bool> IsBlogSlugUniqueAsync(string slug)
+    {
+      var blogEntity = await context.Blogs
+        .AsNoTracking()
+        .FirstOrDefaultAsync(b => b.Slug == slug);
+
+      return (blogEntity == null);
     }
 
     public async Task DeleteBlogAsync(int id)
@@ -69,7 +76,7 @@ namespace MyBlog.Persistence
     {
       var blogEntity = await context.Blogs
         .AsNoTracking()
-        .FirstAsync(b => b.Slug == slug);
+        .FirstOrDefaultAsync(b => b.Slug == slug && b.IsPublished);
 
       return mapper.Map<BlogTable, Blog>(blogEntity);
     }

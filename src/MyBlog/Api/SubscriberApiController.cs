@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyBlog.DTO;
 using MyBlog.Model;
@@ -17,10 +18,14 @@ namespace MyBlog.Api
   public class SubscriberApiController : Controller
   {
     private readonly IUnitOfWork unitOfWork;
+    private readonly ILogger<SubscriberApiController> logger;
     private readonly VapidSettings vapidSettings;
-    public SubscriberApiController(IUnitOfWork unitOfWork, IOptions<AppSettings> config)
+    public SubscriberApiController(IUnitOfWork unitOfWork,
+    IOptions<AppSettings> config,
+    ILogger<SubscriberApiController> logger)
     {
       this.unitOfWork = unitOfWork;
+      this.logger = logger;
       this.vapidSettings = config.Value.Vapid;
     }
     [AllowAnonymous]
@@ -134,15 +139,12 @@ namespace MyBlog.Api
           await unitOfWork.Subscribers.RemovePushNotificationSubscriptionAsync(subscriber.Endpoint);
         }
       }
-      if (messageFaildCount > 0 && !await unitOfWork.SaveAsync())
+
+      if (messageFaildCount > 0)
       {
-        return StatusCode(500, new
-        {
-          subscribersCount = messageSentCount,
-          messageSentCount = messageSentCount - messageFaildCount,
-          messageFaildCount
-        });
+        await unitOfWork.SaveAsync();
       }
+
       return StatusCode(201, new
       {
         subscribersCount = messageSentCount,

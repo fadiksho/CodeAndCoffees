@@ -101,7 +101,7 @@ namespace MyBlog.Api
       }
       catch (IOException ex)
       {
-        logger.LogError(ex, ex.Message);
+        logger.LogWarning(ex.Message, ex);
         return StatusCode(409, new { message = "The server is busy now try again later." });
       }
     }
@@ -145,7 +145,7 @@ namespace MyBlog.Api
         }
         catch (IOException ex)
         {
-          logger.LogError(ex, ex.Message);
+          logger.LogWarning(ex.Message, ex);
           return StatusCode(409, new { message = "The server is busy now try again later." });
         }
       }
