@@ -14,6 +14,8 @@ using MyBlog.Services;
 using AutoMapper;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.SpaServices.Webpack;
+using Westwind.AspNetCore.LiveReload;
 
 namespace MyBlog
 {
@@ -35,11 +37,18 @@ namespace MyBlog
       services.Configure<AppSettings>(Configuration);
       services.AddDbContext<BlogContext>(options =>
           options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
-      
+
       services.AddScoped<IUnitOfWork, UnitOfWork>();
 
       services.AddSingleton<IFileHelper, FileHelper>();
       services.AddSingleton<IURLHelper, URLHelper>();
+
+      services.AddLiveReload(config =>
+      {
+        // optional - use config instead
+        //config.LiveReloadEnabled = true;
+        //config.FolderToMonitor = Path.GetFullname(Path.Combine(Env.ContentRootPath,"..")) ;
+      });
 
       services.AddAutoMapper(typeof(Startup));
 
@@ -80,6 +89,12 @@ namespace MyBlog
 
       if (env.IsDevelopment())
       {
+        app.UseLiveReload();
+        app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+        {
+          ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),
+          HotModuleReplacement = true
+        });
         app.UseDeveloperExceptionPage();
       }
       else if (env.IsProduction() || env.IsStaging())

@@ -24,11 +24,11 @@
   <meta property="og:image:height" content="1257">
   <meta property="og:image:width" content="2400">
   <link rel="icon" type="image/x-icon" href="~/favicon.ico">
-  
-    <link href="/dist/style.css" rel="stylesheet" />
-  
+  <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <link href="<%= htmlWebpackPlugin.files.chunks[chunk].css %>" rel="stylesheet" />
+  <% } %>
   @RenderSection("Styles", required: false)
-<meta name="apple-mobile-web-app-title" content="Code And Coffees" /><meta name="apple-mobile-web-app-capable" content="yes" /><meta name="apple-mobile-web-app-status-bar-style" content="default" /><meta name="theme-color" content="#FF7B39" /><link rel="manifest" href="/dist/manifest.9e6d34242f9302053a846a9822c6378d.json" /></head>
+</head>
 <body data-controller="@ViewContext.RouteData.Values["Controller"]" data-action="@ViewContext.RouteData.Values["Action"]">
   <nav class="nav">
     <div class="nav-brand">
@@ -82,9 +82,9 @@
     </div>
   </main>
   <div id="snackbar"></div>
-  
-    <script src="/dist/main.js"></script>
-  
+  <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+  <% } %>
   @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -11,6 +11,7 @@
 /src/MyBlog/web.config
 /src/MyBlog/appsettings.Staging.json
 /src/MyBlog/appsettings.json
+/src/MyBlog/ClientApp/node_modules
 /src/BlogManager/src/environments/environment.staging.ts
 /src/BlogManager/src/environments/environment.prod.ts
 /src/BlogManager/src/web.config

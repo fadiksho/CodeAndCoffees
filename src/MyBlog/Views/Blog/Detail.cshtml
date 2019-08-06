@@ -8,7 +8,7 @@
 }
 
 @section Styles {
-  <environment include="Development">
+  <!-- <environment include="Development">
     <link rel="stylesheet" href="~/css/blog-detail.css" />
     @if (Context.Request.Cookies["theme-color"] == "dark")
     {
@@ -29,7 +29,7 @@
     {
       <link rel="stylesheet" href="~/dist/css/theme/blog-detail-theme-default.css" id="blog-detail-theme-default" />
     }
-  </environment>
+  </environment> -->
 }
 
 @section PageHeader {
@@ -69,10 +69,10 @@
   <vc:disqus disqus-options="Model.DisqusViewModel" />
 </article>
 @section Scripts {
-  <environment include="Development">
+  <!-- <environment include="Development">
     <script src="~/js/blog-detail.js"></script>
   </environment>
   <environment exclude="Development">
     <script src="~/dist/js/blog-detail.js" asp-append-version="false"></script>
-  </environment>
+  </environment> -->
 }

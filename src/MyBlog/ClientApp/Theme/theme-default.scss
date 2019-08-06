@@ -1,0 +1,137 @@
+﻿@import "../shared/_variable";
+
+/* Components *********************************************************************************/
+.theme {
+  background-color: darken($background, 3%);
+  color: $color;
+}
+
+.btn {
+  &:focus {
+    box-shadow: 0 0 0 0.1rem $secondry-color;
+  }
+}
+
+.underline-from-center-d {
+  &.active {
+    &::before {
+      background-color: $primary-color;
+    }
+  }
+
+  &::before {
+    background-color: $secondry-color;
+  }
+}
+
+.nav {
+  background-color: darken($background, 1%);
+  color: $primary-color;
+}
+
+.nav-brand-link {
+  color: $primary-color;
+
+  span {
+    color: $secondry-color-darken;
+  }
+}
+
+.nav-item {
+  border-color: $secondry-color;
+}
+
+.nav-link {
+  color: $primary-color;
+
+  &.active {
+    background-color: $secondry-color;
+  }
+}
+
+.nav-button {
+  color: $secondry-color;
+}
+
+.aboutAuther-container {
+  background-color: darken($background, 1%);
+  color: $primary-color;
+}
+
+.aboutAuther-text {
+  border-color: $secondry-color;
+}
+
+.aboutAuther-text-auther {
+  border-color: $primary-color;
+}
+
+.aboutAuther-text-name {
+  color: $secondry-color-darken;
+}
+
+.aboutAuther-text-quote {
+  color: $secondry-color-darken;
+}
+
+.aboutAuther-social {
+  border-color: $secondry-color;
+}
+
+.phbl {
+  background-color: $primary-color;
+  color: $white;
+}
+
+.blog-thumbnail {
+  border-color: $secondry-color;
+  background-color: darken($background, 2%);
+}
+
+.blog-thumbnail-header-link {
+  color: $primary-color;
+}
+
+.blog-thumbnail-body-read-more-link {
+  color: $secondry-color-darken;
+}
+
+.blog-thumbnail-footer-date-icon {
+  color: $primary-color;
+}
+
+.blog-thumbnail-footer-tags-icon {
+  color: $primary-color;
+}
+
+.pagination-item {
+  background-color: $background;
+  color: $link-color;
+
+  &.active {
+    color: $white;
+    background-color: $secondry-color;
+  }
+
+  &:hover {
+    color: $white;
+    background-color: darken($secondry-color, 10%);
+  }
+}
+
+.pagination-item-navigation {
+  color: $white;
+  background-color: $secondry-color;
+
+  &:hover {
+    background-color: darken($secondry-color, 10%);
+  }
+}
+
+.pagination-link {
+  border-color: $secondry-color;
+}
+
+.social-link {
+  background-color: white;
+}
