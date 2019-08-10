@@ -34,7 +34,7 @@ module.exports = (env = {}, argv = {}) => {
         minRatio: 0.8
       }),
       new HtmlWebpackPlugin({
-        template: "_LayoutTemplate.cshtml",
+        template: "./Pages/_LayoutTemplate.cshtml",
         filename: "../../Views/Shared/_Layout.cshtml",
         inject: false
       }),
@@ -49,7 +49,8 @@ module.exports = (env = {}, argv = {}) => {
         icons: [
           {
             src: path.resolve("Assets/images/icon.png"),
-            sizes: [96, 128, 192, 256, 384, 512]
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: "/icons/"
           }
         ]
       }),
@@ -78,10 +79,17 @@ module.exports = (env = {}, argv = {}) => {
           ]
         },
         {
-          test: /\.(png|jpg|gif|woff|woff2|eot|ttf|svg)$/,
+          test: /\.(png|jpg|gif|svg)$/,
           loader: "file-loader",
           options: {
-            name: "[name].[ext]"
+            name: "images/[name].[ext]"
+          }
+        },
+        {
+          test: /\.(woff|woff2|eot|ttf)$/,
+          loader: "file-loader",
+          options: {
+            name: "fonts/[name].[ext]"
           }
         },
         {

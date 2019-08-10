@@ -6,6 +6,10 @@ import "./Assets/images/codeandcoffees-brand-2400x1260.png";
 import "./Assets/favicon.ico";
 import "./Assets/images/icon.png";
 
+import "./Assets/fonts/icons-font/icons-font.eot";
+import "./Assets/fonts/icons-font/icons-font.ttf";
+import "./Assets/fonts/icons-font/icons-font.woff";
+
 import "./Pages/site.scss";
 import "./Pages/BlogDetail/blog-detail.scss";
 import "./Theme/theme-dark.scss";
