@@ -21,7 +21,6 @@
     <Folder Include="ClientApp\Pages\" />
     <Folder Include="ClientApp\Shared\" />
     <Folder Include="UploadedFiles\" />
-    <Folder Include="wwwroot\dist\js\" />
   </ItemGroup>
 
   <ItemGroup>

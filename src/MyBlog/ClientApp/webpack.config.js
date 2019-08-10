@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WebpackPwaManifest = require("webpack-pwa-manifest");
+const workboxPlugin = require("workbox-webpack-plugin");
 
 module.exports = (env = {}, argv = {}) => {
   const isProd = argv.mode === "production";
@@ -51,6 +52,11 @@ module.exports = (env = {}, argv = {}) => {
             sizes: [96, 128, 192, 256, 384, 512]
           }
         ]
+      }),
+      new workboxPlugin.InjectManifest({
+        swDest: "../sw.js",
+        swSrc: "./sw.js",
+        exclude: [/\.cshtml$/]
       })
     ],
     module: {

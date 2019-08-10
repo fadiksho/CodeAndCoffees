@@ -4,9 +4,12 @@ import "./Assets/images/codeandcoffees-brand-1200x1200.png";
 import "./Assets/images/codeandcoffees-brand-2400x1260.png";
 
 import "./Assets/favicon.ico";
+import "./Assets/images/icon.png";
 
 import "./Pages/site.scss";
+import "./Pages/BlogDetail/blog-detail.scss";
 import "./Theme/theme-dark.scss";
+
 import "./Pages/site.js";
 
 // Add a namespace

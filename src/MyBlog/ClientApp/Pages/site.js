@@ -187,18 +187,21 @@ function addToHomeScreen() {
 
 window.addEventListener("load", function() {
   // Register ServiceWorker if Supported
-  //if ('serviceWorker' in navigator) {
-  //  navigator.serviceWorker.register('/serviceworker.js', {
-  //    updateViaCache: 'none'
-  //  }).then(function (swReg) {
-  //    swRegistration = swReg;
-  //    if ('PushManager' in window) {
-  //      initializeNotificationButton();
-  //    }
-  //  }).catch(function (error) {
-  //    console.log('ServiceWorker registration failed: ', error);
-  //  });
-  //}
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then(swReg => {
+        swRegistration = swReg;
+        console.log("SW registered.");
+        if ("PushManager" in window) {
+          console.log("Push Notification is supported.");
+          initializeNotificationButton();
+        }
+      })
+      .catch(swRegError => {
+        console.log("SW registration failed: ", swRegError);
+      });
+  }
   // Check If We Are Runing From PWA APP
   if (
     window.matchMedia("(display-mode: standalone)").matches ||

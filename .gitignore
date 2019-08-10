@@ -3,7 +3,6 @@
 ################################################################################
 
 /.vs
-/src/MyBlog/node_modules
 /src/MyBlog/bin
 /src/MyBlog/obj
 /src/MyBlog/MyBlog.csproj.user
@@ -12,6 +11,8 @@
 /src/MyBlog/appsettings.Staging.json
 /src/MyBlog/appsettings.json
 /src/MyBlog/ClientApp/node_modules
+/src/MyBlog/wwwroot
+/src/MyBlog/Views/Shared/_Layout.cshtml
 /src/BlogManager/src/environments/environment.staging.ts
 /src/BlogManager/src/environments/environment.prod.ts
 /src/BlogManager/src/web.config

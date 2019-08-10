@@ -1,6 +1,4 @@
-﻿import "./blog-detail.scss";
-
-window.addEventListener("load", function() {
+﻿window.addEventListener("load", function() {
   document
     .getElementById("scrolToButton")
     .addEventListener("click", function() {
