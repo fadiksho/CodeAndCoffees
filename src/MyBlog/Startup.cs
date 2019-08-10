@@ -107,9 +107,9 @@ namespace MyBlog
           });
         });
         app.UseHsts();
-        app.UseHttpsRedirection();
       }
 
+      app.UseHttpsRedirection();
       // Disable html view response on api request
       app.Use(async (ctx, next) =>
       {
@@ -140,7 +140,14 @@ namespace MyBlog
       app.UseStaticFiles();
 
       app.UseAuthentication();
-      app.UseMvc();
+      app.UseMvc(routes =>
+      {
+        routes.MapRoute("Blog", "Blog/{*slug}",
+          defaults: new { controller = "Blog", action = "Detail" });
+        routes.MapRoute("BlogPage", "{controller}/{pageNumber:int}",
+          defaults: new { controller = "Blog", action = "Pagination" });
+        routes.MapRoute("Defaults", "{controller=Blog}/{action=Index}/{id?}");
+      });
     }
   }
 }

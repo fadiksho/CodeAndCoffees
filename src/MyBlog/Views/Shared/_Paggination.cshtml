@@ -4,6 +4,8 @@
 	<ul class="pagination-links">
 		<li class="pagination-item pagination-item-navigation @(!Model.HasPrevious ? "disabled" : "")">
 			<a class="pagination-link"
+				 asp-controller="Blog"
+				 asp-action="Pagination"
 				 asp-route-pageNumber="@(Model.CurrentPage-1)">
 				<span>&laquo;</span>
 			</a>
@@ -14,6 +16,8 @@
 					is-active-route
 					asp-route-pageNumber="@i">
 				<a class="pagination-link"
+					 asp-controller="Blog"
+					 asp-action="Pagination"
 					 asp-route-pageNumber="@i">
 					@i
 				</a>
@@ -21,6 +25,8 @@
 		}
 		<li class="pagination-item pagination-item-navigation @(!Model.HasNext ? "disabled" : "")">
 			<a class="pagination-link"
+				 asp-controller="Blog"
+				 asp-action="Pagination"
 				 asp-route-pageNumber="@(Model.CurrentPage+1)">
 				<span>&raquo;</span>
 			</a>

@@ -34,20 +34,16 @@
     <div class="nav-brand">
       <a class="nav-brand-link underline-from-center underline-from-center-d"
          asp-controller="Blog"
-         asp-action="Index"
-         asp-route-pageNumber="1">
+         asp-action="Index">
         <span>&lt;</span> Code & Coffees&nbsp;<span>></span>
       </a>
     </div>
     <div class="nav-container">
       <ul class="nav-list">
-        <li class="nav-item nav-item-first" is-active-route
-            asp-controller="Blog"
-            asp-action="Index">
+        <li class="nav-item nav-item-first">
           <a class="nav-link underline-from-center underline-from-center-d"
              asp-controller="Blog"
-             asp-action="Index"
-             is-active-route>Blog</a>
+             asp-action="Index">Blog</a>
           <button id="pwaInstallButton" onclick="addToHomeScreen()"
                   class="btn nav-button round-tl-br"
                   aria-label="PWA install app" style="display:none;">
