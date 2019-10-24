@@ -96,6 +96,7 @@ namespace MyBlog.Api
             FileSize = blob.File.Length
           }
         );
+        await this.unitOfWork.SaveAsync();
 
         return StatusCode(201);
       }

@@ -46,8 +46,8 @@ namespace MyBlog
       services.AddLiveReload(config =>
       {
         // optional - use config instead
-        //config.LiveReloadEnabled = true;
-        //config.FolderToMonitor = Path.GetFullname(Path.Combine(Env.ContentRootPath,"..")) ;
+        // config.LiveReloadEnabled = true;
+        // config.FolderToMonitor = Path.GetFullname(Path.Combine(Env.ContentRootPath,"..")) ;
       });
 
       services.AddAutoMapper(typeof(Startup));
@@ -89,11 +89,13 @@ namespace MyBlog
 
       if (env.IsDevelopment())
       {
+        // ToDo: check if there is a bug in this package when we hit statuscode controller
+        // it return 500 error instead of the specifid view.
         app.UseLiveReload();
         app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
         {
           ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),
-          HotModuleReplacement = true
+          // HotModuleReplacement = true
         });
         app.UseDeveloperExceptionPage();
       }
@@ -107,9 +109,9 @@ namespace MyBlog
           });
         });
         app.UseHsts();
+        app.UseHttpsRedirection();
       }
 
-      app.UseHttpsRedirection();
       // Disable html view response on api request
       app.Use(async (ctx, next) =>
       {
@@ -142,9 +144,9 @@ namespace MyBlog
       app.UseAuthentication();
       app.UseMvc(routes =>
       {
-        routes.MapRoute("Blog", "Blog/{*slug}",
+        routes.MapRoute("Blog", "post/{*slug}",
           defaults: new { controller = "Blog", action = "Detail" });
-        routes.MapRoute("BlogPage", "{controller}/{pageNumber:int}",
+        routes.MapRoute("BlogPage", "blog/page/{pageNumber:int}",
           defaults: new { controller = "Blog", action = "Pagination" });
         routes.MapRoute("Defaults", "{controller=Blog}/{action=Index}/{id?}");
       });

@@ -1,5 +1,5 @@
-﻿@import '_variable.scss';
-@import '_mixins.scss';
+﻿@import "_variable.scss";
+@import "_mixins.scss";
 *,
 *::before,
 *::after {
@@ -25,7 +25,16 @@ html {
 // Shim for "new" HTML5 structural elements to display correctly (IE10, older browsers)
 // TODO: remove in v5
 // stylelint-disable-next-line selector-list-comma-newline-after
-article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
+article,
+aside,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
   display: block;
 }
 
@@ -55,7 +64,6 @@ body {
   outline: 0 !important;
 }
 
-
 // Content grouping
 //
 // 1. Add the correct box sizing in Firefox.
@@ -67,7 +75,6 @@ hr {
   overflow: visible; // 2
 }
 
-
 //
 // Typography
 //
@@ -77,7 +84,12 @@ hr {
 // By default, `<h1>`-`<h6>` all receive top and bottom margins. We nuke the top
 // margin for easier control within type scales as it avoids margin collapsing.
 // stylelint-disable-next-line selector-list-comma-newline-after
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0;
   margin-bottom: $headings-margin-bottom;
 }
@@ -131,7 +143,7 @@ dt {
 }
 
 dd {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   margin-left: 0; // Undo browser default
 }
 
@@ -162,13 +174,12 @@ sup {
 }
 
 sub {
-  bottom: -.25em;
+  bottom: -0.25em;
 }
 
 sup {
-  top: -.5em;
+  top: -0.5em;
 }
-
 
 //
 // Links
@@ -178,7 +189,6 @@ a {
   text-decoration: none;
   cursor: pointer;
   background-color: transparent; // Remove the gray background on active links in IE 10.
-
 }
 
 // And undo these styles for placeholder links/named anchors (without href)
@@ -200,7 +210,6 @@ a {
     outline: 0;
   }
 }*/
-
 
 //
 // Code
@@ -225,7 +234,6 @@ pre {
   -ms-overflow-style: scrollbar;
 }
 
-
 //
 // Figures
 //
@@ -234,7 +242,6 @@ figure {
   // Apply a consistent margin strategy (matches our type styles).
   margin: 0 0 1rem;
 }
-
 
 //
 // Images and content
@@ -252,7 +259,6 @@ svg {
   vertical-align: middle;
 }
 
-
 //
 // Tables
 //
@@ -262,8 +268,8 @@ table {
 }
 
 caption {
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
   color: #6c757d;
   text-align: left;
   caption-side: bottom;
@@ -275,7 +281,6 @@ th {
   text-align: inherit;
 }
 
-
 //
 // Forms
 //
@@ -284,21 +289,6 @@ label {
   // Allow labels to use `margin` for spacing.
   display: inline-block;
   /*margin-bottom: $label-margin-bottom;*/
-}
-
-// Remove the default `border-radius` that macOS Chrome adds.
-//
-// Details at https://github.com/twbs/bootstrap/issues/24093
-button {
-  border-radius: 0;
-}
-
-// Work around a Firefox/IE bug where the transparent `button` background
-// results in a loss of the default `button` focus styles.
-//
-// Credit: https://github.com/suitcss/base/
-button:focus {
-  outline: none;
 }
 
 input,
@@ -347,7 +337,6 @@ input[type="checkbox"] {
   padding: 0; // 2. Remove the padding in IE 10-
 }
 
-
 input[type="date"],
 input[type="time"],
 input[type="datetime-local"],
@@ -386,7 +375,7 @@ legend {
   width: 100%;
   max-width: 100%; // 1
   padding: 0;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   font-size: 1.5rem;
   line-height: inherit;
   color: inherit; // 2

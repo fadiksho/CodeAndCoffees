@@ -1,20 +1,20 @@
 // assets
 import "./Assets/images/auther-image.png";
-import "./Assets/images/codeandcoffees-brand-1200x1200.png";
-import "./Assets/images/codeandcoffees-brand-2400x1260.png";
+import "./Assets/images-crawler/codeandcoffees-brand-1200x1200.png";
+import "./Assets/images-crawler/codeandcoffees-brand-2400x1260.png";
 
 import "./Assets/favicon.ico";
 import "./Assets/images/icon.png";
 
-import "./Assets/fonts/icons-font/icons-font.eot";
-import "./Assets/fonts/icons-font/icons-font.ttf";
-import "./Assets/fonts/icons-font/icons-font.woff";
+import "./Assets/offline.html";
+import "./Assets/404.html";
 
 import "./Pages/site.scss";
 import "./Pages/BlogDetail/blog-detail.scss";
 import "./Theme/theme-dark.scss";
 
 import "./Pages/site.js";
+import "./Pages/serviceworker.js";
 
 // Add a namespace
 window.MyBlog = {};

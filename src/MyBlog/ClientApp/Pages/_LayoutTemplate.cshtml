@@ -41,16 +41,16 @@
     <div class="nav-container">
       <ul class="nav-list">
         <li class="nav-item nav-item-first">
-          <a class="nav-link underline-from-center underline-from-center-d"
+          <a class="btn round-tl-br btn-noborder round-tr-bl mr-auto btn-default"
              asp-controller="Blog"
              asp-action="Index">Blog</a>
-          <button id="pwaInstallButton" onclick="addToHomeScreen()"
-                  class="btn nav-button round-tl-br"
-                  aria-label="PWA install app" style="display:none;">
+          <button id="pwaInstallButton"
+                  class="btn btn-noborder round-tl-br btn-default"
+                  aria-label="PWA install app">
             PWA
           </button>
-          <button id="subscribeButton" class="btn nav-button round-tl-br icon-bell-slash"
-                  aria-label="Subscribe To Notifications" style="display:none;" disabled></button>
+          <button id="subscribeButton" class="btn btn-noborder round-tl-br icon-bell-slash"
+                  aria-label="Subscribe To Notifications" style="display:none;" disabled>Bell</button>
         </li>
       </ul>
       <div class="hide-md-down">
@@ -77,7 +77,6 @@
       </footer>
     </div>
   </main>
-  <div id="snackbar"></div>
   <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
     <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
   <% } %>

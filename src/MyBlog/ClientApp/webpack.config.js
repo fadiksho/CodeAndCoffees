@@ -10,7 +10,7 @@ module.exports = (env = {}, argv = {}) => {
 
   const config = {
     mode: argv.mode || "development", // we default to development when no 'mode' arg is passed
-
+    devtool: "inline-source-map",
     optimization: {
       minimize: true
     },
@@ -50,14 +50,14 @@ module.exports = (env = {}, argv = {}) => {
           {
             src: path.resolve("Assets/images/icon.png"),
             sizes: [96, 128, 192, 256, 384, 512],
-            destination: "/icons/"
+            destination: path.join("icons")
           }
         ]
       }),
       new workboxPlugin.InjectManifest({
         swDest: "../sw.js",
         swSrc: "./sw.js",
-        exclude: [/\.cshtml$/]
+        include: [/\.(css|js|html|ico|json)$/, /images\/.*\.(png|svg|jpg)$/]
       })
     ],
     module: {
@@ -79,17 +79,11 @@ module.exports = (env = {}, argv = {}) => {
           ]
         },
         {
-          test: /\.(png|jpg|gif|svg)$/,
+          test: /\.(html|png|jpg|gif|svg|woff|woff2|eot|ttf)$/,
           loader: "file-loader",
           options: {
-            name: "images/[name].[ext]"
-          }
-        },
-        {
-          test: /\.(woff|woff2|eot|ttf)$/,
-          loader: "file-loader",
-          options: {
-            name: "fonts/[name].[ext]"
+            context: "Assets",
+            name: "[path][name].[ext]"
           }
         },
         {

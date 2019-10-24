@@ -1,38 +1,13 @@
 ﻿@import "../shared/_variable";
 @import "./blog-detail-theme-dark.scss";
 
-$primary-color: #ff7b39;
-$color: darken(#fff, 7%);
-$background: #000;
-$secondry-color: gray;
-$link-color: royalblue;
-$link-hover-color: darken($link-color, 10%);
-
 .theme {
   background-color: $background;
   color: $color;
 }
 
-.btn {
-  &:focus {
-    box-shadow: 0px 0px 0px 0.1rem $primary-color;
-  }
-}
-
-.underline-from-center-d {
-  &.active {
-    &::before {
-      background-color: $secondry-color;
-    }
-  }
-
-  &::before {
-    background-color: $secondry-color;
-  }
-}
-
 .nav {
-  background: lighten($background, 5%);
+  background: $background-secondry;
   color: $color;
 }
 
@@ -48,21 +23,8 @@ $link-hover-color: darken($link-color, 10%);
   border-color: $primary-color;
 }
 
-.nav-link {
-  color: $primary-color;
-
-  &.active {
-    color: $color;
-    background-color: $primary-color;
-  }
-}
-
-.nav-button {
-  color: $primary-color;
-}
-
 .aboutAuther-container {
-  background-color: lighten($background, 5%);
+  background-color: $background-secondry;
   color: $color;
 }
 
@@ -93,7 +55,7 @@ $link-hover-color: darken($link-color, 10%);
 
 .blog-thumbnail {
   border-color: $secondry-color;
-  background-color: lighten($background, 5%);
+  background-color: $background-secondry;
 }
 
 .blog-thumbnail-header-link {
@@ -144,7 +106,7 @@ $link-hover-color: darken($link-color, 10%);
   background-color: white;
 }
 
-.comments-block-button {
+.btn-default {
   background-color: transparent;
   color: $primary-color;
   border-color: $primary-color;
@@ -153,4 +115,53 @@ $link-hover-color: darken($link-color, 10%);
     background-color: $primary-color;
     color: $white;
   }
+}
+
+.toast {
+  color: $color;
+  background-color: $black;
+  .toast-action-button {
+    background-color: transparent;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .toast-close {
+    background: transparent;
+    color: $red;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+  .toast-accept {
+    color: $green;
+    border-color: $green;
+    &:hover {
+      color: $color;
+      background: $green;
+    }
+  }
+  .toast-reject {
+    color: $red;
+    border-color: $red;
+    &:hover {
+      color: $color;
+      background: $red;
+    }
+  }
+}
+.toast-info {
+  border-color: $primary-color;
+  box-shadow: 0 0 10px $primary-color;
+}
+.toast-success {
+  border-color: $green;
+  box-shadow: 0 0 10px $green;
+}
+.toast-warning {
+  border-color: $yellow;
+  box-shadow: 0 0 10px $yellow;
+}
+.toast-error {
+  border-color: $red;
+  box-shadow: 0 0 10px $red;
 }

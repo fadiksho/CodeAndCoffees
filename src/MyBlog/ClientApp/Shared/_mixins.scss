@@ -1,4 +1,4 @@
-﻿@import './variable';
+﻿@import "./variable";
 
 @mixin media-breakpoint-sm {
   @media (min-width: #{$breakpoint-sm}) {
@@ -20,7 +20,11 @@
     @content;
   }
 }
-
+@mixin media-breakpoint-xxl {
+  @media (min-width: #{$breakpoint-xxl}) {
+    @content;
+  }
+}
 
 @mixin hover-focus {
   &:hover,
@@ -32,6 +36,6 @@
 @mixin page-header {
   padding: 0.5rem 1rem;
   border-radius: $radius-round;
-  margin: 0.3rem;
-  margin-bottom: 0rem;
+  margin: 0.5rem;
+  margin-bottom: 0;
 }
