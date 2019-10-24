@@ -46,11 +46,12 @@ module.exports = (env = {}, argv = {}) => {
         display: "standalone",
         theme_color: "#FF7B39",
         ios: true,
+        start_url: "/",
         icons: [
           {
             src: path.resolve("Assets/images/icon.png"),
             sizes: [96, 128, 192, 256, 384, 512],
-            destination: path.join("icons")
+            destination: path.join("pwa-icons")
           }
         ]
       }),

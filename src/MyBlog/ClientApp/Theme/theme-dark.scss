@@ -1,4 +1,4 @@
-﻿@import "../shared/_variable";
+﻿@import "../shared/variable";
 @import "./blog-detail-theme-dark.scss";
 
 .theme {
@@ -102,10 +102,6 @@
   color: $color;
 }
 
-.social-link {
-  background-color: white;
-}
-
 .btn-default {
   background-color: transparent;
   color: $primary-color;
@@ -122,7 +118,6 @@
   background-color: $black;
   .toast-action-button {
     background-color: transparent;
-    transition: background-color 0.3s, color 0.3s;
   }
   .toast-close {
     background: transparent;
@@ -164,4 +159,11 @@
 .toast-error {
   border-color: $red;
   box-shadow: 0 0 10px $red;
+}
+
+.icon-wrapper {
+  background-color: transparent;
+  &:hover {
+    background-color: #3a3a3a;
+  }
 }

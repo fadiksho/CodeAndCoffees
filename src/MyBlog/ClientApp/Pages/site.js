@@ -168,7 +168,8 @@ function addToHomeScreen() {
     onAccept: function() {
       console.log("Accepting! 1");
     },
-    type: "info"
+    type: "info",
+    sticky: true
   });
   // if (deferredPrompt) {
   //   // Show the prompt

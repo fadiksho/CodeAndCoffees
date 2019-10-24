@@ -1,5 +1,4 @@
 ﻿@import "./mixins";
-
 @import "./reboot";
 
 ::-webkit-scrollbar {
@@ -49,19 +48,9 @@ button[disabled] {
   padding: 0.3rem 0.5rem;
   border-style: solid;
   cursor: pointer;
+  transition: $background-color-transtion;
 }
-.btn-image {
-  display: inline-block;
-  text-align: center;
-  padding: 0.3rem;
-  background-color: white;
-  img {
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    vertical-align: middle;
-  }
-}
+
 .btn-noborder {
   border: none;
 }
@@ -81,15 +70,16 @@ button[disabled] {
 .mr-auto {
   margin-right: auto;
 }
+
+.ml-1 {
+  margin-left: 0.2rem;
+}
 .social-links-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  font-size: 1.5rem;
 }
-.social-link {
-  padding: 0.2rem;
-}
+
 /* Blog List ******************************************************************** */
 .phbl {
   @include page-header;
@@ -106,4 +96,39 @@ footer {
   text-align: center;
   font-style: italic;
   margin: 1rem;
+}
+
+/* Icons ******************************************************************** */
+.icon-wrapper {
+  border-radius: $radius-round;
+  width: 2rem;
+  height: 2rem;
+  transition: $background-color-transtion;
+  padding: 0;
+  border: none;
+}
+.icon {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-origin: content-box;
+  padding: 0.2rem;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+.icon-bell-silent {
+  background-image: url("../Assets/icons/bell-silent.svg");
+}
+.icon-bell {
+  background-image: url("../Assets/icons/bell.svg");
+}
+.icon-twitter {
+  background-image: url("../Assets/icons/twitter.svg");
+}
+.icon-github {
+  background-image: url("../Assets/icons/github.svg");
+}
+.icon-linkedin {
+  background-image: url("../Assets/icons/linkedin.svg");
 }

@@ -1,13 +1,10 @@
-// // workbox.core.skipWaiting();
-// // workbox.core.clientsClaim();
-
 workbox.precaching.cleanupOutdatedCaches();
 
 const offlinePage = "/dist/offline.html";
-const notFoundPage = "/dist/404.html";
+// const notFoundPage = "/dist/404.html";
 
 workbox.routing.registerRoute(
-  new RegExp("/dist/icons/"),
+  new RegExp("/dist/pwa-icons/"),
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: "pwa-icon-cache"
   })
@@ -52,15 +49,13 @@ workbox.routing.registerRoute(postPagesMatch, ({ event }) => {
   return postPagesHandler
     .handle({ event })
     .then(response => {
-      if (!response) {
-        return caches.match(workbox.precaching.getCacheKeyForURL(offlinePage));
-      } else if (response.status === 404) {
-        return caches.match(workbox.precaching.getCacheKeyForURL(notFoundPage));
-      }
-      return response;
+      return (
+        response ||
+        caches.match(workbox.precaching.getCacheKeyForURL(offlinePage))
+      );
     })
     .catch(() => {
-      return response;
+      return caches.match(workbox.precaching.getCacheKeyForURL(offlinePage));
     });
 });
 
@@ -80,15 +75,13 @@ workbox.routing.registerRoute(new RegExp("/post/.+"), ({ event }) => {
   return articleHandler
     .handle({ event })
     .then(response => {
-      if (!response) {
-        return caches.match(workbox.precaching.getCacheKeyForURL(offlinePage));
-      } else if (response.status === 404) {
-        return caches.match(workbox.precaching.getCacheKeyForURL(notFoundPage));
-      }
-      return response;
+      return (
+        response ||
+        caches.match(workbox.precaching.getCacheKeyForURL(offlinePage))
+      );
     })
     .catch(() => {
-      return response;
+      return caches.match(workbox.precaching.getCacheKeyForURL(offlinePage));
     });
 });
 
@@ -99,15 +92,24 @@ workbox.routing.registerRoute(
     plugins: [
       new workbox.expiration.Plugin({
         maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
+        maxAgeSeconds: 30 * 24 * 60 * 60 * 12 // 30 Days
       })
     ]
   })
 );
 
-workbox.routing.setCatchHandler(({ url, event, params }) => {
-  console.log(`Catch Error \n ${url} \n ${event} \n ${params}`);
-});
+workbox.routing.registerRoute(
+  /\.(svg)$/,
+  new workbox.strategies.CacheFirst({
+    cacheName: "icon",
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 60,
+        maxAgeSeconds: 30 * 24 * 60 * 60 * 12 // 1 year
+      })
+    ]
+  })
+);
 
 addEventListener("push", event => {
   if (event.data) {

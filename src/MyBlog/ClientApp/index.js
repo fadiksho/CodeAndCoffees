@@ -6,8 +6,14 @@ import "./Assets/images-crawler/codeandcoffees-brand-2400x1260.png";
 import "./Assets/favicon.ico";
 import "./Assets/images/icon.png";
 
+// Icons
+import "./Assets/icons/bell.svg";
+import "./Assets/icons/bell-silent.svg";
+import "./Assets/icons/github.svg";
+import "./Assets/icons/twitter.svg";
+import "./Assets/icons/linkedin.svg";
+
 import "./Assets/offline.html";
-import "./Assets/404.html";
 
 import "./Pages/site.scss";
 import "./Pages/BlogDetail/blog-detail.scss";

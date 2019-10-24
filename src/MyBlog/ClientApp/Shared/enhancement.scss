@@ -33,39 +33,6 @@
   }
 }
 
-.toast {
-  color: $color;
-  background-color: $black;
-  .toast-action-button {
-    background-color: transparent;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  .toast-close {
-    background: transparent;
-    color: $red;
-    cursor: pointer;
-    &:hover {
-      opacity: 0.7;
-    }
-  }
-  .toast-accept {
-    color: $green;
-    border-color: $green;
-    &:hover {
-      color: $color;
-      background: $green;
-    }
-  }
-  .toast-reject {
-    color: $red;
-    border-color: $red;
-    &:hover {
-      color: $color;
-      background: $red;
-    }
-  }
-}
-
 .bounceInRight {
   animation-name: bounceInRight;
 }
