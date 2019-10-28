@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -117,6 +118,14 @@ namespace MyBlog.Api
     [HttpPost("newPushNotification")]
     public async Task<IActionResult> PushNofitication([FromBody]PushNotificationPayload payload)
     {
+      if (!ModelState.IsValid)
+      {
+        return new UnprocessableEntityObjectResult(payload);
+      }
+      // ToDo: Check if url is valid
+      payload.Url = !string.IsNullOrEmpty(payload.Url) ? payload.Url :
+        $"{Request.Scheme}://{Request.Host.Value}/";
+
       var messageSentCount = 0;
       var messageFaildCount = 0;
 

@@ -1,12 +1,8 @@
 class Toast {
-  toast({
+  toast(
     message,
-    onAccept,
-    onReject,
-    sticky = false,
-    type = "info",
-    timeout = 5000
-  }) {
+    { onAccept, onReject, sticky = false, type = "info", timeout = 5000 }
+  ) {
     this.initContainer();
     new ToastItem(this.toastContainer, {
       message,
@@ -28,16 +24,16 @@ class Toast {
 }
 
 class ToastItem {
-  constructor(container, toastOption) {
+  constructor(container, toastProp) {
     this.timerId = 0;
     this.toastContainer = container;
-    this.onAccept = toastOption.onAccept;
-    this.onReject = toastOption.onReject;
-    this.toastElement = this.buildToast(toastOption);
-    this.sticky = toastOption.sticky;
+    this.onAccept = toastProp.onAccept;
+    this.onReject = toastProp.onReject;
+    this.toastElement = this.buildToast(toastProp);
+    this.sticky = toastProp.sticky;
     this.isRemoved = false;
     // this magic number 800 is the animation duration
-    this.timeout = toastOption.timeout + 800;
+    this.timeout = toastProp.timeout + 800;
     this.showToast();
   }
 

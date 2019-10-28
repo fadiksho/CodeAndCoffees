@@ -1,3 +1,6 @@
+workbox.setConfig({
+  debug: false
+});
 workbox.precaching.cleanupOutdatedCaches();
 
 const offlinePage = "/dist/offline.html";
@@ -111,23 +114,50 @@ workbox.routing.registerRoute(
   })
 );
 
-addEventListener("push", event => {
+self.addEventListener("push", event => {
   if (event.data) {
-    var data = event.data.json();
-    var payload = {
-      body: data["Body"],
-      icon: "/dist/icon.png",
-      badge: "/dist/icon.png"
+    let data = event.data.json();
+    let payload = {
+      body: data.Body,
+      icon: "/dist/images/icon.png",
+      badge: "/dist/images/icon.png",
+      data: data.Url
     };
     event.waitUntil(self.registration.showNotification(data["Title"], payload));
   }
 });
 
-addEventListener("message", event => {
+self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     console.log("new service worker update to new version trying to update!!!");
     skipWaiting();
   }
+});
+
+self.addEventListener("notificationclick", function(event) {
+  console.log(event.notification);
+
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: "window" }).then(windowClients => {
+      // Check if there is already a window/tab open with the target URL
+      for (var i = 0; i < windowClients.length; i++) {
+        var client = windowClients[i];
+        // If so, just focus it.
+        console.log(client.url);
+        if (client.url === event.notification.data && "focus" in client) {
+          console.log("focus window");
+          return client.focus();
+        }
+      }
+      // If not, then open the target URL in a new window/tab.
+      if (clients.openWindow) {
+        console.log("open window");
+        console.log(event.notification.data);
+        return clients.openWindow(event.notification.data);
+      }
+    })
+  );
 });
 
 workbox.precaching.precacheAndRoute(self.__precacheManifest);

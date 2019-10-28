@@ -92,11 +92,11 @@ namespace MyBlog
         // ToDo: check if there is a bug in this package when we hit statuscode controller
         // it return 500 error instead of the specifid view.
         app.UseLiveReload();
-        app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-        {
-          ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),
-          // HotModuleReplacement = true
-        });
+        // app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+        // {
+        //   ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),
+        //   // HotModuleReplacement = true
+        // });
         app.UseDeveloperExceptionPage();
       }
       else if (env.IsProduction() || env.IsStaging())

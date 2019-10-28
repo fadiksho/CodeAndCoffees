@@ -32,7 +32,7 @@
 <body data-controller="@ViewContext.RouteData.Values["Controller"]" data-action="@ViewContext.RouteData.Values["Action"]">
   <nav class="nav">
     <div class="nav-brand">
-      <a class="nav-brand-link underline-from-center underline-from-center-d"
+      <a class="nav-brand-link"
          asp-controller="Blog"
          asp-action="Index">
         <span>&lt;</span> Code & Coffees&nbsp;<span>></span>
@@ -46,19 +46,18 @@
              asp-action="Index">Blog</a>
           <button id="pwaInstallButton"
                   class="btn btn-noborder round-tl-br btn-default"
-                  aria-label="PWA install app">
-            PWA
+                  aria-label="PWA install app" style="display: none;">
+            APP
           </button>
-          <button id="subscribeButton" class="btn icon-wrapper ml-1"
-                  aria-label="Subscribe To Notifications">
-                  <span class="icon icon-bell-silent"></span>
+          <button id="pushNotificationButton" class="btn icon-wrapper ml-1"
+                  aria-label="Subscribe To Notifications" disabled>
+                  <span class="icon icon-bell"></span>
           </button>
         </li>
       </ul>
       <div class="hide-md-down">
         <partial name="_AboutAuther" />
       </div>
-
     </div>
     <div class="nav-brand nav-brand-sm">
       <span class="nav-brand-link">
