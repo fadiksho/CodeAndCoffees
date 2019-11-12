@@ -62,24 +62,24 @@ namespace IDP
       else
       {
         builder
-      // config data from DB (clients, resources)
-      .AddConfigurationStore(options =>
-      {
-        options.ConfigureDbContext = b =>
-          b.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection,
-            sql => sql.MigrationsAssembly(migrationsAssembly));
-      })
-      // operational data from DB (codes, tokens, consents)
-      .AddOperationalStore(options =>
-      {
-        options.ConfigureDbContext = b =>
-          b.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection,
-            sql => sql.MigrationsAssembly(migrationsAssembly));
+        // config data from DB (clients, resources)
+        .AddConfigurationStore(options =>
+        {
+          options.ConfigureDbContext = b =>
+            b.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection,
+              sql => sql.MigrationsAssembly(migrationsAssembly));
+        })
+        // operational data from DB (codes, tokens, consents)
+        .AddOperationalStore(options =>
+        {
+          options.ConfigureDbContext = b =>
+            b.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection,
+              sql => sql.MigrationsAssembly(migrationsAssembly));
 
-        // this enables automatic token cleanup. this is optional.
-        options.EnableTokenCleanup = true;
-      })
-      .AddAspNetIdentity<ApplicationUser>();
+          // this enables automatic token cleanup. this is optional.
+          options.EnableTokenCleanup = true;
+        })
+        .AddAspNetIdentity<ApplicationUser>();
         throw new Exception("configure key to signin the token!");
       }
 

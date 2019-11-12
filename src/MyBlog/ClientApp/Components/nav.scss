@@ -109,6 +109,9 @@
   .nav-item-first {
     margin-top: 0;
   }
+  a {
+    text-decoration: none;
+  }
 }
 
 @include media-breakpoint-lg {

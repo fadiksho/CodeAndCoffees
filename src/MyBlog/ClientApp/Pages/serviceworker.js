@@ -12,27 +12,16 @@ const vapidPublicKey =
 window.addEventListener("load", function() {
   pushNotificationButton = document.getElementById("pushNotificationButton");
   pwaInstallButton = document.getElementById("pwaInstallButton");
-  console.log("Check if is app or browser!");
-  if (
-    window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true
-  ) {
-    console.log("From PWA!");
+  if (window.matchMedia("(display-mode: standalone)").matches) {
     pwaInstallButton.style.display = "none";
-  } else {
-    console.log("From Browser!");
-    pwaInstallButton.style.display = "inline-block";
   }
 });
 
 if ("serviceWorker" in navigator) {
   const wb = new Workbox("/sw.js");
-  wb.addEventListener("activated", event => {
-    // `event.isUpdate` will be true if another version of the service
-    // worker was controlling the page when this version was registered.
-  });
-
   wb.addEventListener("waiting", event => {
+    if (localStorage.getItem("isPromptedToUpdate") === "true") return;
+    else localStorage.setItem("isPromptedToUpdate", true);
     Toast.toast("New Version Is here Update now", {
       sticky: true,
       onAccept: () => {
@@ -48,10 +37,16 @@ if ("serviceWorker" in navigator) {
         // Note: for this to work, you have to add a message
         // listener in your service worker. See below.
         wb.messageSW({ type: "SKIP_WAITING" });
+        // localStorage.setItem("isPromptedToUpdate", true);
       }
     });
   });
-
+  wb.addEventListener("installed", event => {
+    if (event.isUpdate) {
+      // First-installed code goes here...
+      localStorage.setItem("isPromptedToUpdate", false);
+    }
+  });
   wb.register().then(swReg => {
     swRegisteration = swReg;
     if ("PushManager" in window) {
@@ -68,7 +63,6 @@ if ("serviceWorker" in navigator) {
                 clearPushNotificationResult();
               })
               .finally(() => {
-                console.log("finally");
                 updateNotificationButton();
               });
           }
@@ -78,9 +72,7 @@ if ("serviceWorker" in navigator) {
     }
     updateNotificationButton();
   });
-
   window.addEventListener("beforeinstallprompt", function(e) {
-    console.log("BeforeInstallPromt");
     e.preventDefault();
     // Stash the event so it can be triggered later.
     deferredPrompt = e;
@@ -104,7 +96,6 @@ function updateNotificationButton() {
 }
 
 function checkIfSubscriber() {
-  console.log("checkIfSubscriber");
   return new Promise((resolve, reject) => {
     DoJsonRequst("/api/subscribers/CheckIfPushNotificationSubscriber", {
       method: "POST",
@@ -124,7 +115,6 @@ function checkIfSubscriber() {
 
 function initializePushNotification() {
   pushNotificationButton.addEventListener("click", function() {
-    console.log("notification clicked");
     if (isPushNotificationEnabled()) {
       Toast.toast("Are you Sure Want to UnSubscribe From Notification?", {
         onAccept: () => {
@@ -255,7 +245,6 @@ function isPushNotificationEnabled() {
 function savePushNotificationResult() {
   let PNSubscribedDate = new Date();
   PNSubscribedDate.setDate(PNSubscribedDate.getDate() + 15);
-  console.log(PNSubscribedDate);
   localStorage.setItem("PNSubscribedDate", PNSubscribedDate);
 }
 

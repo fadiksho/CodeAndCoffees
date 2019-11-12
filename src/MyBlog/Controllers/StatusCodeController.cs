@@ -14,7 +14,7 @@ namespace MyBlog.Controllers
         case 500:
           return View("Error");
         default:
-          return View("NotFound");
+          return View("Error");
       }
     }
   }

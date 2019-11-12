@@ -5,7 +5,7 @@
       window.scroll({
         behavior: "smooth",
         left: 0,
-        top: pwaInstallButton.offsetTop
+        top: 0
       });
     });
 });

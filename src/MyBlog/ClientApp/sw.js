@@ -1,3 +1,5 @@
+const SW_VERSION = "0.1.0";
+
 workbox.setConfig({
   debug: false
 });
@@ -129,35 +131,26 @@ self.addEventListener("push", event => {
 
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
-    console.log("new service worker update to new version trying to update!!!");
     skipWaiting();
   }
 });
 
 self.addEventListener("notificationclick", function(event) {
-  console.log(event.notification);
-
   event.notification.close();
   event.waitUntil(
     clients.matchAll({ type: "window" }).then(windowClients => {
       // Check if there is already a window/tab open with the target URL
       for (var i = 0; i < windowClients.length; i++) {
         var client = windowClients[i];
-        // If so, just focus it.
-        console.log(client.url);
         if (client.url === event.notification.data && "focus" in client) {
-          console.log("focus window");
           return client.focus();
         }
       }
       // If not, then open the target URL in a new window/tab.
       if (clients.openWindow) {
-        console.log("open window");
-        console.log(event.notification.data);
         return clients.openWindow(event.notification.data);
       }
     })
   );
 });
-
 workbox.precaching.precacheAndRoute(self.__precacheManifest);

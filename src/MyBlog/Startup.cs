@@ -16,6 +16,7 @@ using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Westwind.AspNetCore.LiveReload;
+using System.Net;
 
 namespace MyBlog
 {
@@ -43,12 +44,12 @@ namespace MyBlog
       services.AddSingleton<IFileHelper, FileHelper>();
       services.AddSingleton<IURLHelper, URLHelper>();
 
-      services.AddLiveReload(config =>
-      {
-        // optional - use config instead
-        // config.LiveReloadEnabled = true;
-        // config.FolderToMonitor = Path.GetFullname(Path.Combine(Env.ContentRootPath,"..")) ;
-      });
+      // services.AddLiveReload(config =>
+      // {
+      //   // optional - use config instead
+      //   // config.LiveReloadEnabled = true;
+      //   // config.FolderToMonitor = Path.GetFullname(Path.Combine(Env.ContentRootPath,"..")) ;
+      // });
 
       services.AddAutoMapper(typeof(Startup));
 
@@ -85,46 +86,55 @@ namespace MyBlog
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
-      app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
+      app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), subApp =>
+      {
+        subApp.UseExceptionHandler(builder =>
+        {
+          builder.Run(async context =>
+          {
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            await context.Response.WriteAsync("Error");
+          });
+        });
+      });
+      app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), subApp =>
+      {
+        subApp.UseExceptionHandler("/StatusCode/500");
+        subApp.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
+      });
 
       if (env.IsDevelopment())
       {
         // ToDo: check if there is a bug in this package when we hit statuscode controller
         // it return 500 error instead of the specifid view.
-        app.UseLiveReload();
+        // app.UseLiveReload();
         // app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
         // {
         //   ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),
         //   // HotModuleReplacement = true
         // });
-        app.UseDeveloperExceptionPage();
+        // app.UseDeveloperExceptionPage();
+
       }
       else if (env.IsProduction() || env.IsStaging())
       {
-        app.UseExceptionHandler(errorApp =>
-        {
-          errorApp.Run(async context =>
-          {
-            context.Response.StatusCode = 500;
-          });
-        });
         app.UseHsts();
         app.UseHttpsRedirection();
       }
 
       // Disable html view response on api request
-      app.Use(async (ctx, next) =>
-      {
-        if (ctx.Request.Path.StartsWithSegments("/api", System.StringComparison.OrdinalIgnoreCase))
-        {
-          var statusCodeFeature = ctx.Features.Get<IStatusCodePagesFeature>();
+      // app.Use(async (ctx, next) =>
+      // {
+      //   if (ctx.Request.Path.StartsWithSegments("/api", System.StringComparison.OrdinalIgnoreCase))
+      //   {
+      //     var statusCodeFeature = ctx.Features.Get<IStatusCodePagesFeature>();
 
-          if (statusCodeFeature != null && statusCodeFeature.Enabled)
-            statusCodeFeature.Enabled = false;
-        }
+      //     if (statusCodeFeature != null && statusCodeFeature.Enabled)
+      //       statusCodeFeature.Enabled = false;
+      //   }
 
-        await next();
-      });
+      //   await next();
+      // });
 
       app.UseCors("EnableCors");
       app.UseStaticFiles(new StaticFileOptions

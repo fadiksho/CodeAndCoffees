@@ -5,13 +5,33 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": ".NET Core Launch (web)",
+      "name": "MyBlog (web)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
       "program": "${workspaceFolder}/src/MyBlog/bin/Debug/netcoreapp2.2/MyBlog.dll",
       "args": [],
       "cwd": "${workspaceFolder}/src/MyBlog",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      }
+    },
+    {
+      "name": "IDP (web)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/IDP/bin/Debug/netcoreapp2.2/IDP.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/IDP",
       "stopAtEntry": false,
       "serverReadyAction": {
         "action": "openExternally",
