@@ -35,3 +35,4 @@
 /src/IDP/bin
 /src/IDP/Certificates
 /src/IDP/Helpers/SigninCredentialExtension.cs
+/src/MyBlog/node_modules
