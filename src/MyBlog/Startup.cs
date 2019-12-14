@@ -13,9 +13,6 @@ using MyBlog.Repository.Data;
 using MyBlog.Services;
 using AutoMapper;
 using Newtonsoft.Json.Serialization;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.SpaServices.Webpack;
-using Westwind.AspNetCore.LiveReload;
 using System.Net;
 
 namespace MyBlog
@@ -43,14 +40,6 @@ namespace MyBlog
 
       services.AddSingleton<IFileHelper, FileHelper>();
       services.AddSingleton<IURLHelper, URLHelper>();
-
-      // services.AddLiveReload(config =>
-      // {
-      //   // optional - use config instead
-      //   // config.LiveReloadEnabled = true;
-      //   // config.FolderToMonitor = Path.GetFullname(Path.Combine(Env.ContentRootPath,"..")) ;
-      // });
-
       services.AddAutoMapper(typeof(Startup));
 
       services.AddCors(o => o.AddPolicy("EnableCors", builder =>
@@ -107,47 +96,27 @@ namespace MyBlog
       {
         // ToDo: check if there is a bug in this package when we hit statuscode controller
         // it return 500 error instead of the specifid view.
-        // app.UseLiveReload();
-        // app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-        // {
-        //   ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),
-        //   // HotModuleReplacement = true
-        // });
-        // app.UseDeveloperExceptionPage();
-
+        app.UseDeveloperExceptionPage();
       }
       else if (env.IsProduction() || env.IsStaging())
       {
-        app.UseHsts();
         app.UseHttpsRedirection();
+        app.UseHsts();
       }
-
-      // Disable html view response on api request
-      // app.Use(async (ctx, next) =>
-      // {
-      //   if (ctx.Request.Path.StartsWithSegments("/api", System.StringComparison.OrdinalIgnoreCase))
-      //   {
-      //     var statusCodeFeature = ctx.Features.Get<IStatusCodePagesFeature>();
-
-      //     if (statusCodeFeature != null && statusCodeFeature.Enabled)
-      //       statusCodeFeature.Enabled = false;
-      //   }
-
-      //   await next();
-      // });
-
+      
       app.UseCors("EnableCors");
       app.UseStaticFiles(new StaticFileOptions
       {
-        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @".well-known")),
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), @".well-known")),
         RequestPath = new PathString("/.well-known"),
         ServeUnknownFileTypes = true // serve extensionless file
       });
       app.UseStaticFiles(new StaticFileOptions
       {
         FileProvider = new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles")),
-        RequestPath = "/UploadedFiles"
+            Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")),
+        RequestPath = new PathString("/UploadedFiles")
       });
       app.UseStaticFiles();
 

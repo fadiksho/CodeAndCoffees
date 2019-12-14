@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "../wwwroot/dist/",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "module": "es6",
+    "target": "es2015",
+    "allowJs": true
+  }
+}

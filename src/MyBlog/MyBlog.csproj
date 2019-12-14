@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientApp\Components\**" />
+    <Compile Remove="ClientApp\Pages\**" />
+    <Compile Remove="ClientApp\Shared\**" />
+    <Content Remove="ClientApp\Components\**" />
+    <Content Remove="ClientApp\Pages\**" />
+    <Content Remove="ClientApp\Shared\**" />
+    <EmbeddedResource Remove="ClientApp\Components\**" />
+    <EmbeddedResource Remove="ClientApp\Pages\**" />
+    <EmbeddedResource Remove="ClientApp\Shared\**" />
+    <None Remove="ClientApp\Components\**" />
+    <None Remove="ClientApp\Pages\**" />
+    <None Remove="ClientApp\Shared\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
@@ -17,9 +32,6 @@
 
   <ItemGroup>
     <Folder Include=".well-known\" />
-    <Folder Include="ClientApp\Components\" />
-    <Folder Include="ClientApp\Pages\" />
-    <Folder Include="ClientApp\Shared\" />
     <Folder Include="UploadedFiles\" />
   </ItemGroup>
 

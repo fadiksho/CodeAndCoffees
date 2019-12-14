@@ -36,5 +36,16 @@
       document.getElementById("show-comments").style.display = "none";
     }
   }
+  if ("IntersectionObserver" in window) {
+    let lazyComments = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          loadDisqusComment();
+        }
+      });
+    });
+    lazyComments.observe(document.getElementById("scrolToButton"));
+    document.getElementById("show-comments").style.display = "none";
+  }
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>

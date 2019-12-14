@@ -49,7 +49,7 @@ namespace MyBlog.Api
       var payload = new PushNotificationPayload
       {
         Title = "Welcome",
-        Body = "Thank you for subscribing :-)",
+        Body = "Now you won't miss any post :-)",
       };
 
       try
@@ -85,7 +85,7 @@ namespace MyBlog.Api
 
       if (subscription == null)
       {
-        return NotFound();
+        return NoContent();
       }
 
       await unitOfWork.Subscribers

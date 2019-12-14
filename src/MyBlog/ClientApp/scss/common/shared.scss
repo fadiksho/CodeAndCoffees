@@ -1,0 +1,116 @@
+﻿@import "./mixins";
+@import "./reboot";
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: #0d0d0d;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(255, 123, 57);
+}
+.hide-md-down {
+  display: none;
+}
+@include media-breakpoint-md {
+  html {
+    font-size: 1.1rem;
+  }
+}
+
+@include media-breakpoint-lg {
+  .hide-lg-up {
+    display: none;
+  }
+  .hide-md-down {
+    display: block;
+  }
+}
+
+@include media-breakpoint-xxl {
+  html {
+    font-size: 1.2rem;
+  }
+}
+
+/* Shared ******************************************************************** */
+
+button:disabled,
+button[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.container {
+  padding: 0.5rem;
+}
+.btn {
+  border-width: 1px;
+  padding: 0.3rem 0.5rem;
+  border-style: solid;
+  cursor: pointer;
+  transition: $background-color-transtion;
+}
+
+.btn-noborder {
+  border: none;
+}
+.disqus {
+  padding: 0.5rem;
+  display: none;
+  border-radius: $radius-round;
+}
+
+.round-tl-br {
+  border-radius: 8px 3px;
+}
+
+.round-tr-bl {
+  border-radius: 3px 8px;
+}
+.mr-auto {
+  margin-right: auto;
+}
+
+.ml-1 {
+  margin-left: 0.2rem;
+}
+.social-links-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+/* Blog List ******************************************************************** */
+.phbl {
+  @include page-header;
+  transition: $backgound-color-transtion;
+
+  .pgbl-header {
+    font-size: 1.8rem;
+    margin: 0;
+  }
+}
+
+/* Footer ******************************************************************** */
+footer {
+  text-align: center;
+  font-style: italic;
+  margin: 1rem;
+}
+
+/* Icons ******************************************************************** */
+.icon-wrapper {
+  border-radius: $radius-round;
+  width: 2rem;
+  height: 2rem;
+  transition: $background-color-transtion;
+  padding: 0;
+  border: none;
+}
+.icon {
+  padding: 0.2rem;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
