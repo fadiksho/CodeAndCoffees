@@ -7,31 +7,6 @@
   ViewData["MetaDescription"] = Model.PageDescription;
 }
 
-@section Styles {
-  <environment include="Development">
-    <link rel="stylesheet" href="~/css/blog-detail.css" />
-    @if (Context.Request.Cookies["theme-color"] == "dark")
-    {
-      <link rel="stylesheet" href="~/css/theme/blog-detail-theme-dark.css" id="blog-detail-theme-dark" />
-    }
-    else
-    {
-      <link rel="stylesheet" href="~/css/theme/blog-detail-theme-default.css" id="blog-detail-theme-default" />
-    }
-  </environment>
-  <environment exclude="Development">
-    <link rel="stylesheet" href="~/dist/css/blog-detail.css" asp-append-version="false" />
-    @if (Context.Request.Cookies["theme-color"] == "dark")
-    {
-      <link rel="stylesheet" href="~/dist/css/theme/blog-detail-theme-dark.css" id="blog-detail-theme-dark" />
-    }
-    else
-    {
-      <link rel="stylesheet" href="~/dist/css/theme/blog-detail-theme-default.css" id="blog-detail-theme-default" />
-    }
-  </environment>
-}
-
 @section PageHeader {
   <div class="phbd">
     <h1 class="phbd-header">@Model.Blog.Title</h1>
@@ -39,7 +14,7 @@
       <div class="bdhf-tag-date-wrapper">
         <div class="bdhf-date">
           <strong class="bdhf-date-icon">Publish Date: </strong>
-          <span>@Model.Blog.PublishedDate.ToString("dd/MM/yyyy")</span>
+          <span class="bdhf-date-text">@Model.Blog.PublishedDate.ToString("dd/MM/yyyy")</span>
         </div>
         <div class="bdhf-tags">
           <strong class="bdhf-tags-icon">Tags: </strong>
@@ -52,12 +27,30 @@
       <div class="bdhf-social">
         <strong class="bdhf-social-icon">Share This Post</strong>
         <div class="social-links-wrapper">
-          <a class="icon-twitter round-tl-br social-link">
-          </a>
-          <a class="icon-github round-tl-br social-link">
-          </a>
-          <a class="icon-linkedin-square round-tl-br social-link">
-          </a>
+          <div class="icon-wrapper">
+            <a aria-label="Fadi Ksho facebook account"
+               href="https://www.linkedin.com/in/fadi-ksho/">
+              <svg class="icon"><use xlink:href="#icon-facebook"></use></svg>
+            </a>
+          </div>
+          <div class="icon-wrapper">
+            <a aria-label="Fadi Ksho twitter account"
+               href="https://twitter.com/FadiKsho">
+              <svg class="icon"><use xlink:href="#icon-twitter"></use></svg>
+            </a>
+          </div>
+          <div class="icon-wrapper">
+            <a aria-label="Fadi Ksho github account"
+               href="https://github.com/fadiksho">
+              <svg class="icon"><use xlink:href="#icon-github"></use></svg>
+            </a>
+          </div>
+          <div class="icon-wrapper">
+            <a aria-label="Fadi Ksho linkedin account"
+               href="https://www.linkedin.com/in/fadi-ksho/">
+              <svg class="icon"><use xlink:href="#icon-linkedin"></use></svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -68,11 +61,3 @@
   @Html.Raw(Model.Blog.Body)
   <vc:disqus disqus-options="Model.DisqusViewModel" />
 </article>
-@section Scripts {
-  <environment include="Development">
-    <script src="~/js/blog-detail.js"></script>
-  </environment>
-  <environment exclude="Development">
-    <script src="~/dist/js/blog-detail.js" asp-append-version="false"></script>
-  </environment>
-}

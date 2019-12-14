@@ -96,6 +96,7 @@ namespace MyBlog.Api
             FileSize = blob.File.Length
           }
         );
+        await this.unitOfWork.SaveAsync();
 
         return StatusCode(201);
       }
@@ -128,7 +129,6 @@ namespace MyBlog.Api
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFileAsync(int id)
     {
-
       if (!await unitOfWork.Blobs.BlobExistAsync(id))
       {
         return NotFound();

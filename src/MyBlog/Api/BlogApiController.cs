@@ -38,7 +38,7 @@ namespace MyBlog.Api
     {
       var blogExist = await unitOfWork.Blogs
         .IsBlogExistByIdAsync(id);
-      
+
       if (!blogExist)
       {
         return NotFound();

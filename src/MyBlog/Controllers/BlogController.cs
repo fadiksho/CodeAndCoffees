@@ -15,9 +15,13 @@ namespace MyBlog.Controllers
     {
       this.unitOfWork = unitOfWork;
     }
-    [HttpGet("")]
-    [HttpGet("blog/{pageNumber:int?}")]
-    public IActionResult Index(int pageNumber = 1)
+
+    public IActionResult Index()
+    {
+      return Pagination(1);
+    }
+
+    public IActionResult Pagination(int pageNumber)
     {
       PaggingResult<Blog> blogPage =
       unitOfWork.Blogs.GetBlogsPage(new BlogQuery()
@@ -25,10 +29,9 @@ namespace MyBlog.Controllers
         Page = pageNumber
       });
 
-      return View(blogPage);
+      return View("Index", blogPage);
     }
 
-    [HttpGet("blog/{slug}")]
     public async Task<IActionResult> Detail(string slug)
     {
       var blog = await unitOfWork.Blogs.GetBlogAsync(slug);
@@ -55,6 +58,6 @@ namespace MyBlog.Controllers
       };
 
       return View(blogDetailVM);
-    }   
+    }
   }
 }

@@ -7,17 +7,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientApp\Components\**" />
+    <Compile Remove="ClientApp\Pages\**" />
+    <Compile Remove="ClientApp\Shared\**" />
+    <Content Remove="ClientApp\Components\**" />
+    <Content Remove="ClientApp\Pages\**" />
+    <Content Remove="ClientApp\Shared\**" />
+    <EmbeddedResource Remove="ClientApp\Components\**" />
+    <EmbeddedResource Remove="ClientApp\Pages\**" />
+    <EmbeddedResource Remove="ClientApp\Shared\**" />
+    <None Remove="ClientApp\Components\**" />
+    <None Remove="ClientApp\Pages\**" />
+    <None Remove="ClientApp\Shared\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.4" />
     <PackageReference Include="WebPush-NetCore" Version="1.0.2" />
+    <PackageReference Include="Westwind.AspnetCore.LiveReload" Version="0.1.12" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include=".well-known\" />
     <Folder Include="UploadedFiles\" />
-    <Folder Include="wwwroot\dist\js\" />
   </ItemGroup>
 
   <ItemGroup>

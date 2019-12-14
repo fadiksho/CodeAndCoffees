@@ -3,7 +3,6 @@
 ################################################################################
 
 /.vs
-/src/MyBlog/node_modules
 /src/MyBlog/bin
 /src/MyBlog/obj
 /src/MyBlog/MyBlog.csproj.user
@@ -11,6 +10,8 @@
 /src/MyBlog/web.config
 /src/MyBlog/appsettings.Staging.json
 /src/MyBlog/appsettings.json
+/src/MyBlog/ClientApp/node_modules
+/src/MyBlog/wwwroot
 /src/BlogManager/src/environments/environment.staging.ts
 /src/BlogManager/src/environments/environment.prod.ts
 /src/BlogManager/src/web.config
@@ -28,3 +29,9 @@
 /test/MyBlog/UnitTest.Helpers/bin/Debug/netcoreapp2.2
 /test/MyBlog/UnitTest.BusinessLogic/bin/Debug/netcoreapp2.2
 /test/MyBlog/UnitTest.BusinessLogic/obj
+/src/logs/codeandcoffees
+/src/IDP/appsettings.Staging.json
+/src/IDP/.well-known
+/src/IDP/bin
+/src/IDP/Certificates
+/src/IDP/Helpers/SigninCredentialExtension.cs

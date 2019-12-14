@@ -1,12 +1,10 @@
 ﻿@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnv
-@{
-  var userTheme = Context.Request.Cookies["theme-color"];
-}
+
 <!DOCTYPE html>
 <html lang="en" class="theme">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>@ViewData["PageTitle"]</title>
   <meta name="description" content="@ViewData["PageDescription"]">
   <meta property="og:title" content="@ViewData["MetaTitle"]" />
@@ -17,78 +15,53 @@
   <meta property="og:url" content="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path" />
   @if (hostingEnv.EnvironmentName == "Production")
   {
-    <meta property="og:image" content="https://codeandcoffees.com/images/codeandcoffees-brand-2400x1260.png" />
+    <meta property="og:image" content="https://codeandcoffees.com/dist/images/codeandcoffees-brand-2400x1260.png" />
   }
   else if (hostingEnv.EnvironmentName == "Staging")
   {
-    <meta property="og:image" content="https://staging.codeandcoffees.com/images/codeandcoffees-brand-2400x1260.png" />
+    <meta property="og:image" content="https://staging.codeandcoffees.com/dist/images/codeandcoffees-brand-2400x1260.png" />
   }
   <meta property="og:image:height" content="1257">
   <meta property="og:image:width" content="2400">
+  <meta name="apple-mobile-web-app-title" content="Code And Coffees" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#FF7B39" />
+  <link rel="manifest" href="/dist/manifest.json" />
   <link rel="icon" type="image/x-icon" href="~/favicon.ico">
-  <link rel="manifest" href="~/manifest.json">
-  <meta name="theme-color" content="@(userTheme == "dark" ? "#FF7B39" : "#0F006B")">
-  <environment include="Development">
-    <link rel="stylesheet" href="~/css/site.css" />
-    @if (Context.Request.Cookies["theme-color"] == "dark")
-    {
-      <link rel="stylesheet" href="~/css/theme/theme-dark.css" id="theme-dark" />
-    }
-    else
-    {
-      <link rel="stylesheet" href="~/css/theme/theme-default.css" id="theme-default" />
-    }
-    @RenderSection("Styles", required: false)
-  </environment>
-  <environment exclude="Development">
-    <link rel="stylesheet" href="~/dist/css/site.css" asp-append-version="false" />
-    @if (Context.Request.Cookies["theme-color"] == "dark")
-    {
-      <link rel="stylesheet" href="~/dist/css/theme/theme-dark.css" id="theme-dark" />
-    }
-    else
-    {
-      <link rel="stylesheet" href="~/dist/css/theme/theme-default.css" id="theme-default" />
-    }
-    @RenderSection("Styles", required: false)
-  </environment>
-
+  <link href="/dist/main.bundle.css" rel="stylesheet" />
+  @RenderSection("Styles", required: false)
 </head>
-<body>
+<body data-controller="@ViewContext.RouteData.Values["Controller"]" data-action="@ViewContext.RouteData.Values["Action"]">
+  <svg style="display: none" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><symbol id="icon-bell" viewBox="0 0 32 32"><path fill="#ff7b39" d="M18.079 2.531c4.809 0.969 8.459 5.241 8.459 10.324 0 5.992-0.569 10.5 5.462 14.513h-32c6.048-4.025 5.477-8.618 5.477-14.513 0-5.111 3.69-9.4 8.537-10.339 0.279-2.424 3.804-2.412 4.066 0.015zM20.348 27.664c-0.372 2.065-2.177 3.631-4.348 3.631s-3.976-1.566-4.348-3.631h8.696z"></path></symbol><symbol id="icon-bell-silent" viewBox="0 0 32 32"><path fill="#ff7b39" d="M20.485 27.528c-0.367 2.041-2.151 3.589-4.297 3.589s-3.931-1.548-4.298-3.589h8.596zM18.242 2.688c2.489 0.502 4.663 1.899 6.17 3.837l-18.641 10.802c0.057-1.395 0.015-2.868 0.015-4.436 0-5.050 3.647-9.291 8.437-10.218 0.276-2.396 3.759-2.384 4.018 0.015zM29.723 5.023l1.785 3.082-29.723 17.223-1.785-3.082 29.723-17.223zM26.595 12.525c0.004 0.122 0.007 0.245 0.007 0.367 0 5.923-0.562 10.377 5.398 14.344h-30.792l25.387-14.711z"></path></symbol><symbol id="icon-facebook" viewBox="0 0 32 32"><path fill="#1877f2" d="M19 6h5v-6h-5c-3.859 0-6.999 3.14-6.999 6.999v3h-4v6.001h3.999v16h6.001v-16h5l1-6.001h-6v-3c0-0.542 0.458-1 1-1v0.001z"></path></symbol><symbol id="icon-github" viewBox="0 0 32 32"><path d="M15.999 0.399c-8.835 0-15.999 7.163-15.999 15.999 0 7.070 4.584 13.065 10.941 15.181 0.8 0.148 1.094-0.348 1.094-0.771 0-0.381-0.016-1.642-0.022-2.978-4.452 0.968-5.39-1.889-5.39-1.889-0.728-1.85-1.776-2.342-1.776-2.342-1.452-0.994 0.11-0.972 0.11-0.972 1.606 0.112 2.452 1.648 2.452 1.648 1.428 2.446 3.744 1.738 4.657 1.33 0.144-1.034 0.557-1.74 1.016-2.14-3.554-0.403-7.29-1.776-7.29-7.907 0-1.746 0.626-3.174 1.648-4.294-0.167-0.404-0.715-2.030 0.154-4.234 0 0 1.344-0.431 4.401 1.64 1.276-0.354 2.644-0.532 4.003-0.538 1.36 0.006 2.731 0.184 4.008 0.538 3.054-2.069 4.396-1.64 4.396-1.64 0.87 2.204 0.324 3.832 0.158 4.234 1.026 1.12 1.646 2.548 1.646 4.294 0 6.145-3.744 7.497-7.306 7.893 0.574 0.496 1.087 1.47 1.087 2.962 0 2.14-0.018 3.864-0.018 4.39 0 0.426 0.288 0.924 1.1 0.768 6.354-2.118 10.932-8.114 10.932-15.179 0-8.835-7.163-15.999-16-15.999l-0.001 0.005z"></path></symbol><symbol id="icon-linkedin" viewBox="0 0 32 32"><path fill="#0077b5" d="M11.429 10.286h6.323v3.242h0.091c0.881-1.58 3.034-3.242 6.245-3.242 6.677 0 7.912 4.155 7.912 9.561v11.011h-6.594v-9.761c0-2.327-0.048-5.322-3.429-5.322-3.433 0-3.96 2.533-3.96 5.153v9.93h-6.588v-20.572zM6.858 4.572c0 1.893-1.536 3.429-3.429 3.429s-3.429-1.536-3.429-3.429c0-1.893 1.537-3.429 3.429-3.429s3.429 1.536 3.429 3.429zM-0.001 10.286h6.858v20.572h-6.858v-20.572z"></path></symbol><symbol id="icon-twitter" viewBox="0 0 32 32"><path fill="#1da1f2" d="M32.001 6.076c-1.176 0.526-2.444 0.876-3.767 1.032 1.356-0.812 2.393-2.099 2.888-3.631-1.267 0.749-2.676 1.299-4.168 1.593-1.2-1.275-2.904-2.067-4.792-2.067-3.625 0-6.561 2.937-6.561 6.56 0 0.511 0.057 1.012 0.168 1.494-5.455-0.276-10.291-2.888-13.528-6.861-0.558 0.946-0.888 2.084-0.888 3.299 0 0 0 0.001 0 0.001v-0c0 2.275 1.155 4.287 2.917 5.46-1.075-0.032-2.087-0.332-2.975-0.818v0.082c0 3.181 2.261 5.836 5.266 6.436-0.55 0.149-1.131 0.232-1.73 0.232-0.424 0-0.833-0.044-1.239-0.117 0.839 2.605 3.262 4.505 6.131 4.56-2.249 1.762-5.075 2.812-8.155 2.812-0.531 0-1.049-0.032-1.567-0.095 2.911 1.868 6.36 2.95 10.066 2.95 12.071 0 18.678-10.003 18.678-18.677 0-0.288-0.006-0.568-0.018-0.85 1.282-0.917 2.393-2.075 3.273-3.392l0.003-0.003z"></path></symbol></defs></svg>
   <nav class="nav">
     <div class="nav-brand">
-      <a class="nav-brand-link underline-from-center underline-from-center-d"
+      <a class="nav-brand-link"
          asp-controller="Blog"
-         asp-action="Index"
-         asp-route-pageNumber="1">
+         asp-action="Index">
         <span>&lt;</span> Code & Coffees&nbsp;<span>></span>
       </a>
     </div>
     <div class="nav-container">
       <ul class="nav-list">
-        <li class="nav-item nav-item-first" is-active-route
-            asp-controller="Blog"
-            asp-action="Index">
-          <a class="nav-link underline-from-center underline-from-center-d"
+        <li class="nav-item nav-item-first">
+          <a class="btn round-tl-br btn-noborder round-tr-bl mr-auto btn-default"
              asp-controller="Blog"
-             asp-action="Index"
-             is-active-route>Blog</a>
-          <button id="pwaInstallButton" onclick="addToHomeScreen()"
-                  class="btn nav-button round-tl-br"
-                  aria-label="PWA install app" style="display:none;">
-            PWA
+             asp-action="Index">Blog</a>
+          <button id="pwaInstallButton"
+                  class="btn btn-noborder round-tl-br btn-default"
+                  aria-label="PWA install app" style="display: none;">
+            APP
           </button>
-          <button id="subscribeButton" class="btn nav-button round-tl-br icon-bell-slash"
-                  aria-label="Subscribe To Notifications" style="display:none;" disabled></button>
-          <button id="toggleThemeButton" onclick="toggleTheme()"
-                  class="btn nav-button round-tl-br @(userTheme == "dark" ? " icon-moon-o" : "icon-sun-o")"
-                  aria-label="Toggle Theme"></button>
+          <button id="pushNotificationButton" class="btn icon-wrapper ml-1"
+                  aria-label="Subscribe To Notifications" disabled>
+            <svg class="icon"><use xlink:href="#bell"></use></svg>
+          </button>
         </li>
       </ul>
       <div class="hide-md-down">
         <partial name="_AboutAuther" />
       </div>
-
     </div>
     <div class="nav-brand nav-brand-sm">
       <span class="nav-brand-link">
@@ -109,14 +82,7 @@
       </footer>
     </div>
   </main>
-  <div id="snackbar"></div>
-  <environment include="Development">
-    <script src="~/js/site.js"></script>
-    @RenderSection("Scripts", required: false)
-  </environment>
-  <environment exclude="Development">
-    <script src="~/dist/js/site.js" asp-append-version="false"></script>
-    @RenderSection("Scripts", required: false)
-  </environment>
+  <script src="/dist/main.bundle.js"></script>
+  @RenderSection("Scripts", required: false)
 </body>
 </html>

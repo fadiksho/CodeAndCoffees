@@ -27,9 +27,20 @@ namespace IDP.Persistence.Data
           RequirePkce = true,
           RequireClientSecret = false,
 
-          RedirectUris =           { "http://localhost:4200/auth-callback", "http://localhost:4200/silent-refresh.html" },
-          PostLogoutRedirectUris = { "http://localhost:4200/?postLogout=true" },
-          AllowedCorsOrigins =     { "http://localhost:4200" },
+          RedirectUris = {
+            "http://localhost:4200/auth-callback",
+            "http://localhost:4200/silent-refresh.html",
+            "https://staging.blogmanager.codeandcoffees.com/auth-callback",
+            "https://staging.blogmanager.codeandcoffees.com/silent-refresh.html"
+          },
+          PostLogoutRedirectUris = { 
+            "http://localhost:4200/?postLogout=true",
+            "https://staging.blogmanager.codeandcoffees.com/?postLogout=true"
+          },
+          AllowedCorsOrigins = {
+            "http://localhost:4200",
+            "https://staging.blogmanager.codeandcoffees.com" 
+          },
           RequireConsent = false,
           AllowRememberConsent = false,
           AllowedScopes =

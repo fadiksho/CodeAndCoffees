@@ -1,0 +1,92 @@
+﻿@import "./variable";
+
+#snackbar {
+  width: 100%;
+  padding: 0.5rem;
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  right: 0;
+}
+.toast {
+  padding: 0.5rem;
+  margin-bottom: 0.3rem;
+  border-style: solid;
+  border-width: 3px;
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+  box-shadow: 0 0 10px #999;
+}
+.toast-close {
+  float: right;
+  border: none;
+  font-weight: bolder;
+}
+.toast-actions {
+  margin-top: 0.5rem;
+  text-align: right;
+  .toast-action-button {
+    padding: 0.1rem 1rem;
+  }
+  .toast-accept {
+    margin-left: 0.3rem;
+  }
+}
+
+.bounceInRight {
+  animation-name: bounceInRight;
+}
+
+.bounceOutRight {
+  animation-name: bounceOutRight;
+}
+
+@keyframes bounceInRight {
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  from {
+    opacity: 0;
+    transform: translate3d(3000px, 0, 0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate3d(-25px, 0, 0);
+  }
+
+  75% {
+    transform: translate3d(10px, 0, 0);
+  }
+
+  90% {
+    transform: translate3d(-5px, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes bounceOutRight {
+  20% {
+    opacity: 1;
+    transform: translate3d(-20px, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(2000px, 0, 0);
+  }
+}
+@include media-breakpoint-sm {
+  #snackbar {
+    width: 500px;
+  }
+}
+@include media-breakpoint-md {
+}

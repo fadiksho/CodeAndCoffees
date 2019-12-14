@@ -38,7 +38,8 @@ namespace MyBlog
           .ConfigureLogging(logging =>
           {
             logging.ClearProviders();
-            logging.SetMinimumLevel(LogLevel.Trace);
+            logging.AddConsole();
+            logging.AddDebug();
           })
           .UseNLog();
   }

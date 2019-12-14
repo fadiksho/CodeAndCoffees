@@ -8,5 +8,6 @@ namespace MyBlog.Model
     public string Title { get; set; }
     [Required]
     public string Body { get; set; }
+    public string Url { get; set; }
   }
 }

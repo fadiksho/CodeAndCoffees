@@ -13,7 +13,7 @@ using MyBlog.Repository.Data;
 using MyBlog.Services;
 using AutoMapper;
 using Newtonsoft.Json.Serialization;
-using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
 
 namespace MyBlog
 {
@@ -35,12 +35,11 @@ namespace MyBlog
       services.Configure<AppSettings>(Configuration);
       services.AddDbContext<BlogContext>(options =>
           options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
-      
+
       services.AddScoped<IUnitOfWork, UnitOfWork>();
 
       services.AddSingleton<IFileHelper, FileHelper>();
       services.AddSingleton<IURLHelper, URLHelper>();
-
       services.AddAutoMapper(typeof(Startup));
 
       services.AddCors(o => o.AddPolicy("EnableCors", builder =>
@@ -76,56 +75,60 @@ namespace MyBlog
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
-      app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
+      app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), subApp =>
+      {
+        subApp.UseExceptionHandler(builder =>
+        {
+          builder.Run(async context =>
+          {
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            await context.Response.WriteAsync("Error");
+          });
+        });
+      });
+      app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), subApp =>
+      {
+        subApp.UseExceptionHandler("/StatusCode/500");
+        subApp.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
+      });
 
       if (env.IsDevelopment())
       {
+        // ToDo: check if there is a bug in this package when we hit statuscode controller
+        // it return 500 error instead of the specifid view.
         app.UseDeveloperExceptionPage();
       }
       else if (env.IsProduction() || env.IsStaging())
       {
-        app.UseExceptionHandler(errorApp =>
-        {
-          errorApp.Run(async context =>
-          {
-            context.Response.StatusCode = 500;
-          });
-        });
-        app.UseHsts();
         app.UseHttpsRedirection();
+        app.UseHsts();
       }
-
-      // Disable html view response on api request
-      app.Use(async (ctx, next) =>
-      {
-        if (ctx.Request.Path.StartsWithSegments("/api", System.StringComparison.OrdinalIgnoreCase))
-        {
-          var statusCodeFeature = ctx.Features.Get<IStatusCodePagesFeature>();
-
-          if (statusCodeFeature != null && statusCodeFeature.Enabled)
-            statusCodeFeature.Enabled = false;
-        }
-
-        await next();
-      });
-
+      
       app.UseCors("EnableCors");
       app.UseStaticFiles(new StaticFileOptions
       {
-        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @".well-known")),
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), @".well-known")),
         RequestPath = new PathString("/.well-known"),
         ServeUnknownFileTypes = true // serve extensionless file
       });
       app.UseStaticFiles(new StaticFileOptions
       {
         FileProvider = new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles")),
-        RequestPath = "/UploadedFiles"
+            Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")),
+        RequestPath = new PathString("/UploadedFiles")
       });
       app.UseStaticFiles();
 
       app.UseAuthentication();
-      app.UseMvc();
+      app.UseMvc(routes =>
+      {
+        routes.MapRoute("Blog", "post/{*slug}",
+          defaults: new { controller = "Blog", action = "Detail" });
+        routes.MapRoute("BlogPage", "blog/page/{pageNumber:int}",
+          defaults: new { controller = "Blog", action = "Pagination" });
+        routes.MapRoute("Defaults", "{controller=Blog}/{action=Index}/{id?}");
+      });
     }
   }
 }

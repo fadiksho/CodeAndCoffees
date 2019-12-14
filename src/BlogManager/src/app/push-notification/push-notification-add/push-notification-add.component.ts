@@ -59,7 +59,8 @@ export class PushNotificationAddComponent implements OnInit, AfterViewInit {
     this.genericValidator = new GenericValidator(this.validationMessages);
     this.pushNotificationForm = this.fb.group({
       title: ["", [Validators.required]],
-      body: ["", [Validators.required]]
+      body: ["", [Validators.required]],
+      url: ["", []]
     });
   }
 

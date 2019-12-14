@@ -1,0 +1,41 @@
+﻿@import "./variable";
+
+@mixin media-breakpoint-sm {
+  @media (min-width: #{$breakpoint-sm}) {
+    @content;
+  }
+}
+@mixin media-breakpoint-md {
+  @media (min-width: #{$breakpoint-md}) {
+    @content;
+  }
+}
+@mixin media-breakpoint-lg {
+  @media (min-width: #{$breakpoint-lg}) {
+    @content;
+  }
+}
+@mixin media-breakpoint-xl {
+  @media (min-width: #{$breakpoint-xl}) {
+    @content;
+  }
+}
+@mixin media-breakpoint-xxl {
+  @media (min-width: #{$breakpoint-xxl}) {
+    @content;
+  }
+}
+
+@mixin hover-focus {
+  &:hover,
+  &:focus {
+    @content;
+  }
+}
+/* Page Header ******************************************************************** */
+@mixin page-header {
+  padding: 0.5rem 1rem;
+  border-radius: $radius-round;
+  margin: 0.5rem;
+  margin-bottom: 0;
+}
