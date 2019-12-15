@@ -17,7 +17,7 @@
 /src/BlogManager/src/web.config
 /src/BlogManager/.vscode
 /test/MyBlog/UnitTest.Repository/obj
-/test/MyBlog/UnitTest.Repository/bin/Debug/netcoreapp2.2
+/test/MyBlog/UnitTest.Repository/bin
 /src/IDP/obj
 /src/IDP/bin/Debug/netcoreapp2.2
 /src/IDP/Properties
