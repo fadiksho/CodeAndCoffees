@@ -1,9 +1,9 @@
 // Images
 import "./assets/favicon.ico";
-import "./assets/images/icon.png";
 import "./assets/images/auther-image.png";
-
+import "./assets/images/logo-512.png";
 // Icons
+import "./manifest.json";
 import "./assets/icons/icons.svg";
 // import "./assets/icons/bell.svg";
 // import "./assets/icons/bell-silent.svg";

@@ -28,6 +28,7 @@
     "terser-webpack-plugin": "^2.3.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.3",
+    "webapp-webpack-plugin": "^2.7.1",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-merge": "^4.2.2",

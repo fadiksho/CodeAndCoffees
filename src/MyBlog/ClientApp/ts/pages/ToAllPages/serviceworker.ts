@@ -129,6 +129,9 @@ function initializePushNotification() {
   pushNotificationButton.addEventListener("click", async e => {
     if (!isEnabled) return;
     else isEnabled = false;
+    if (!pushNotificationSubscription)
+      pushNotificationSubscription = await swRegisteration.pushManager.getSubscription();
+
     if (isPushNotificationEnabled()) {
       Toast.toast("Are you Sure Want to UnSubscribe From Notification?", {
         onAccept: async () => {
@@ -170,7 +173,7 @@ function initializePushNotification() {
       try {
         await askPermission();
         try {
-          var response = await subscribeUser();
+          let response = await subscribeUser();
           if (response.ok) {
             savePushNotificationResult();
           } else {

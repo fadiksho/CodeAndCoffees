@@ -12,29 +12,22 @@ module.exports = merge(common, {
     new MiniCssExtractPlugin({
       filename: "[name].bundle.css"
     }),
-    new WebpackPwaManifest({
-      inject: true,
-      fingerprints: false,
-      name: "Code And Coffees",
-      short_name: "Code And Coffees",
-      description: "Code and Coffees is a blog about programming topics.",
-      background_color: "#ffffff",
-      display: "standalone",
-      theme_color: "#FF7B39",
-      ios: true,
-      start_url: "/",
-      icons: [
-        {
-          src: path.resolve("assets/images/icon.png"),
-          sizes: [96, 128, 144, 192, 256, 384, 512, 1024],
-          destination: path.join("pwa-icons")
+    new WebappWebpackPlugin({
+      logo: path.resolve("assets/logo.svg"),
+      prefix: "/pwa-icons",
+      favicons: {
+        icons: {
+          coast: false,
+          yandex: false,
+          windows: false,
+          firefox: false
         }
-      ]
+      }
     }),
     new workboxPlugin.InjectManifest({
       swDest: "../sw.js",
       swSrc: "./sw.js",
-      include: [/\.(css|js|html|ico|json)$/, /images\/.*\.(png|svg|jpg)$/]
+      include: [/\.(css|js|html)$/, /images\/.*\.(png|svg|jpg)$/]
     })
   ]
 });

@@ -1,4 +1,4 @@
-const SW_VERSION = "0.1.1";
+const SW_VERSION = "0.0.3";
 
 workbox.setConfig({
   debug: false
@@ -8,7 +8,7 @@ workbox.precaching.cleanupOutdatedCaches();
 const offlinePage = "/dist/offline.html";
 
 workbox.routing.registerRoute(
-  new RegExp("/dist/pwa-icons/"),
+  new RegExp("/dist/pwa-icons/.*\\.png"),
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: "pwa-icon-cache"
   })
@@ -120,8 +120,8 @@ self.addEventListener("push", event => {
     const data = event.data.json();
     let payload = {
       body: data.Body,
-      icon: "/dist/images/icon.png",
-      badge: "/dist/images/icon.png",
+      icon: "/dist/images/logo-512.png",
+      badge: "/dist/images/logo-512.png",
       data: data.Url
     };
     event.waitUntil(self.registration.showNotification(data.Title, payload));

@@ -16,12 +16,15 @@ namespace MyBlog.Api
   {
     private readonly IUnitOfWork unitOfWork;
     private readonly IURLHelper urlHelper;
+    private readonly IMapper mapper;
     public BlogApiController(
       IUnitOfWork unitOfWork,
-      IURLHelper urlHelper)
+      IURLHelper urlHelper,
+      IMapper mapper)
     {
       this.unitOfWork = unitOfWork;
       this.urlHelper = urlHelper;
+      this.mapper = mapper;
     }
 
     [HttpGet]
@@ -140,7 +143,7 @@ namespace MyBlog.Api
       }
 
       var blog = await unitOfWork.Blogs.GetBlogAsync(id);
-      var updatedBlogDto = Mapper.Map<BlogForUpdatingDto>(blog);
+      var updatedBlogDto = mapper.Map<BlogForUpdatingDto>(blog);
 
       TryValidateModel(updatedBlogDto);
 
