@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
 using IdentityServer4.EntityFramework.DbContexts;
-using IDP.Helpers;
 using System.Linq;
 
 namespace IDP

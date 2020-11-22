@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const merge = require("webpack-merge");
 const common = require("./webpack.common.js");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const WebpackPwaManifest = require("webpack-pwa-manifest");
 const workboxPlugin = require("workbox-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 module.exports = merge(common, {
   mode: "development",
@@ -12,7 +13,7 @@ module.exports = merge(common, {
     new MiniCssExtractPlugin({
       filename: "[name].bundle.css"
     }),
-    new WebappWebpackPlugin({
+    new FaviconsWebpackPlugin({
       logo: path.resolve("assets/logo.svg"),
       prefix: "/pwa-icons",
       favicons: {

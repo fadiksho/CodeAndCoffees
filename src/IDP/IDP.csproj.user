@@ -4,7 +4,8 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>IDP</ActiveDebugProfile>
+    <ActiveDebugProfile>IIS Express</ActiveDebugProfile>
     <NameOfLastUsedPublishProfile>auth.codeandcoffees.com - Web Deploy</NameOfLastUsedPublishProfile>
+    <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
 </Project>

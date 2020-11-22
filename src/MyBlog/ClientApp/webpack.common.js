@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -9,7 +10,7 @@ module.exports = {
     rules: [
       {
         test: /\.ts?$/,
-        use: ["ts-loader"],
+        use: "ts-loader",
         exclude: /node_modules/
       },
       {

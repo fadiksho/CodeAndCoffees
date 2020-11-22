@@ -1,4 +1,4 @@
-const SW_VERSION = "0.0.3";
+const SW_VERSION = "0.0.4";
 
 workbox.setConfig({
   debug: false

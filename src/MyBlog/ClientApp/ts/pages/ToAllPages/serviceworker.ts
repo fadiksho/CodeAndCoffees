@@ -14,6 +14,8 @@ let pwaInstallButton: HTMLButtonElement;
 const vapidPublicKey =
   "BDW5yAPVXetyXAN9C1F31REgmWRM9WlQUUX2r0ZgAPgqN_RlTKwN7eWJDHT0SOVpljZ8db3AyM4O91m4MMOuOTw";
 
+
+
 window.addEventListener("load", () => {
   pushNotificationButton = document.getElementById(
     "pushNotificationButton"
@@ -58,12 +60,12 @@ if ("serviceWorker" in navigator) {
   wb.register().then(async swReg => {
     swRegisteration = swReg;
     if ("PushManager" in window) {
-      let sub = await swRegisteration.pushManager.getSubscription();
+      const sub = await swRegisteration.pushManager.getSubscription();
       if (sub) {
         pushNotificationSubscription = sub;
         if (!isPushNotificationEnabled()) {
           try {
-            let isSubscriber = await checkIfSubscriber();
+            const isSubscriber = await checkIfSubscriber();
             if (isSubscriber) savePushNotificationResult();
           } catch {
             clearPushNotificationResult();
@@ -90,22 +92,25 @@ if ("serviceWorker" in navigator) {
 
 function updateNotificationButton(): void {
   pushNotificationButton.disabled = true;
+  const pushNotificationIcon = pushNotificationButton.firstElementChild.firstElementChild;
   if (isPushNotificationEnabled()) {
-    pushNotificationButton.firstElementChild.firstElementChild.setAttribute(
-      "xlink:href",
-      "#icon-bell-silent"
-    );
+    if (pushNotificationIcon.getAttributeNS('http://www.w3.org/1999/xlink', 'href') !== "#icon-bell-silent")
+      pushNotificationIcon.setAttribute(
+        "xlink:href",
+        "#icon-bell-silent"
+      );
   } else {
-    pushNotificationButton.firstElementChild.firstElementChild.setAttribute(
-      "xlink:href",
-      "#icon-bell"
-    );
+    if (pushNotificationIcon.getAttributeNS('http://www.w3.org/1999/xlink', 'href') !== "#icon-bell")
+      pushNotificationIcon.setAttribute(
+        "xlink:href",
+        "#icon-bell"
+      );
   }
   pushNotificationButton.disabled = false;
 }
 
 async function checkIfSubscriber() {
-  let response = await fetch(
+  const response = await fetch(
     "/api/subscribers/CheckIfPushNotificationSubscriber",
     {
       method: "POST",
@@ -118,7 +123,7 @@ async function checkIfSubscriber() {
     }
   );
   if (response.ok) {
-    let checkIfSubscriberResponse = (await response.json()) as CheckIfSubscriberResponse;
+    const checkIfSubscriberResponse = (await response.json()) as CheckIfSubscriberResponse;
     return Promise.resolve(checkIfSubscriberResponse.isSubscribed);
   }
   return Promise.reject(response.status);
@@ -136,7 +141,7 @@ function initializePushNotification() {
       Toast.toast("Are you Sure Want to UnSubscribe From Notification?", {
         onAccept: async () => {
           try {
-            let response = await fetch(
+            const response = await fetch(
               "/api/subscribers/PushNotificationCancelSubscription",
               {
                 method: "POST",
@@ -173,7 +178,7 @@ function initializePushNotification() {
       try {
         await askPermission();
         try {
-          let response = await subscribeUser();
+          const response = await subscribeUser();
           if (response.ok) {
             savePushNotificationResult();
           } else {
@@ -198,21 +203,77 @@ function initializePushNotification() {
   });
 }
 
-async function subscribeUser() {
+function urlBase64ToUint8Array(base64String: string): Uint8Array {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+function isPushNotificationEnabled(): boolean {
+  const isSubscribed =
+    localStorage.getItem("PNSubscribedDate") &&
+    new Date(localStorage.getItem("PNSubscribedDate")) > new Date();
+
+  return isSubscribed;
+}
+
+function savePushNotificationResult(): void {
+  const PNSubscribedDate = new Date();
+  PNSubscribedDate.setDate(PNSubscribedDate.getDate() + 7);
+  localStorage.setItem("PNSubscribedDate", PNSubscribedDate.toString());
+}
+
+function clearPushNotificationResult(): void {
+  localStorage.removeItem("PNSubscribedDate");
+}
+
+async function askPermission(): Promise<void> {
+  const permissionResult1 = await new Promise(function (resolve, reject) {
+    const permissionResult = Notification.requestPermission(function (result) {
+      resolve(result);
+    });
+    if (permissionResult) {
+      permissionResult.then(resolve, reject);
+    }
+  });
+  if (permissionResult1 !== "granted") {
+    throw new Error("We weren't granted permission.");
+  }
+}
+
+function initializeAddToHomeScreen(): void {
+  pwaInstallButton.addEventListener("click", () => {
+    // Show the prompt
+    deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    deferredPrompt.userChoice.then(choiceResult => {
+      if (choiceResult.outcome === "accepted") {
+        pwaInstallButton.style.display = "none";
+      }
+    });
+  });
+}
+
+async function subscribeUser(): Promise<any> {
   const sub = await swRegisteration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
   });
-  let rawKey = sub.getKey ? sub.getKey("p256dh") : null;
-  let key = rawKey
+  const rawKey = sub.getKey ? sub.getKey("p256dh") : null;
+  const key = rawKey
     ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey)))
     : "";
-  let rawAuthSecret = sub.getKey ? sub.getKey("auth") : null;
-  let authSecret = rawAuthSecret
+  const rawAuthSecret = sub.getKey ? sub.getKey("auth") : null;
+  const authSecret = rawAuthSecret
     ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret)))
     : "";
 
-  let pushNotificationSubscription = {
+  const pushNotificationSubscription = {
     Key: key,
     EndPoint: sub.endpoint,
     AuthSecret: authSecret
@@ -223,61 +284,5 @@ async function subscribeUser() {
     headers: {
       "Content-Type": "application/json"
     }
-  });
-}
-
-function urlBase64ToUint8Array(base64String: string) {
-  let padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  let base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
-  let rawData = window.atob(base64);
-  let outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-function isPushNotificationEnabled(): boolean {
-  let isSubscribed =
-    localStorage.getItem("PNSubscribedDate") &&
-    new Date(localStorage.getItem("PNSubscribedDate")) > new Date();
-
-  return isSubscribed;
-}
-
-function savePushNotificationResult() {
-  let PNSubscribedDate = new Date();
-  PNSubscribedDate.setDate(PNSubscribedDate.getDate() + 7);
-  localStorage.setItem("PNSubscribedDate", PNSubscribedDate.toString());
-}
-
-function clearPushNotificationResult() {
-  localStorage.removeItem("PNSubscribedDate");
-}
-
-async function askPermission() {
-  const permissionResult_1 = await new Promise(function(resolve, reject) {
-    const permissionResult = Notification.requestPermission(function(result) {
-      resolve(result);
-    });
-    if (permissionResult) {
-      permissionResult.then(resolve, reject);
-    }
-  });
-  if (permissionResult_1 !== "granted") {
-    throw new Error("We weren't granted permission.");
-  }
-}
-
-function initializeAddToHomeScreen() {
-  pwaInstallButton.addEventListener("click", () => {
-    // Show the prompt
-    deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    deferredPrompt.userChoice.then(choiceResult => {
-      if (choiceResult.outcome === "accepted") {
-        pwaInstallButton.style.display = "none";
-      }
-    });
   });
 }

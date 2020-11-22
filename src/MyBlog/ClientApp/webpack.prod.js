@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const merge = require("webpack-merge");
 const common = require("./webpack.common.js");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const WebpackPwaManifest = require("webpack-pwa-manifest");
 const CompressionPlugin = require("compression-webpack-plugin");
 const workboxPlugin = require("workbox-webpack-plugin");
-const WebappWebpackPlugin = require("webapp-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 module.exports = merge(common, {
   mode: "production",
@@ -21,7 +21,7 @@ module.exports = merge(common, {
       threshold: 8192,
       minRatio: 0.8
     }),
-    new WebappWebpackPlugin({
+    new FaviconsWebpackPlugin({
       logo: path.resolve("assets/logo.svg"),
       prefix: "/pwa-icons",
       favicons: {

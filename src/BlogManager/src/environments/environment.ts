@@ -3,10 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  apiRoot: "https://localhost:44397/api/",
+  apiRoot: "https://localhost:44354/api/",
   production: false,
   userManagerSettings: {
-    authority: "https://localhost:44309/",
+    authority: "https://localhost:44381/",
     client_id: "blogManager_SPA",
     redirect_uri: "http://localhost:4200/auth-callback",
     post_logout_redirect_uri: "http://localhost:4200/?postLogout=true",

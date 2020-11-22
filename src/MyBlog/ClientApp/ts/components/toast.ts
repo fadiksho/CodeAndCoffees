@@ -14,7 +14,7 @@ interface ToastConfig {
 }
 class Toast {
   toastContainer: HTMLElement;
-  toast(message: string, config: ToastConfig = {}) {
+  toast(message: string, config: ToastConfig = {}): void {
     this.initContainer();
     const defaultConfig: ToastConfig = {
       onAccept: null,
@@ -24,13 +24,14 @@ class Toast {
       type: ToastType.info
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     new ToastItem(this.toastContainer, message, {
       ...defaultConfig,
       ...config
     });
   }
 
-  initContainer() {
+  initContainer(): void {
     if (!this.toastContainer) {
       this.toastContainer = document.createElement("div");
       this.toastContainer.setAttribute("id", "snackbar");
@@ -43,8 +44,8 @@ class ToastItem {
   toastContainer: HTMLElement;
   toastElement: HTMLElement;
   config: ToastConfig;
-  isRemoved: boolean = false;
-  timerId: number;
+  isRemoved = false;
+  timerId: NodeJS.Timeout;
 
   constructor(
     container: HTMLElement,
@@ -60,22 +61,22 @@ class ToastItem {
   }
 
   buildToast(message: string): HTMLElement {
-    let newToast = document.createElement("div");
-    let toastMessage = document.createElement("p");
+    const newToast = document.createElement("div");
+    const toastMessage = document.createElement("p");
     toastMessage.className = "toast-message";
     toastMessage.innerText = message;
     newToast.className = `toast ${this.getToastType(this.config.type)}`;
-    let newToastAction = document.createElement("div");
+    const newToastAction = document.createElement("div");
     newToastAction.className = "toast-actions";
-    let acceptAction = document.createElement("button");
+    const acceptAction = document.createElement("button");
     acceptAction.innerText = "OK";
     acceptAction.className = "toast-action-button toast-accept btn";
     // Only show reject button when reject callback is present
     if (this.config.onAccept) {
-      let cancelAction = document.createElement("button");
+      const cancelAction = document.createElement("button");
       cancelAction.innerText = "Cancel";
       cancelAction.className = "toast-action-button toast-reject btn";
-      cancelAction.addEventListener("click", e => {
+      cancelAction.addEventListener("click", () => {
         this.closeToast(this.config.onReject);
         if (this.timerId) {
           clearTimeout(this.config.timout);
@@ -85,10 +86,10 @@ class ToastItem {
     }
     // Show X (close) icon when reject callback is not present.
     else {
-      let closeButton = document.createElement("button");
+      const closeButton = document.createElement("button");
       closeButton.className = "toast-close";
       closeButton.innerText = "X";
-      closeButton.addEventListener("click", e => {
+      closeButton.addEventListener("click", () => {
         this.closeToast();
         if (this.timerId) {
           clearTimeout(this.timerId);
@@ -97,7 +98,7 @@ class ToastItem {
       newToast.appendChild(closeButton);
     }
 
-    acceptAction.addEventListener("click", e => {
+    acceptAction.addEventListener("click", () => {
       this.closeToast(this.config.onAccept);
       if (this.timerId) {
         clearTimeout(this.timerId);
@@ -122,7 +123,7 @@ class ToastItem {
     }
   }
 
-  closeToast(onCallBack: () => void = null) {
+  closeToast(onCallBack: () => void = null): void {
     // to prevent multiple click
     if (this.isRemoved) return;
     else this.isRemoved = true;
