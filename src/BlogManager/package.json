@@ -23,7 +23,7 @@
     "@ng-bootstrap/ng-bootstrap": "^5.1.4",
     "bootstrap": "^4.4.1",
     "core-js": "^2.6.11",
-    "highlight.js": "^9.17.1",
+    "highlight.js": "^10.1.2",
     "jwt-decode": "^2.2.0",
     "ngx-autosize": "^1.6.4",
     "ngx-toastr": "^10.2.0",
