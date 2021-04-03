@@ -13,8 +13,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
-using IdentityServer4.EntityFramework.DbContexts;
-using System.Linq;
+using Microsoft.Extensions.Hosting;
 
 namespace IDP
 {
@@ -22,9 +21,9 @@ namespace IDP
   {
     private readonly ILogger<Startup> logger;
     public IConfiguration Configuration { get; }
-    public IHostingEnvironment Environment { get; }
+    public IWebHostEnvironment Environment { get; }
 
-    public Startup(IConfiguration configuration, IHostingEnvironment environment, ILogger<Startup> logger)
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment, ILogger<Startup> logger)
     {
       this.logger = logger;
       Configuration = configuration;
@@ -38,7 +37,11 @@ namespace IDP
       var appSetting = Configuration.Get<AppSettings>();
       var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
       logger.LogInformation($"Environmanet {Environment.EnvironmentName}");
+
+
       services.Configure<AppSettings>(Configuration);
+
+      services.AddDatabaseDeveloperPageExceptionFilter();
 
       services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
@@ -90,23 +93,25 @@ namespace IDP
           options.EnableTokenCleanup = true;
         })
         .AddAspNetIdentity<ApplicationUser>()
-        .AddSigningCredential(new X509Certificate2(Path.Combine(Directory.GetCurrentDirectory(), "Certificates", "auth.codeandcoffees.com.pfx"),
-                  "IForgetMyPassword-3Times!",
+        .AddSigningCredential(new X509Certificate2(Path.Combine(Directory.GetCurrentDirectory(), "Certificates", appSetting.Certificate.Name),
+                  appSetting.Certificate.Password,
                   X509KeyStorageFlags.MachineKeySet));
 
       services.AddAuthentication();
-      services.AddMvc()
-        .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+      services
+        .AddMvc(opt => {
+          opt.EnableEndpointRouting = false;
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-      //DbInitialize.EnsureIdentityServerDatabase(app);
+      DbInitialize.EnsureIdentityServerDatabase(app);
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
-        app.UseDatabaseErrorPage();
+        app.UseMigrationsEndPoint();
       }
       else
       {

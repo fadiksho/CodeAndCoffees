@@ -4,7 +4,6 @@ using IdentityServer4.EntityFramework.Mappers;
 using IDP.Models;
 using IDP.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
