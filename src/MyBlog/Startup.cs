@@ -11,9 +11,9 @@ using MyBlog.Persistence;
 using MyBlog.Persistence.Data;
 using MyBlog.Repository.Data;
 using MyBlog.Services;
-using AutoMapper;
-using Newtonsoft.Json.Serialization;
 using System.Net;
+using System.Text.Json;
+using Microsoft.Extensions.Hosting;
 
 namespace MyBlog
 {
@@ -33,7 +33,9 @@ namespace MyBlog
       var appSetting = Configuration.Get<AppSettings>();
 
       services.Configure<AppSettings>(Configuration);
-      services.AddDbContext<BlogContext>(options =>
+
+      services
+        .AddDbContext<BlogContext>(options =>
           options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
 
       services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -42,20 +44,22 @@ namespace MyBlog
       services.AddSingleton<IURLHelper, URLHelper>();
       services.AddAutoMapper(typeof(Startup));
 
-      services.AddCors(o => o.AddPolicy("EnableCors", builder =>
-      {
-        builder
-        .SetIsOriginAllowedToAllowWildcardSubdomains()
-          .WithOrigins(
-            "https://*.codeandcoffees.com",
-            "https://staging.blogmanager.codeandcoffees.com",
-            "http://localhost:4200"
-          )
-          .AllowAnyHeader()
-          .AllowAnyMethod();
-      }));
+      services
+        .AddCors(o => o.AddPolicy("EnableCors", builder =>
+        {
+          builder
+          .SetIsOriginAllowedToAllowWildcardSubdomains()
+            .WithOrigins(
+              "https://*.codeandcoffees.com",
+              "https://staging.blogmanager.codeandcoffees.com",
+              "http://localhost:4200"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        }));
 
-      services.AddAuthentication("Bearer")
+      services
+        .AddAuthentication("Bearer")
         .AddJwtBearer("Bearer", options =>
         {
           options.RequireHttpsMetadata = appSetting.WebSiteHosting.RequirdHttps;
@@ -63,17 +67,20 @@ namespace MyBlog
           options.Audience = appSetting.JwtBearer.Audience;
         });
 
-      services.AddMvc()
+      services
+        .AddMvc(opt =>
+        {
+          opt.EnableEndpointRouting = false;
+        })
         .AddJsonOptions(opt =>
         {
-          opt.SerializerSettings.ContractResolver =
-            new CamelCasePropertyNamesContractResolver();
+          opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         })
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), subApp =>
       {
@@ -91,19 +98,19 @@ namespace MyBlog
         subApp.UseExceptionHandler("/StatusCode/500");
         subApp.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
       });
-
       if (env.IsDevelopment())
       {
         // ToDo: check if there is a bug in this package when we hit statuscode controller
         // it return 500 error instead of the specifid view.
         app.UseDeveloperExceptionPage();
       }
+
       else if (env.IsProduction() || env.IsStaging())
       {
         app.UseHttpsRedirection();
         app.UseHsts();
       }
-      
+
       app.UseCors("EnableCors");
       app.UseStaticFiles(new StaticFileOptions
       {
@@ -121,6 +128,7 @@ namespace MyBlog
       app.UseStaticFiles();
 
       app.UseAuthentication();
+
       app.UseMvc(routes =>
       {
         routes.MapRoute("Blog", "post/{*slug}",

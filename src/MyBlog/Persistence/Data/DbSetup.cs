@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using MyBlog.Entity;
 using MyBlog.Services;
 using NLog;
@@ -20,7 +21,7 @@ namespace MyBlog.Persistence.Data
         var services = scope.ServiceProvider;
         var context = services.GetRequiredService<BlogContext>();
         var config = host.Services.GetRequiredService<IConfiguration>().Get<AppSettings>();
-        var env = host.Services.GetRequiredService<IHostingEnvironment>();
+        var env = host.Services.GetRequiredService<IWebHostEnvironment>();
 
         logger.Debug("Apply Latest Migration.");
         try
@@ -47,7 +48,7 @@ namespace MyBlog.Persistence.Data
     {
       context.Database.Migrate();
     }
-    public static void EnsureSeedDb(IHostingEnvironment env, BlogContext context, AppSettings appSettings)
+    public static void EnsureSeedDb(IWebHostEnvironment env, BlogContext context, AppSettings appSettings)
     {
       if (env.IsProduction() || env.IsStaging())
         return;

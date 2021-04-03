@@ -19,14 +19,14 @@ namespace MyBlog.Api
   [Route("api/blob")]
   public class BlobApiController : Controller
   {
-    private readonly IHostingEnvironment host;
+    private readonly IWebHostEnvironment host;
     private readonly IUnitOfWork unitOfWork;
     private readonly IFileHelper fileHelper;
     private readonly WebSiteHostingSettings webHostingSettings;
     private readonly ILogger<BlogApiController> logger;
     public BlobApiController(
       IOptions<AppSettings> config,
-      IHostingEnvironment host,
+      IWebHostEnvironment host,
       IUnitOfWork unitOfWork,
       ILogger<BlogApiController> logger,
       IFileHelper fileHelper)

@@ -19,7 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest.Mapper", "test\MyB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest.Helpers", "test\MyBlog\UnitTest.Helpers\UnitTest.Helpers.csproj", "{5BCA7420-9B69-4599-8D01-BF99FD94B6DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest.BusinessLogic", "test\MyBlog\UnitTest.BusinessLogic\UnitTest.BusinessLogic.csproj", "{8212CE4A-DB98-4F35-BFD1-7A7328DCDBA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest.BusinessLogic", "test\MyBlog\UnitTest.BusinessLogic\UnitTest.BusinessLogic.csproj", "{8212CE4A-DB98-4F35-BFD1-7A7328DCDBA4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{469031AE-C7F3-4E37-8EEC-229534561C11}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
