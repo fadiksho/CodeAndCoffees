@@ -1,7 +1,6 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
   AfterViewInit,
   ElementRef,
   ViewChildren
@@ -17,7 +16,7 @@ import {
 import { DatePipe } from "@angular/common";
 
 import { Observable, fromEvent, merge } from "rxjs";
-import { takeWhile, debounceTime } from "rxjs/operators";
+import { debounceTime } from "rxjs/operators";
 import { BlogService } from "../_services/blog.service";
 import { Router } from "@angular/router";
 
@@ -25,8 +24,8 @@ import { ToastrService } from "ngx-toastr";
 import { BlogDto } from "../_model/blogDto";
 import { ValidationModel } from "src/app/shared/_model/validation.model";
 import { GenericValidator } from "src/app/shared/_model/generic-validator";
-import { NgbTabChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { HtmlService } from "../_services/html.service";
+import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-blog-add",
@@ -157,7 +156,7 @@ export class BlogAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onTapChange(event: NgbTabChangeEvent) {
+  onTapChange(event: NgbNavChangeEvent) {
     switch (event.nextId) {
       case "description-preview":
         this.descriptionPreview = this.htmlService.getHtmlValueForPreview(

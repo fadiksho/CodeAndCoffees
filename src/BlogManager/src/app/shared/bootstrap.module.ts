@@ -1,8 +1,8 @@
 import { NgModule } from "@angular/core";
-import { NgbTabsetModule, NgbCollapseModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbNavModule, NgbCollapseModule } from "@ng-bootstrap/ng-bootstrap";
 @NgModule({
-  imports: [NgbTabsetModule],
-  exports: [NgbTabsetModule, NgbCollapseModule],
+  imports: [NgbNavModule],
+  exports: [NgbNavModule, NgbCollapseModule],
   providers: []
 })
 export class BootstrapModule {}

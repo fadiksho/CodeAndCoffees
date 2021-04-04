@@ -45,8 +45,9 @@
         displayMessage["description"]
       }}</small>
     </div>
-    <ngb-tabset [justify]="'fill'" (tabChange)="onTapChange($event)">
-      <ngb-tab title="Markup" id="description-edit">
+
+    <ul ngbNav #nav="ngbNav" (tabChange)="onTapChange($event)">
+      <li ngbNavItem title="Markup" id="description-edit">
         <ng-template ngbTabContent>
           <textarea
             class="form-control"
@@ -60,13 +61,13 @@
           >
           </textarea>
         </ng-template>
-      </ngb-tab>
-      <ngb-tab title="Preview" id="description-preview">
+      </li>
+      <li ngbNavItem title="Preview" id="description-preview">
         <ng-template ngbTabContent>
           <div [innerHtml]="descriptionPreview | safeHtml"></div>
         </ng-template>
-      </ngb-tab>
-    </ngb-tabset>
+      </li>
+    </ul>
   </div>
   <div class="mb-3 shadow p-3 rounded">
     <div class="d-flex align-items-center ">
@@ -86,8 +87,8 @@
         displayMessage["body"]
       }}</small>
     </div>
-    <ngb-tabset [justify]="'fill'" (tabChange)="onTapChange($event)">
-      <ngb-tab title="Markup" id="body-edit">
+    <ul ngbNav #nav="ngbNav" (tabChange)="onTapChange($event)">
+      <li ngbNavItem title="Markup" id="body-edit">
         <ng-template ngbTabContent>
           <textarea
             class="form-control"
@@ -99,13 +100,13 @@
           >
           </textarea>
         </ng-template>
-      </ngb-tab>
-      <ngb-tab title="Preview" id="body-preview">
+      </li>
+      <li ngbNavItem title="Preview" id="body-preview">
         <ng-template ngbTabContent>
           <div [innerHtml]="bodyPreview | safeHtml"></div>
         </ng-template>
-      </ngb-tab>
-    </ngb-tabset>
+      </li>
+    </ul>
   </div>
   <div class="mb-3 shadow p-3 rounded" formArrayName="tags">
     <div class="d-flex align-items-center">

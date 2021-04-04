@@ -24,7 +24,7 @@ import { GenericValidator } from "src/app/shared/_model/generic-validator";
 import { ValidationModel } from "src/app/shared/_model/validation.model";
 import { ToastrService } from "ngx-toastr";
 import { HtmlService } from "../_services/html.service";
-import { NgbTabChangeEvent } from "@ng-bootstrap/ng-bootstrap";
+import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-blog-edit",
@@ -174,7 +174,7 @@ export class BlogEditComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  onTapChange(event: NgbTabChangeEvent) {
+  onTapChange(event: NgbNavChangeEvent) {
     switch (event.nextId) {
       case "description-preview":
         this.descriptionPreview = this.htmlService.getHtmlValueForPreview(
