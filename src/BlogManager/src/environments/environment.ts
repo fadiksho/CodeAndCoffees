@@ -6,12 +6,12 @@ export const environment = {
   apiRoot: "https://localhost:44354/api/",
   production: false,
   userManagerSettings: {
-    authority: "https://localhost:44381/",
+    authority: "https://localhost:5001/",
     client_id: "blogManager_SPA",
     redirect_uri: "http://localhost:4200/auth-callback",
     post_logout_redirect_uri: "http://localhost:4200/?postLogout=true",
     response_type: "code",
-    scope: "openid codeandcoffees.blog.api",
+    scope: "openid admin",
     loadUserInfo: true,
     automaticSilentRenew: true,
     silent_redirect_uri: "http://localhost:4200/silent-refresh.html"

@@ -33,13 +33,13 @@ namespace IDP.Persistence.Data
             "https://staging.blogmanager.codeandcoffees.com/auth-callback",
             "https://staging.blogmanager.codeandcoffees.com/silent-refresh.html"
           },
-          PostLogoutRedirectUris = { 
+          PostLogoutRedirectUris = {
             "http://localhost:4200/?postLogout=true",
             "https://staging.blogmanager.codeandcoffees.com/?postLogout=true"
           },
           AllowedCorsOrigins = {
             "http://localhost:4200",
-            "https://staging.blogmanager.codeandcoffees.com" 
+            "https://staging.blogmanager.codeandcoffees.com"
           },
           RequireConsent = false,
           AllowRememberConsent = false,
@@ -47,7 +47,8 @@ namespace IDP.Persistence.Data
           {
             IdentityServerConstants.StandardScopes.OpenId,
             IdentityServerConstants.StandardScopes.Profile,
-            "codeandcoffees.blog.api"
+            "codeandcoffees.blog.api",
+            "admin"
           },
           AllowAccessTokensViaBrowser = true,
           
@@ -62,6 +63,17 @@ namespace IDP.Persistence.Data
       return new List<ApiResource>
       {
         new ApiResource("codeandcoffees.blog.api", "Code And Coffees Blog API")
+        {
+          Scopes = { "admin" }
+        }
+      };
+    }
+
+    public static IEnumerable<ApiScope> GetApiScopes()
+    {
+      return new List<ApiScope>
+      {
+          new ApiScope(name: "admin", displayName: "Provides administrative access to all the api.")
       };
     }
   }

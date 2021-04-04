@@ -63,6 +63,7 @@ namespace IDP.Persistence.Data
         serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
 
         var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+
         if (!context.Clients.Any())
         {
           foreach (var client in Config.GetClients())
@@ -77,6 +78,15 @@ namespace IDP.Persistence.Data
           foreach (var resource in Config.GetIdentityResources())
           {
             context.IdentityResources.Add(resource.ToEntity());
+          }
+          context.SaveChanges();
+        }
+
+        if (!context.ApiScopes.Any())
+        {
+          foreach (var resource in Config.GetApiScopes())
+          {
+            context.ApiScopes.Add(resource.ToEntity());
           }
           context.SaveChanges();
         }
