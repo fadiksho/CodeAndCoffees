@@ -19,6 +19,7 @@ namespace IDP
         using (var scope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
         {
           DbInitialize.EnsureSeedData(scope.ServiceProvider);
+          DbInitialize.EnsureIdentityServerDatabase(scope.ServiceProvider);
         }
         host.Run();
       }

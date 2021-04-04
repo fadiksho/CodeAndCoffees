@@ -11,7 +11,7 @@ export const environment = {
     redirect_uri: "http://localhost:4200/auth-callback",
     post_logout_redirect_uri: "http://localhost:4200/?postLogout=true",
     response_type: "code",
-    scope: "openid admin",
+    scope: "openid profile admin",
     loadUserInfo: true,
     automaticSilentRenew: true,
     silent_redirect_uri: "http://localhost:4200/silent-refresh.html"
