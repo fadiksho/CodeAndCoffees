@@ -10,7 +10,7 @@ import { Blob } from "../_model/blob";
   styleUrls: ["./blob-list.component.scss"]
 })
 export class BlobListComponent implements OnInit {
-  @ViewChild("fileInput", { static: false }) fileInput: ElementRef;
+  @ViewChild("fileInput") fileInput: ElementRef;
 
   query: PaggingQuery = {
     page: 1,
