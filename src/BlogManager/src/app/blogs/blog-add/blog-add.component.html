@@ -46,9 +46,10 @@
       }}</small>
     </div>
 
-    <ul ngbNav #nav="ngbNav" (tabChange)="onTapChange($event)">
-      <li ngbNavItem title="Markup" id="description-edit">
-        <ng-template ngbTabContent>
+    <ul ngbNav #nav="ngbNav" (navChange)="onTapChange($event)" class="nav-tabs">
+      <li [ngbNavItem]="'description-edit'">
+        <a ngbNavLink>Markup</a>
+        <ng-template ngbNavContent>
           <textarea
             class="form-control"
             id="description"
@@ -62,12 +63,14 @@
           </textarea>
         </ng-template>
       </li>
-      <li ngbNavItem title="Preview" id="description-preview">
-        <ng-template ngbTabContent>
+      <li [ngbNavItem]="'description-preview'">
+        <a ngbNavLink>Preview</a>
+        <ng-template ngbNavContent>
           <div [innerHtml]="descriptionPreview | safeHtml"></div>
         </ng-template>
       </li>
     </ul>
+    <div [ngbNavOutlet]="nav"></div>
   </div>
   <div class="mb-3 shadow p-3 rounded">
     <div class="d-flex align-items-center ">
@@ -87,9 +90,11 @@
         displayMessage["body"]
       }}</small>
     </div>
-    <ul ngbNav #nav="ngbNav" (tabChange)="onTapChange($event)">
-      <li ngbNavItem title="Markup" id="body-edit">
-        <ng-template ngbTabContent>
+    
+    <ul ngbNav #bodynav="ngbNav" (navChange)="onTapChange($event)" class="nav-tabs">
+      <li [ngbNavItem]="'body-edit'">
+        <a ngbNavLink>Markup</a>
+        <ng-template ngbNavContent>
           <textarea
             class="form-control"
             id="body"
@@ -101,12 +106,14 @@
           </textarea>
         </ng-template>
       </li>
-      <li ngbNavItem title="Preview" id="body-preview">
-        <ng-template ngbTabContent>
+      <li [ngbNavItem]="'body-preview'">
+        <a ngbNavLink>Preview</a>
+        <ng-template ngbNavContent>
           <div [innerHtml]="bodyPreview | safeHtml"></div>
         </ng-template>
       </li>
     </ul>
+    <div [ngbNavOutlet]="bodynav"></div>
   </div>
   <div class="mb-3 shadow p-3 rounded" formArrayName="tags">
     <div class="d-flex align-items-center">

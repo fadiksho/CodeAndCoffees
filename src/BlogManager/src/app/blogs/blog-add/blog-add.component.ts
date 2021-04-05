@@ -157,6 +157,7 @@ export class BlogAddComponent implements OnInit, AfterViewInit {
   }
 
   onTapChange(event: NgbNavChangeEvent) {
+    console.log('OnTapChange' + event.nextId);
     switch (event.nextId) {
       case "description-preview":
         this.descriptionPreview = this.htmlService.getHtmlValueForPreview(

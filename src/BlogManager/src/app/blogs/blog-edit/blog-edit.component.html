@@ -45,13 +45,14 @@
       }}</small>
     </div>
     <ul
-      (tabChange)="onTapChange($event)"
+      (navChange)="onTapChange($event)"
       ngbNav 
-      #nav="ngbNav"
-      class="tabset-sticky-top tabset-primary"
+      #descriptionNav="ngbNav"
+      class="nav-tabs"
     >
-      <li ngbNavItem title="Description Markup" id="description-edit">
-        <ng-template ngbTabContent>
+      <li [ngbNavItem]="'description-edit'">
+        <a ngbNavLink>Description Markup</a>
+        <ng-template ngbNavContent>
           <textarea
             class="form-control"
             id="description"
@@ -65,12 +66,14 @@
           </textarea>
         </ng-template>
       </li>
-      <li ngbNavItem title="Description Preview" id="description-preview">
-        <ng-template ngbTabContent>
+      <li [ngbNavItem]="'description-preview'">
+        <a ngbNavLink>Description Preview</a>
+        <ng-template ngbNavContent>
           <div [innerHtml]="descriptionPreview | safeHtml"></div>
         </ng-template>
       </li>
     </ul>
+    <div [ngbNavOutlet]="descriptionNav"></div>
   </div>
   <div class="mb-3 shadow p-3 rounded">
     <div class="d-flex align-items-center">
@@ -92,12 +95,13 @@
     </div>
     <ul
       ngbNav 
-      #nav="ngbNav"
-      (tabChange)="onTapChange($event)"
-      class="tabset-sticky-top tabset-primary"
+      #bodyNav="ngbNav"
+      (navChange)="onTapChange($event)"
+      class="nav-tabs"
     >
-      <li ngbNavItem title="Body Markup" id="body-edit">
-        <ng-template ngbTabContent>
+      <li [ngbNavItem]="'body-edit'">
+        <a ngbNavLink>Body Markup</a>
+        <ng-template ngbNavContent>
           <textarea
             class="form-control"
             id="body"
@@ -109,12 +113,14 @@
           </textarea>
         </ng-template>
       </li>
-      <li ngbNavItem title="Body Preview" id="body-preview">
-        <ng-template ngbTabContent>
+      <li [ngbNavItem]="'body-preview'">
+        <a ngbNavLink>Body Markup</a>
+        <ng-template ngbNavContent>
           <div [innerHtml]="bodyPreview | safeHtml"></div>
         </ng-template>
       </li>
     </ul>
+    <div [ngbNavOutlet]="bodyNav"></div>
   </div>
   <div formArrayName="tags" class="mb-3 shadow p-3 rounded">
     <div class="d-flex align-items-center">

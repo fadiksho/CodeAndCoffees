@@ -1,6 +1,7 @@
-<ul ngbNav #nav="ngbNav">
-  <li ngbNavItem title="View Files" id="body-edit">
-    <ng-template ngbTabContent>
+<ul ngbNav #blobNav="ngbNav" class="nav-tabs">
+  <li ngbNavItem>
+    <a ngbNavLink>View Files</a>
+    <ng-template ngbNavContent>
       <div *ngIf="paggingResult" class="mt-3">
         <div class="row">
           <div *ngIf="paggingResult.totalPages > 1" class="w-100 mt-3 ml-3">
@@ -78,10 +79,11 @@
       </div>
     </ng-template>
   </li>
-  <li ngbNavItem title="Upload">
-    <ng-template ngbTabContent>
+  <li ngbNavItem>
+    <a ngbNavLink>Upload</a>
+    <ng-template ngbNavContent>
       <div class="form-group mt-3">
-        <h3>Upload New File</h3>
+        <h4>Upload New File</h4>
         <input
           type="file"
           class="form-control"
@@ -92,3 +94,4 @@
     </ng-template>
   </li>
 </ul>
+<div [ngbNavOutlet]="blobNav"></div>
