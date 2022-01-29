@@ -139,5 +139,3 @@ namespace MyBlog
     }
   }
 }
-
-

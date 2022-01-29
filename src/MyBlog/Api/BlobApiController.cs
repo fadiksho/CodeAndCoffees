@@ -37,6 +37,7 @@ namespace MyBlog.Api
       this.fileHelper = fileHelper;
       this.logger = logger;
     }
+
     [HttpPost]
     public async Task<IActionResult> UploadAsync(BlobForCreatingDto blob)
     {
@@ -48,6 +49,7 @@ namespace MyBlog.Api
       if (blob.File.Length == 0) return BadRequest("Empty file");
       if (blob.File.Length > 10 * 1024 * 1024) return BadRequest("Max file size exceeded");
 
+      
       //  Validate file extenstion
       var fileExtenstion = Path.GetExtension(blob.File.FileName);
       if (!fileHelper.IsExtenstionSupported(fileExtenstion))

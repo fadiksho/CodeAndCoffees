@@ -24,10 +24,10 @@ namespace MyBlog.Controllers
     public IActionResult Pagination(int pageNumber)
     {
       PaggingResult<Blog> blogPage =
-      unitOfWork.Blogs.GetBlogsPage(new BlogQuery()
-      {
-        Page = pageNumber
-      });
+        unitOfWork.Blogs.GetBlogsPage(new BlogQuery()
+        {
+          Page = pageNumber
+        });
 
       return View("Index", blogPage);
     }

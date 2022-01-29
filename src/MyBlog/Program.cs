@@ -15,7 +15,7 @@ namespace MyBlog
       try
       {
         var host = CreateWebHostBuilder(args).Build();
-
+        
         DbSetup.EnsureMigrationAndSeeding(host, logger);
 
         host.Run();
