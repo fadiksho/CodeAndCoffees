@@ -1,141 +1,111 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using MyBlog.Persistence;
-using MyBlog.Persistence.Data;
-using MyBlog.Repository.Data;
-using MyBlog.Services;
-using System.Net;
-using System.Text.Json;
-using Microsoft.Extensions.Hosting;
+﻿//using System.IO;
+//using Microsoft.AspNetCore.Builder;
+//using Microsoft.AspNetCore.Hosting;
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.Extensions.Configuration;
+//using Microsoft.Extensions.DependencyInjection;
+//using Microsoft.Extensions.FileProviders;
+//using MyBlog.Persistence;
+//using MyBlog.Persistence.Data;
+//using MyBlog.Repository.Data;
+//using MyBlog.Services;
+//using System.Net;
+//using System.Text.Json;
+//using Microsoft.Extensions.Hosting;
+//using MyBlog.Extensions;
+//using Microsoft.AspNetCore.Authentication.Cookies;
+//using System.Threading.Tasks;
+//using Microsoft.AspNetCore.SpaServices.AngularCli;
 
-namespace MyBlog
-{
-  public class Startup
-  {
-    public Startup(IConfiguration configuration)
-    {
-      Configuration = configuration;
-    }
+//namespace MyBlog
+//{
+//  public class Startup
+//  {
+//    public Startup(IConfiguration configuration)
+//    {
+//      Configuration = configuration;
+//    }
 
-    public IConfiguration Configuration { get; }
+//    public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
-    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-    public void ConfigureServices(IServiceCollection services)
-    {
-      var appSetting = Configuration.Get<AppSettings>();
+//    // This method gets called by the runtime. Use this method to add services to the container.
+//    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+//    public void ConfigureServices(IServiceCollection services)
+//    {
+//      services.AddControllersWithViews()
+//        .AddJsonOptions(opt =>
+//        {
+//          opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+//        });
 
-      services.Configure<AppSettings>(Configuration);
+//      services.AddRazorPages();
 
-      services
-        .AddDbContext<BlogContext>(options =>
-          options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
+//      services.AddSettingsConfiguration(Configuration);
 
-      services.AddScoped<IUnitOfWork, UnitOfWork>();
+//      services.AddDatabaseContext<BlogContext>();
 
-      services.AddSingleton<IFileHelper, FileHelper>();
-      services.AddSingleton<IURLHelper, URLHelper>();
-      services.AddAutoMapper(typeof(Startup));
+//      services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-      services
-        .AddCors(o => o.AddPolicy("EnableCors", builder =>
-        {
-          builder
-          .SetIsOriginAllowedToAllowWildcardSubdomains()
-            .WithOrigins(
-              "https://*.codeandcoffees.com",
-              "https://staging.blogmanager.codeandcoffees.com",
-              "http://localhost:4200"
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-        }));
+//      services.AddSingleton<IFileHelper, FileHelper>();
+//      services.AddSingleton<IURLHelper, URLHelper>();
+//      services.AddSingleton<ILoginService, LoginService>();
 
-      services
-        .AddAuthentication("Bearer")
-        .AddJwtBearer("Bearer", options =>
-        {
-          options.RequireHttpsMetadata = appSetting.WebSiteHosting.RequirdHttps;
-          options.Authority = appSetting.JwtBearer.Authority;
-          options.Audience = appSetting.JwtBearer.Audience;
-        });
+//      services.AddAutoMapper(typeof(Startup));
 
-      services
-        .AddMvc(opt =>
-        {
-          opt.EnableEndpointRouting = false;
-        })
-        .AddJsonOptions(opt =>
-        {
-          opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        });
-    }
+//      services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//        .AddCookie(options =>
+//        {
+//          options.LoginPath = "/login/";
+//          options.LogoutPath = "/logout/";
+//          options.Events.OnRedirectToLogin = async (cookieAuthenticationOptions) =>
+//          {
+//            cookieAuthenticationOptions.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+//            await cookieAuthenticationOptions.Response.WriteAsync("Error");
+//          };
+//        });
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-      app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), subApp =>
-      {
-        subApp.UseExceptionHandler(builder =>
-        {
-          builder.Run(async context =>
-          {
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            await context.Response.WriteAsync("Error");
-          });
-        });
-      });
-      app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), subApp =>
-      {
-        subApp.UseExceptionHandler("/StatusCode/500");
-        subApp.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
-      });
-      if (env.IsDevelopment())
-      {
-        // ToDo: check if there is a bug in this package when we hit statuscode controller
-        // it return 500 error instead of the specifid view.
-        app.UseDeveloperExceptionPage();
-      }
+//      // In production, the Angular files will be served from this directory
+//      services.AddSpaStaticFiles(configuration =>
+//      {
+//        configuration.RootPath = "BlogManager/dist";
+//      });
+//    }
 
-      else if (env.IsProduction() || env.IsStaging())
-      {
-        app.UseHttpsRedirection();
-        app.UseHsts();
-      }
+//    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+//    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+//    {
+//      app.UseCustomExceptionHandler();
 
-      app.UseCors("EnableCors");
-      app.UseStaticFiles(new StaticFileOptions
-      {
-        FileProvider = new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), @".well-known")),
-        RequestPath = new PathString("/.well-known"),
-        ServeUnknownFileTypes = true // serve extensionless file
-      });
-      app.UseStaticFiles(new StaticFileOptions
-      {
-        FileProvider = new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")),
-        RequestPath = new PathString("/UploadedFiles")
-      });
-      app.UseStaticFiles();
+//      app.UseRouting();
 
-      app.UseAuthentication();
+//      app.UseStaticFiles(new StaticFileOptions
+//      {
+//        FileProvider = new PhysicalFileProvider(
+//            Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")),
+//        RequestPath = new PathString("/UploadedFiles")
+//      });
+//      app.UseStaticFiles();
+      
+//      app.UseAuthentication();
+//      app.UseAuthorization();
 
-      app.UseMvc(routes =>
-      {
-        routes.MapRoute("Blog", "post/{*slug}",
-          defaults: new { controller = "Blog", action = "Detail" });
-        routes.MapRoute("BlogPage", "blog/page/{pageNumber:int}",
-          defaults: new { controller = "Blog", action = "Pagination" });
-        routes.MapRoute("Defaults", "{controller=Blog}/{action=Index}/{id?}");
-      });
-    }
-  }
-}
+//      app.Map("/admin", adminApp =>
+//      {
+//        adminApp.UseSpa(spa =>
+//        {
+//          spa.Options.SourcePath = "BlogManager";
+
+//          if (env.IsDevelopment())
+//          {
+//            spa.UseAngularCliServer(npmScript: "start");
+//          }
+//        });
+//      });
+
+//      app.UseEndpoints(endpoints =>
+//      {
+//        endpoints.MapControllerRoute("default", "{controller=Blog}/{action=Index}/{id?}");
+//      });
+//    }
+//  }
+//}

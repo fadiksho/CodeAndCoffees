@@ -11,8 +11,9 @@ using MyBlog.Services;
 namespace MyBlog.Api
 {
   [Authorize]
+  [ApiController]
   [Route("api/blog")]
-  public class BlogApiController : Controller
+  public class BlogApiController : ControllerBase
   {
     private readonly IUnitOfWork unitOfWork;
     private readonly IURLHelper urlHelper;

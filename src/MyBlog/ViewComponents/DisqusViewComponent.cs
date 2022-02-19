@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MyBlog.Services;
+using MyBlog.Settings;
 using MyBlog.ViewModel;
 using System;
 
@@ -8,11 +9,11 @@ namespace MyBlog.ViewComponents
 {
   public class DisqusViewComponent : ViewComponent
   {
-    private readonly DisqusSettings disqusSettings;
+    private readonly CommentSettings _commentSettings;
 
-    public DisqusViewComponent(IOptions<AppSettings> config)
+    public DisqusViewComponent(IOptions<CommentSettings> config)
     {
-      disqusSettings = config.Value.Disqus;
+      _commentSettings = config.Value;
     }
 
     public IViewComponentResult Invoke(DisqusViewModel disqusOptions)
@@ -22,9 +23,9 @@ namespace MyBlog.ViewComponents
         throw new ArgumentException("Comment Title Was Null or Empty!");
       }
 
-      if (!string.IsNullOrEmpty(disqusSettings.ShortName))
+      if (!string.IsNullOrEmpty(_commentSettings.DisqusShortName))
       {
-        disqusOptions.ShortName = disqusSettings.ShortName;
+        disqusOptions.ShortName = _commentSettings.DisqusShortName;
       }
 
       if (string.IsNullOrEmpty(disqusOptions.PageUrl))

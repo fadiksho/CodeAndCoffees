@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using MyBlog.Abstraction;
 using MyBlog.DTO;
 using MyBlog.Entity;
@@ -16,23 +15,21 @@ using Microsoft.AspNetCore.Authorization;
 namespace MyBlog.Api
 {
   [Authorize]
+  [ApiController]
   [Route("api/blob")]
-  public class BlobApiController : Controller
+  public class BlobApiController : ControllerBase
   {
     private readonly IWebHostEnvironment host;
     private readonly IUnitOfWork unitOfWork;
     private readonly IFileHelper fileHelper;
-    private readonly WebSiteHostingSettings webHostingSettings;
     private readonly ILogger<BlogApiController> logger;
     public BlobApiController(
-      IOptions<AppSettings> config,
       IWebHostEnvironment host,
       IUnitOfWork unitOfWork,
       ILogger<BlogApiController> logger,
       IFileHelper fileHelper)
     {
       this.host = host;
-      this.webHostingSettings = config.Value.WebSiteHosting;
       this.unitOfWork = unitOfWork;
       this.fileHelper = fileHelper;
       this.logger = logger;
@@ -79,8 +76,10 @@ namespace MyBlog.Api
 
         var fileNameWithExtenstion = $"{fileName}{fileExtenstion}";
         var filePath = Path.Combine(uploadsFolerPath, fileNameWithExtenstion);
+
+        var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
         var fileUrl = string.Join("/",
-          this.webHostingSettings.Url, string.Join("/", folderPath), fileNameWithExtenstion);
+          baseUrl, string.Join("/", folderPath), fileNameWithExtenstion);
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {

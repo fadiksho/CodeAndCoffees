@@ -1,46 +1,78 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.FileProviders;
+using MyBlog.Extensions;
+using MyBlog.Persistence;
 using MyBlog.Persistence.Data;
-using NLog.Web;
-using System;
+using MyBlog.Repository.Data;
+using MyBlog.Services;
+using System.Net;
+using System.Text.Json;
 
-namespace MyBlog
-{
-  public class Program
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews()
+        .AddJsonOptions(opt =>
+        {
+          opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        });
+
+builder.Services.AddRazorPages();
+
+builder.Services.AddSettingsConfiguration(builder.Configuration);
+
+builder.Services
+  .AddDatabaseContext<BlogContext>()
+  .AddScoped<IUnitOfWork, UnitOfWork>()
+  .AddSingleton<IFileHelper, FileHelper>()
+  .AddSingleton<IURLHelper, URLHelper>()
+  .AddSingleton<ILoginService, LoginService>()
+  .AddAutoMapper(typeof(Program));
+
+
+builder.Services
+  .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+  .AddCookie(options =>
   {
-    public static void Main(string[] args)
+    options.LoginPath = "/login/";
+    options.LogoutPath = "/logout/";
+    options.Events.OnRedirectToLogin = async (cookieAuthenticationOptions) =>
     {
-      var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-      try
-      {
-        var host = CreateWebHostBuilder(args).Build();
-        
-        DbSetup.EnsureMigrationAndSeeding(host, logger);
+      cookieAuthenticationOptions.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+      await cookieAuthenticationOptions.Response.WriteAsync("Error");
+    };
+  });
 
-        host.Run();
-      }
-      catch (Exception exception)
-      {
-        //NLog: catch setup errors
-        logger.Error(exception, "Stopped program because of exception");
-        throw;
-      }
-      finally
-      {
-        NLog.LogManager.Shutdown();
-      }
-    }
 
-    public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-        WebHost.CreateDefaultBuilder(args)
-          .UseStartup<Startup>()
-          .ConfigureLogging(logging =>
-          {
-            logging.ClearProviders();
-            logging.AddConsole();
-            logging.AddDebug();
-          })
-          .UseNLog();
-  }
-}
+var app = builder.Build();
+
+app.UseCustomExceptionHandler();
+
+app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions
+{
+  FileProvider = new PhysicalFileProvider(
+      Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")),
+  RequestPath = new PathString("/UploadedFiles")
+});
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.Map("/admin", adminApp =>
+{
+  adminApp.UseEndpoints(adminEndPoint =>
+  {
+    adminEndPoint.MapFallbackToFile("/admin/", "/admin/index.html");
+  });
+});
+
+app.UseEndpoints(endpoints =>
+{
+  endpoints.MapControllerRoute("default", "{controller=Blog}/{action=Index}/{id?}");
+});
+
+
+app.Run();

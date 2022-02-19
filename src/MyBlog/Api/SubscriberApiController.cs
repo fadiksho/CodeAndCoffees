@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyBlog.DTO;
 using MyBlog.Model;
 using MyBlog.Repository.Data;
-using MyBlog.Services;
+using MyBlog.Settings;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
@@ -14,20 +13,19 @@ using WebPush;
 namespace MyBlog.Api
 {
   [Authorize]
+  [ApiController]
   [Route("api/subscribers")]
-  public class SubscriberApiController : Controller
+  public class SubscriberApiController : ControllerBase
   {
-    private readonly IUnitOfWork unitOfWork;
-    private readonly ILogger<SubscriberApiController> logger;
-    private readonly VapidSettings vapidSettings;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly PushNotificationSettings _pushNotificationSettings;
     public SubscriberApiController(IUnitOfWork unitOfWork,
-    IOptions<AppSettings> config,
-    ILogger<SubscriberApiController> logger)
+      IOptions<PushNotificationSettings> config)
     {
-      this.unitOfWork = unitOfWork;
-      this.logger = logger;
-      this.vapidSettings = config.Value.Vapid;
+      _unitOfWork = unitOfWork;
+      _pushNotificationSettings = config.Value;
     }
+
     [AllowAnonymous]
     [HttpPost("PushNotificationSubscription")]
     public async Task<IActionResult> Create([FromBody] PushNotificationSubscriptionDto pushNotificationSubscription)
@@ -37,13 +35,13 @@ namespace MyBlog.Api
         return new UnprocessableEntityObjectResult(ModelState);
       }
       var pushSubscription = new PushSubscription(pushNotificationSubscription.EndPoint, pushNotificationSubscription.Key, pushNotificationSubscription.AuthSecret);
-      var vapidDetails = new VapidDetails(vapidSettings.Subject, vapidSettings.PublicKey, vapidSettings.PrivateKey);
+      var vapidDetails = new VapidDetails(_pushNotificationSettings.Subject, _pushNotificationSettings.PublicKey, _pushNotificationSettings.PrivateKey);
 
       var webPushClient = new WebPushClient();
       webPushClient.SetVapidDetails(vapidDetails);
 
-      await unitOfWork.Subscribers.AddPushNotificationSubscriptionAsync(pushNotificationSubscription);
-      await this.unitOfWork.SaveAsync();
+      await _unitOfWork.Subscribers.AddPushNotificationSubscriptionAsync(pushNotificationSubscription);
+      await this._unitOfWork.SaveAsync();
 
       var payload = new PushNotificationPayload
       {
@@ -79,7 +77,7 @@ namespace MyBlog.Api
         return new UnprocessableEntityObjectResult(dto);
       }
 
-      var subscription = await unitOfWork.Subscribers
+      var subscription = await _unitOfWork.Subscribers
         .GetPushNotificationSubscriptionAsync(dto.EndPoint);
 
       if (subscription == null)
@@ -87,23 +85,24 @@ namespace MyBlog.Api
         return NoContent();
       }
 
-      await unitOfWork.Subscribers
+      await _unitOfWork.Subscribers
         .RemovePushNotificationSubscriptionAsync(dto.EndPoint);
-      await unitOfWork.SaveAsync();
+
+      await _unitOfWork.SaveAsync();
 
       return NoContent();
     }
 
     [AllowAnonymous]
     [HttpPost("CheckIfPushNotificationSubscriber")]
-    public async Task<IActionResult> CheckIfSubscriber([FromBody]PushNotificationSubscriptionBase dto)
+    public async Task<IActionResult> CheckIfSubscriber([FromBody] PushNotificationSubscriptionBase dto)
     {
       if (dto == null || !ModelState.IsValid)
       {
         return new JsonResult(new { isSubscribed = false });
       }
 
-      var subscription = await unitOfWork.Subscribers
+      var subscription = await _unitOfWork.Subscribers
         .GetPushNotificationSubscriptionAsync(dto.EndPoint);
 
       if (subscription == null)
@@ -115,12 +114,13 @@ namespace MyBlog.Api
     }
 
     [HttpPost("newPushNotification")]
-    public async Task<IActionResult> PushNofitication([FromBody]PushNotificationPayload payload)
+    public async Task<IActionResult> PushNofitication([FromBody] PushNotificationPayload payload)
     {
       if (!ModelState.IsValid)
       {
         return new UnprocessableEntityObjectResult(payload);
       }
+
       // ToDo: Check if url is valid
       payload.Url = !string.IsNullOrEmpty(payload.Url) ? payload.Url :
         $"{Request.Scheme}://{Request.Host.Value}/";
@@ -128,8 +128,8 @@ namespace MyBlog.Api
       var messageSentCount = 0;
       var messageFaildCount = 0;
 
-      var subscriptions = await unitOfWork.Subscribers.GetPushNotificationSubscriptionAsync();
-      var vapidDetails = new VapidDetails(vapidSettings.Subject, vapidSettings.PublicKey, vapidSettings.PrivateKey);
+      var subscriptions = await _unitOfWork.Subscribers.GetPushNotificationSubscriptionAsync();
+      var vapidDetails = new VapidDetails(_pushNotificationSettings.Subject, _pushNotificationSettings.PublicKey, _pushNotificationSettings.PrivateKey);
       var webPushClient = new WebPushClient();
       webPushClient.SetVapidDetails(vapidDetails);
 
@@ -144,13 +144,13 @@ namespace MyBlog.Api
         catch (Exception ex) when (ex.InnerException is WebPushException)
         {
           messageFaildCount += 1;
-          await unitOfWork.Subscribers.RemovePushNotificationSubscriptionAsync(subscriber.Endpoint);
+          await _unitOfWork.Subscribers.RemovePushNotificationSubscriptionAsync(subscriber.Endpoint);
         }
       }
 
       if (messageFaildCount > 0)
       {
-        await unitOfWork.SaveAsync();
+        await _unitOfWork.SaveAsync();
       }
 
       return StatusCode(201, new
@@ -162,9 +162,10 @@ namespace MyBlog.Api
     }
 
     [HttpGet("getSubscribersCount")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetSubscribersCount()
     {
-      var subscribersCount = await unitOfWork.Subscribers.GetPushNotificationSubscribersCountAsync();
+      var subscribersCount = await _unitOfWork.Subscribers.GetPushNotificationSubscribersCountAsync();
 
       return Ok(subscribersCount);
     }

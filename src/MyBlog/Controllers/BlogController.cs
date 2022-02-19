@@ -16,22 +16,19 @@ namespace MyBlog.Controllers
       this.unitOfWork = unitOfWork;
     }
 
-    public IActionResult Index()
-    {
-      return Pagination(1);
-    }
-
-    public IActionResult Pagination(int pageNumber)
+    [Route("/{page:int?}")]
+    public IActionResult Index(int page = 1)
     {
       PaggingResult<Blog> blogPage =
         unitOfWork.Blogs.GetBlogsPage(new BlogQuery()
         {
-          Page = pageNumber
+          Page = page
         });
 
       return View("Index", blogPage);
     }
 
+    [Route("/blog/{slug?}")]
     public async Task<IActionResult> Detail(string slug)
     {
       var blog = await unitOfWork.Blogs.GetBlogAsync(slug);
