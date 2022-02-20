@@ -1,0 +1,43 @@
+<div class="container-lg p-2 p-sm-5 mt-5 rounded shadow">
+  <h1 class="display-4 fst-italic text-primary text-center">Login</h1>
+  <form novalidate [formGroup]="loginForm" (ngSubmit)="login()">
+    <div class="mb-2">
+      <label class="form-label" for="userName">User name:</label>
+      <small *ngIf="displayMessage['userName']" class="text-danger ms-1">{{
+        displayMessage["userName"]
+      }}</small>
+      <input class="form-control" id="userName" formControlName="userName" />
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label" for="password">Password:</label>
+      <small *ngIf="displayMessage['password']" class="text-danger ms-1">{{
+        displayMessage["password"]
+      }}</small>
+      <input
+        class="form-control"
+        id="password"
+        formControlName="password"
+        type="password"
+      />
+    </div>
+
+    <div class="form-check mb-3">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="rememberMe"
+        formControlName="rememberMe"
+      />
+      <label class="form-check-label" for="rememberMe"> Rememeber Me </label>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary w-100"
+      [disabled]="!loginForm.valid"
+    >
+      Login
+    </button>
+  </form>
+</div>

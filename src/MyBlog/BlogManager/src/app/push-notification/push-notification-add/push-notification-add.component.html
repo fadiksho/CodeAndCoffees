@@ -1,0 +1,48 @@
+<div class="container-lg p-2 p-sm-5 mt-5 rounded shadow">
+  <h1 class="display-4 fst-italic text-primary text-center">
+    Push New Notification
+  </h1>
+  <form novalidate [formGroup]="pushNotificationForm" (ngSubmit)="pushIt()">
+    <div class="mb-2">
+      <label class="form-label" for="title">Title</label>
+      <small *ngIf="displayMessage['title']" class="text-danger ms-1">{{
+        displayMessage["title"]
+      }}</small>
+      <textarea
+        class="form-control"
+        id="title"
+        formControlName="title"
+        autosize
+        [minRows]="1"
+      >
+      </textarea>
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label" for="url">URL</label>
+      <input class="form-control" id="url" formControlName="url" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="body">Body</label>
+      <small *ngIf="displayMessage['body']" class="text-danger ms-1">{{
+        displayMessage["body"]
+      }}</small>
+      <textarea
+        class="form-control"
+        formControlName="body"
+        id="body"
+        autosize
+        [minRows]="2"
+      ></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary w-100"
+      [disabled]="!pushNotificationForm.valid"
+    >
+      Push it
+    </button>
+  </form>
+</div>

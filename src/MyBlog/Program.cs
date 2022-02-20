@@ -28,13 +28,13 @@ builder.Services
   .AddSingleton<ILoginService, LoginService>()
   .AddAutoMapper(typeof(Program));
 
-
 builder.Services
   .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
   .AddCookie(options =>
   {
-    options.LoginPath = "/login/";
-    options.LogoutPath = "/logout/";
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.LoginPath = "/admin/login/";
+    //options.LogoutPath = "/logout/";
     options.Events.OnRedirectToLogin = async (cookieAuthenticationOptions) =>
     {
       cookieAuthenticationOptions.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -42,18 +42,24 @@ builder.Services
     };
   });
 
-
 var app = builder.Build();
 
 app.UseCustomExceptionHandler();
 
 app.UseHttpsRedirection();
+
+if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")))
+{
+  Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles"));
+}
 app.UseStaticFiles(new StaticFileOptions
 {
+
   FileProvider = new PhysicalFileProvider(
-      Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")),
+    Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")),
   RequestPath = new PathString("/UploadedFiles")
 });
+
 app.UseStaticFiles();
 
 app.UseRouting();

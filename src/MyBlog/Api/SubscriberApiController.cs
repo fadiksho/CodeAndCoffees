@@ -6,8 +6,6 @@ using MyBlog.Model;
 using MyBlog.Repository.Data;
 using MyBlog.Settings;
 using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
 using WebPush;
 
 namespace MyBlog.Api
